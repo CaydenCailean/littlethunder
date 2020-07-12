@@ -41,13 +41,20 @@ class lt_db(object):
         return True
 
     def init_add(self, Guild, Category, Name, ID, Init):
-        ID = str(ID)
-        Guild = str(Guild)
-        Category = str(Category)
         self.db[str(Guild)][str(Category)]
         Entry = {"Name": Name, "ID": ID, "Init": Init}
 
         self.db[str(Guild)][str(Category)].insert_one(Entry).inserted_id
+        turnCheck = self.db[str(Guild)].find_one({"Category": Category})
+        initlist = list(self.db[str(Guild)][str(Category)].find({}))
+        print(turnCheck)
+        print(initlist)
+        if turnCheck['turn'] != 1 and initlist[turnCheck['turn']]['Init'] < Init:
+            self.db[str(Guild)].update_one(
+            {"Category": Category}, {"$inc": {"turn": 1}}
+        )
+
+        
 
     def init_clear(self, Guild, Category):
 
