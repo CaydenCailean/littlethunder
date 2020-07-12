@@ -29,7 +29,7 @@ if 'DBUSER' in os.environ:
         'user': os.environ["DBUSER"],
         'pass': os.environ["DBPASS"],
         'host': os.environ["DBHOST"],
-        'PORT': os.environ["DBPORT"],
+        'port': os.environ["DBPORT"],
         'dbname': os.environ["DBNAME"],
         'discordtoken': os.environ["DISCTOKEN"]
         
