@@ -31,7 +31,7 @@ if 'DBUSER' in os.environ:
         'host': os.environ["DBHOST"],
         'PORT': os.environ["DBPORT"],
         'dbname': os.environ["DBNAME"],
-        'discordToken': os.environ["DISCTOKEN"]
+        'discordtoken': os.environ["DISCTOKEN"]
         
     }
 else:
