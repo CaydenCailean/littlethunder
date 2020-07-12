@@ -25,7 +25,15 @@ async def on_ready():
 
 # Read config and connect to db
 if 'DBUSER' in os.environ:
-    pass
+    config = {
+        'user': os.environ("DBUSER"),
+        'pass': os.environ("DBPASS"),
+        'host': os.environ("DBHOST"),
+        'PORT': os.environ("DBPORT"),
+        'dbname': os.environ("DBNAME"),
+        'discordToken': os.environ("DISCTOKEN")
+        
+    }
 else:
     cfg = configparser.ConfigParser()
     cfg.read("config.cfg")
@@ -37,6 +45,8 @@ dis_cred = {"discToken": config["discordtoken"]}
 discToken = dis_cred["discToken"]
 
 # connect to and initialize DB
+
+print(config)
 
 lt_db = lt_db(config)
 lt_db.connect()
