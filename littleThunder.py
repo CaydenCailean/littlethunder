@@ -24,10 +24,10 @@ async def on_ready():
 
 
 # Read config and connect to db
-
-cfg = configparser.ConfigParser()
-cfg.read("config.cfg")
-config = dict(cfg.items("prod"))
+if os.environ("DBUSER") == None:
+    cfg = configparser.ConfigParser()
+    cfg.read("config.cfg")
+    config = dict(cfg.items("prod"))
 
 # separate configured credentials to their respect services.
 
