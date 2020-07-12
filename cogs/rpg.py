@@ -279,15 +279,7 @@ class rpg(commands.Cog):
         output = self.lt_db.add_owner(Guild, Category, ID)
         await ctx.send(output)
 
-   # @dm.command(aliases=["register"])
-   # async def add(self, ctx):
-   #     """
-   #     Register the user as a Dungeon Master within the current channel category.
-   #             """
-   #     Category, Guild, ID = self.ctx_info(ctx)
-   #     output = self.lt_db.add_owner(Guild, Category, ID)
-   #     await ctx.send(output)
-
+   
     @dm.command(aliases=["unregister"])
     async def remove(self, ctx):
         """

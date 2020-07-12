@@ -1,6 +1,7 @@
 import json
 from pymongo import MongoClient, ReturnDocument, ASCENDING
 import configparser
+import os
 
 
 def init_order(self):
@@ -11,12 +12,18 @@ class lt_db(object):
     def __init__(self, config):
 
         # connection information for DB
-
-        self.user = config["user"]
-        self.password = config["pass"]
-        self.host = config["host"]
-        self.port = config["port"]
-        self.dbname = config["dbname"]
+        try:
+            self.user = os.environ("DBUSER")
+            self.password = os.environ("DBPASS")
+            self.host = os.environ("DBHOST")
+            self.port = os.environ("DBPORT")
+            self.dbname = os.environ("DBNAME")
+        except:
+            self.user = config["user"]
+            self.password = config["pass"]
+            self.host = config["host"]
+            self.port = config["port"]
+            self.dbname = config["dbname"]
         
     def connect(self):
         connection = {
