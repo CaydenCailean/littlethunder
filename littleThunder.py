@@ -24,7 +24,7 @@ async def on_ready():
 
 
 # Read config and connect to db
-if os.environ("DBUSER") == None:
+if 'DBUSER' in os.environ:
     cfg = configparser.ConfigParser()
     cfg.read("config.cfg")
     config = dict(cfg.items("prod"))
