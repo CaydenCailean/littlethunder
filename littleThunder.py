@@ -26,12 +26,12 @@ async def on_ready():
 # Read config and connect to db
 if 'DBUSER' in os.environ:
     config = {
-        'user': os.environ("DBUSER"),
-        'pass': os.environ("DBPASS"),
-        'host': os.environ("DBHOST"),
-        'PORT': os.environ("DBPORT"),
-        'dbname': os.environ("DBNAME"),
-        'discordToken': os.environ("DISCTOKEN")
+        'user': os.environ["DBUSER"],
+        'pass': os.environ["DBPASS"],
+        'host': os.environ["DBHOST"],
+        'PORT': os.environ["DBPORT"],
+        'dbname': os.environ["DBNAME"],
+        'discordToken': os.environ["DISCTOKEN"]
         
     }
 else:
