@@ -42,7 +42,9 @@ class rpg(commands.Cog):
                     diceNum, diceVal = input.split("d")
                 except ValueError as e:
                     raise Exception("Make sure your expression is in #d# format.")
-
+                    
+                if diceNum == "":
+                    diceNum = "1"
                 if int(diceNum) > 100 or int(diceVal) > 100:
                     raise Exception(
                         "That's too many numbers. The limit to this value is 100d100."
@@ -54,10 +56,11 @@ class rpg(commands.Cog):
                         outResults.append(i)
 
             if isPlus != -1 or isMinus != -1:
-
                 expr = re.split("[+-]", input)[0]
 
                 diceNum, diceVal = expr.split("d")
+                if diceNum == "":
+                    diceNum = "1"
 
                 outResults = dice.roll(expr)
 
@@ -69,9 +72,12 @@ class rpg(commands.Cog):
                 for i in bonus:
                     posmod += int(i)
 
-                bonusDice = re.findall(r"\+\d+d\d+", input)
+                bonusDice = re.findall(r"\+\d*d\d+", input)
                 for i in bonusDice:
                     idiceNum, idiceVal = i.split("d")
+                    print(idiceNum + ", " + idiceVal)
+                    if idiceNum == "+":
+                        idiceNum = "1"
                     if int(idiceNum) > 100 or int(idiceVal) > 100:
                         raise Exception(
                             "That's too many numbers. The limit to this value is 100d100."
@@ -84,10 +90,13 @@ class rpg(commands.Cog):
                 for i in malus:
                     negmod += int(i)
 
-                malusDice = re.findall(r"\-\d+d\d+", input)
+                malusDice = re.findall(r"\-\d*d\d+", input)
                 for i in malusDice:
                     output = dice.roll(i)
                     idiceNum, idiceVal = i.split("d")
+                    print(idiceNum + ", " + idiceVal)
+                    if idiceNum == "-":
+                        idiceNum = "1"
                     if int(idiceNum) > 100 or int(idiceVal) > 100:
                         raise Exception(
                             "That's too many numbers. The limit to this value is 100d100."
@@ -131,12 +140,12 @@ class rpg(commands.Cog):
             return int(Total)
         except Exception as e:
             if str(e).find("not enough values") != -1:
-                await ctx.send("Make sure your expression is in #d# format.")
+                await ctx.send("Not enough values.")
             elif str(e).find("literal") != -1:
-                await ctx.send("Make sure your expression is in #d# format.")
+                await ctx.send("Bad formatting, use #d# format.")
             elif str(e).find("400 bad request"):
                 await ctx.send(
-                    "The output is too large. Try with fewer combined dice in your expression."
+                    "Either your dice phrase was not formatted correctly or you are rolling too many dice. Please try again."
                 )
             return Total
 
