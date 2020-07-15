@@ -46,8 +46,6 @@ discToken = dis_cred["discToken"]
 
 # connect to and initialize DB
 
-print(config)
-
 lt_db = lt_db(config)
 lt_db.connect()
 lt_db.db_init()

@@ -47,8 +47,6 @@ class lt_db(object):
         self.db[str(Guild)][str(Category)].insert_one(Entry).inserted_id
         turnCheck = self.db[str(Guild)].find_one({"Category": Category})
         initlist = list(self.db[str(Guild)][str(Category)].find({}))
-        print(turnCheck)
-        print(initlist)
         if turnCheck['turn'] != 1 and initlist[turnCheck['turn']]['Init'] < Init:
             self.db[str(Guild)].update_one(
             {"Category": Category}, {"$inc": {"turn": 1}}

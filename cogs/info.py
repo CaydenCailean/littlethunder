@@ -19,13 +19,16 @@ class info(commands.Cog):
         embed.add_field(name="Author", value="Cayden Cailean")
         embed.add_field(
             name="Purpose",
-            value="I'm just a generally good boi. I like to roll dice, and text people.",
+            value="I'm just a generally good boi. I like to roll dice, track initiative for you, and keep your characters organized.",
         )
         embed.add_field(
             name="GitHub", value="https://github.com/caydencailean/littlethunder"
         )
         embed.add_field(
             name='Donations', value='Donations, while not required, are greatly appreciated!\nhttps://donorbox.org/little-thunder'
+        )
+        embed.set_thumbnail(
+            url = 'https://i.imgur.com/lacm87y.png'
         )
         await ctx.send(embed=embed)
 
