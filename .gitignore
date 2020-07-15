@@ -3,3 +3,5 @@ cogs/__pycache__/
 env/
 __pycache__
 .python-version
+Pipfile
+Pipfile.lock
