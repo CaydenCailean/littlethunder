@@ -24,7 +24,7 @@ class lt_db(object):
             self.host = config["host"]
             self.port = config["port"]
             self.dbname = config["dbname"]
-        
+
     def connect(self):
         connection = {
             f"mongodb://{self.user}:{self.password}@{self.host}:{self.port}/{self.dbname}"
@@ -52,7 +52,7 @@ class lt_db(object):
             {"Category": Category}, {"$inc": {"turn": 1}}
         )
 
-        
+
 
     def init_clear(self, Guild, Category):
 
@@ -225,7 +225,7 @@ class lt_db(object):
         query = {'$text': {'$search': Name}}
 
         output = self.db[str(Guild)].find(query)
-        
+
         return output
 
     def char_owner(self, Guild, Category, ID, Name):

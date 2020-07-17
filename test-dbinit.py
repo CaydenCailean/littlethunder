@@ -63,11 +63,22 @@ class Testdb:
         db.db_init()
         assert isinstance(db.db, pymongo.database.Database)
 
-    def test_db_retrieval(self, db):
+    def test_collections(self, mongodb):
+        assert "character" in mongodb.list_collection_names()
+        assert "initentry" in mongodb.list_collection_names()
+        assert "init" in mongodb.list_collection_names()
+
+    def test_init_add(self, db, mongodb):
         """
-        test_db_retrieval Begins the retrieval tasks
+        test_init_add Tests adding init for character
 
         :param db: lt_db database object
         :type db: lt_db
         """
+        db.db = mongodb
+        guild = "init"
+        category = "entry"
+        name = "sneg"
+        char_id = 1273461827364134
+        init = 5
         pass
