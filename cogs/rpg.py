@@ -288,8 +288,7 @@ class rpg(commands.Cog):
         output = self.lt_db.add_owner(Guild, Category, ID)
         await ctx.send(output)
 
-   
-    @dm.command(aliases=["unregister"])
+    @dm.command(pass_context=True, aliases=['unregister'])
     async def remove(self, ctx):
         """
         Unregister current DM for Category. Only usable by DM or administrator.

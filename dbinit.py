@@ -45,11 +45,11 @@ class lt_db(object):
         Entry = {"Name": Name, "ID": ID, "Init": Init}
 
         self.db[str(Guild)][str(Category)].insert_one(Entry).inserted_id
-        turnCheck = self.db[str(Guild)].find_one({"Category": Category})
+        turnCheck = self.db[str(Guild)].find_one({"Category": Category, "turn":{"$exists": True}})
         initlist = list(self.db[str(Guild)][str(Category)].find({}))
         if turnCheck['turn'] != 1 and initlist[turnCheck['turn']]['Init'] < Init:
             self.db[str(Guild)].update_one(
-            {"Category": Category}, {"$inc": {"turn": 1}}
+            {"Category": Category, "turn":{"$exists": True}}, {"$inc": {"turn": 1}}
         )
 
         
@@ -58,7 +58,7 @@ class lt_db(object):
 
         self.db[str(Guild)][str(Category)].drop()
         self.db[str(Guild)].find_one_and_update(
-            {"Category": Category}, {"$unset": {"turn": 1}}
+            {"Category": Category, "turn":{"$exists": True}}, {"$unset": {"turn": 1}}
         )
 
     def init_remove(self, Guild, Category, Name):
@@ -76,31 +76,30 @@ class lt_db(object):
     def turn_next(self, Guild, Category):
 
         current = self.db[str(Guild)].find_one_and_update(
-            {"Category": Category}, {"$inc": {"turn": 1}}, upsert=True
+            {"Category": Category, "turn":{"$exists": True}}, {"$inc": {"turn": 1}}, upsert=True
         )
         entries = self.db[str(Guild)][str(Category)].count_documents({})
 
         if current["turn"] >= entries:
             self.db[str(Guild)].find_one_and_update(
-                {"Category": Category}, {"$inc": {"turn": -entries}}
+                {"Category": Category, "turn":{"$exists": True}}, {"$inc": {"turn": -entries}}
             )
 
     def turn_get(self, Guild, Category):
 
-        turnCheck = self.db[str(Guild)].find_one({"Category": Category})
+        turnCheck = self.db[str(Guild)].find_one({"Category": Category, "turn":{"$exists": True}})
         try:
             return turnCheck["turn"]
         except:
             self.db[str(Guild)].find_one_and_update(
-                {"Category": Category}, {"$set": {"turn": 1}}, upsert=True,
+                {"Category": Category, "turn":{"$exists": True}}, {"$set": {"turn": 1}}, upsert=True,
             )
-            turnCheck = self.db[str(Guild)].find_one({"Category": Category})
+            turnCheck = self.db[str(Guild)].find_one({"Category": Category, "turn":{"$exists": True}})
             return turnCheck["turn"]
 
     def init_delay(self, Guild, Category, Name, newInit):
 
-        current = self.db[str(Guild)].find_one({"Category": Category})
-        turn = self.db[str(Guild)].find_one({"Category": Category})["turn"]
+        turn = self.db[str(Guild)].find_one({"Category": Category, "turn":{"$exists": True}})["turn"]
         oldInit = self.db[str(Guild)][str(Category)].find_one({"Name": Name})["Init"]
         currentInit = self.db[str(Guild)][str(Category)].find_one_and_update(
             {"Name": Name},
@@ -112,18 +111,18 @@ class lt_db(object):
 
         entries = self.db[str(Guild)][str(Category)].count_documents({})
 
-        if current["turn"] >= entries:
+        if turn >= entries:
             self.db[str(Guild)].find_one_and_update(
-                {"Category": Category}, {"$inc": {"turn": -entries}}
+                {"Category": Category, "turn":{"$exists": True}}, {"$inc": {"turn": -entries}}
             )
 
         if currentInit > nextInit or oldInit < currentInit:
             self.db[str(Guild)].update_one(
-                {"Category": Category}, {"$inc": {"turn": 1}}
+                {"Category": Category, "turn":{"$exists": True}}, {"$inc": {"turn": 1}}
             )
 
     def add_owner(self, Guild, Category, ID):
-        existCheck = self.db[str(Guild)].find_one({"Category": Category})
+        existCheck = self.db[str(Guild)].find_one({"Category": Category, "turn":{"$exists": True}})
 
         try:
             if existCheck["owner"] == ID:
@@ -138,14 +137,14 @@ class lt_db(object):
 
         except KeyError:
             self.db[str(Guild)].find_one_and_update(
-                {"Category": Category}, {"$set": {"owner": ID}}, upsert=True
+                {"Category": Category, "turn":{"$exists": True}}, {"$set": {"owner": ID}}, upsert=True
             )
             output = f"<@{ID}> has been added as the DM for this channel category."
             return output
 
         except TypeError:
             self.db[str(Guild)].find_one_and_update(
-                {"Category": Category}, {"$set": {"owner": ID}}, upsert=True
+                {"Category": Category, "turn":{"$exists": True}}, {"$set": {"owner": ID}}, upsert=True
             )
             output = f"<@{ID}> has been added as the DM for this channel category."
             return output
@@ -153,18 +152,18 @@ class lt_db(object):
     def remove_owner(self, Guild, Category, ID, override=False):
         if override == True:
             current = self.db[str(Guild)].find_one_and_update(
-                {"Category": Category}, {"$unset": {"owner": 1}}
+                {"Category": Category, "turn":{"$exists": True}}, {"$unset": {"owner": 1}}
             )
             owner = current["owner"]
             output = f"<@{owner}> has been removed as this channel's owner."
             return output
         else:
-            current = self.db[str(Guild)].find_one({"Category": Category})
+            current = self.db[str(Guild)].find_one({"Category": Category, "turn":{"$exists": True}})
             owner = current["owner"]
             if ID == owner:
 
                 self.db[str(Guild)].find_one_and_update(
-                    {"Category": Category}, {"$unset": {"owner": 1}}
+                    {"Category": Category, "turn":{"$exists": True}}, {"$unset": {"owner": 1}}
                 )
                 output = f"<@{owner}> has been removed as this channel's owner."
                 return output
@@ -173,7 +172,7 @@ class lt_db(object):
                 return output
 
     def owner_check(self, Guild, Category, ID):
-        if self.db[str(Guild)].find_one({"Category": Category})["owner"] == ID:
+        if self.db[str(Guild)].find_one({"Category": Category, "turn":{"$exists": True}})["owner"] == ID:
             check = True
             return check
         else:
@@ -197,6 +196,8 @@ class lt_db(object):
                 "Category": Category,
                 "owner": ID,
                 "color": 000000,
+                "public": "False",
+                "inventory": {}
             }
             self.db[str(Guild)].insert_one(entry).inserted_id
             output = f"{Name.title()} was added to the database."
@@ -247,3 +248,16 @@ class lt_db(object):
     def unset_field(self, Guild, Category, ID, Name, field):
         query = {"Category": Category, "name": Name}
         self.db[str(Guild)].update(query, {"$unset": {field: 1}})
+
+    def addto_inv(self, Guild, Category, ID, Name, Item, Value):
+        query = {"Category": Category, "name": Name}
+        self.db[str(Guild)].find_one_and_update(query, {"$set": {f"inventory.{Item}" :int(Value)}})
+
+    def increment_inv(self, Guild, Category, ID, Name, Item, Value):
+        query = {"Category": Category, "name": Name}
+        self.db[str(Guild)].find_one_and_update(query, {"$inc": {f"inventory.{Item}" :int(Value)}})
+
+    def inv_get(self, Guild, Category, Name):
+        query = {"Category": Category, "name": Name}
+        inventory = self.db[str(Guild)].find_one(query)['inventory']
+        return inventory
