@@ -289,7 +289,7 @@ class rpg(commands.Cog):
         await ctx.send(output)
 
     @dm.command(pass_context=True, aliases=['unregister'])
-    async def remove(self, ctx):
+    async def remove(self, ctx ):
         """
         Unregister current DM for Category. Only usable by DM or administrator.
         """
