@@ -418,7 +418,7 @@ class rpg(commands.Cog):
             embed = discord.Embed(
                 title= output['name'].title(),
                 description= output["description"],
-                color= output["color"],
+                color= int(output["color"], 16),
             )
 
 
