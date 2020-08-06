@@ -141,8 +141,6 @@ class rpg(commands.Cog):
         except Exception as e:
             if str(e).find("not enough values") != -1:
                 await ctx.send("Not enough values.")
-            elif str(e).find("literal") != -1:
-                await ctx.send("Bad formatting, use #d# format.")
             elif str(e).find("400 bad request"):
                 await ctx.send(
                     "Either your dice phrase was not formatted correctly or you are rolling too many dice. Please try again."
@@ -366,23 +364,15 @@ class rpg(commands.Cog):
         except:
             await ctx.send(f"Sorry, I guess {Name.title()} doesn't exist!")
         if ownerCheck == True or dmCheck == True:
-            if field == "inventory":
-                await ctx.send(
-                    f"Sorry! {field.capitalize()} hasn't been implemented yet!"
-                )
-            elif field == "spells":
-                await ctx.send(
-                    f"Sorry! {field.capitalize()} hasn't been implemented yet!"
-                )
-            elif field == "hp":
+            if field in {"inventory", "spells", "hp"}:
                 await ctx.send(
                     f"Sorry! {field.capitalize()} hasn't been implemented yet!"
                 )
             elif field == "color":
-                value = int(value, 16)
+                
                 self.lt_db.set_field(Guild, Category, ID, Name, field, value)
                 await ctx.send(f"{Name.title()}'s {field} value has been updated!")
-            elif field == "owner" or field == "category":
+            elif field in {"owner","category","public"}:
                 await ctx.send(
                     f"This value, {field.capitalize()}, is used for behind-the-scenes things, and cannot be modified. Sorry for the inconvenience!"
                 )
@@ -439,6 +429,7 @@ class rpg(commands.Cog):
                 output["name"],
                 output["description"],
                 output["color"],
+                output["public"]
             )
             keys = []
             vals = []

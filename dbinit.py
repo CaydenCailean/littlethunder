@@ -223,7 +223,7 @@ class lt_db(object):
 
     def get_char(self, Guild, Category, Name):
 
-        query = {'$text': {'$search': Name}}
+        query = {'$text': {'$search': Name}, "Category":Category}
 
         output = self.db[str(Guild)].find(query)
         

@@ -41,8 +41,8 @@ else:
 
 # separate configured credentials to their respect services.
 
-dis_cred = {"discToken": config["discordtoken"]}
-discToken = dis_cred["discToken"]
+discToken = {"discToken": config["discordtoken"]}['discToken']
+
 
 # connect to and initialize DB
 
