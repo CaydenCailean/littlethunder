@@ -24,7 +24,7 @@ class lt_db(object):
             self.host = config["host"]
             self.port = config["port"]
             self.dbname = config["dbname"]
-        
+
     def connect(self):
         connection = {
             f"mongodb://{self.user}:{self.password}@{self.host}:{self.port}/{self.dbname}"
@@ -47,18 +47,16 @@ class lt_db(object):
         self.db[str(Guild)][str(Category)].insert_one(Entry).inserted_id
         turnCheck = self.db[str(Guild)].find_one({"Category": Category})
         initlist = list(self.db[str(Guild)][str(Category)].find({}))
-        if turnCheck['turn'] != 1 and initlist[turnCheck['turn']]['Init'] < Init:
+        if turnCheck["turn"] != 1 and initlist[turnCheck["turn"]]["Init"] < Init:
             self.db[str(Guild)].update_one(
-            {"Category": Category}, {"$inc": {"turn": 1}}
-        )
-
-        
+                {"Category": Category}, {"$inc": {"turn": 1}}
+            )
 
     def init_clear(self, Guild, Category):
 
         self.db[str(Guild)][str(Category)].drop()
         self.db[str(Guild)].find_one_and_update(
-            {"Category": Category, }, {"$unset": {"turn": 1}}
+            {"Category": Category,}, {"$unset": {"turn": 1}}
         )
 
     def init_remove(self, Guild, Category, Name):
@@ -137,7 +135,7 @@ class lt_db(object):
 
         except KeyError:
             self.db[str(Guild)].find_one_and_update(
-                {"Category": Category}, {"$set": {"owner": ID, 'turn' : 1}}, upsert=True
+                {"Category": Category}, {"$set": {"owner": ID, "turn": 1}}, upsert=True
             )
             output = f"<@{ID}> has been added as the DM for this channel category."
             return output
@@ -181,7 +179,7 @@ class lt_db(object):
 
     def add_char(self, Guild, Category, ID, Name):
 
-        self.db[str(Guild)].create_index([('name', 'text')])
+        self.db[str(Guild)].create_index([("name", "text")])
 
         try:
             char = self.db[str(Guild)].find_one({"Category": Category, "name": Name})[
@@ -197,7 +195,7 @@ class lt_db(object):
                 "owner": ID,
                 "color": 000000,
                 "public": "False",
-                "inventory": {}
+                "inventory": {},
             }
             self.db[str(Guild)].insert_one(entry).inserted_id
             output = f"{Name.title()} was added to the database."
@@ -223,10 +221,10 @@ class lt_db(object):
 
     def get_char(self, Guild, Category, Name):
 
-        query = {'$text': {'$search': Name}, "Category":Category}
+        query = {"$text": {"$search": Name}, "Category": Category}
 
         output = self.db[str(Guild)].find(query)
-        
+
         return output
 
     def char_owner(self, Guild, Category, ID, Name):
@@ -240,9 +238,11 @@ class lt_db(object):
 
     def set_field(self, Guild, Category, ID, Name, field, value):
         query = {"Category": Category, "name": Name}
-        output = self.db[str(Guild)].find_one_and_update(
-            query, {"$set": {field: value}}
-        )["name"].title()
+        output = (
+            self.db[str(Guild)]
+            .find_one_and_update(query, {"$set": {field: value}})["name"]
+            .title()
+        )
         return output
 
     def unset_field(self, Guild, Category, ID, Name, field):
@@ -251,13 +251,17 @@ class lt_db(object):
 
     def addto_inv(self, Guild, Category, ID, Name, Item, Value):
         query = {"Category": Category, "name": Name}
-        self.db[str(Guild)].find_one_and_update(query, {"$set": {f"inventory.{Item}" :int(Value)}})
+        self.db[str(Guild)].find_one_and_update(
+            query, {"$set": {f"inventory.{Item}": int(Value)}}
+        )
 
     def increment_inv(self, Guild, Category, ID, Name, Item, Value):
         query = {"Category": Category, "name": Name}
-        self.db[str(Guild)].find_one_and_update(query, {"$inc": {f"inventory.{Item}" :int(Value)}})
+        self.db[str(Guild)].find_one_and_update(
+            query, {"$inc": {f"inventory.{Item}": int(Value)}}
+        )
 
     def inv_get(self, Guild, Category, Name):
         query = {"Category": Category, "name": Name}
-        inventory = self.db[str(Guild)].find_one(query)['inventory']
+        inventory = self.db[str(Guild)].find_one(query)["inventory"]
         return inventory

@@ -25,11 +25,10 @@ class info(commands.Cog):
             name="GitHub", value="https://github.com/caydencailean/littlethunder"
         )
         embed.add_field(
-            name='Donations', value='Donations, while not required, are greatly appreciated!\nhttps://donorbox.org/little-thunder'
+            name="Donations",
+            value="Donations, while not required, are greatly appreciated!\nhttps://donorbox.org/little-thunder",
         )
-        embed.set_thumbnail(
-            url = 'https://i.imgur.com/lacm87y.png'
-        )
+        embed.set_thumbnail(url="https://i.imgur.com/lacm87y.png")
         await ctx.send(embed=embed)
 
     @commands.command()

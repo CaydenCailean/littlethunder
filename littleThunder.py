@@ -24,15 +24,14 @@ async def on_ready():
 
 
 # Read config and connect to db
-if 'DBUSER' in os.environ:
+if "DBUSER" in os.environ:
     config = {
-        'user': os.environ["DBUSER"],
-        'pass': os.environ["DBPASS"],
-        'host': os.environ["DBHOST"],
-        'port': os.environ["DBPORT"],
-        'dbname': os.environ["DBNAME"],
-        'discordtoken': os.environ["DISCTOKEN"]
-        
+        "user": os.environ["DBUSER"],
+        "pass": os.environ["DBPASS"],
+        "host": os.environ["DBHOST"],
+        "port": os.environ["DBPORT"],
+        "dbname": os.environ["DBNAME"],
+        "discordtoken": os.environ["DISCTOKEN"],
     }
 else:
     cfg = configparser.ConfigParser()
@@ -41,7 +40,7 @@ else:
 
 # separate configured credentials to their respect services.
 
-discToken = {"discToken": config["discordtoken"]}['discToken']
+discToken = {"discToken": config["discordtoken"]}["discToken"]
 
 
 # connect to and initialize DB

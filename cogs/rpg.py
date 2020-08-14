@@ -42,7 +42,7 @@ class rpg(commands.Cog):
                     diceNum, diceVal = input.split("d")
                 except ValueError as e:
                     raise Exception("Make sure your expression is in #d# format.")
-                    
+
                 if diceNum == "":
                     diceNum = "1"
                 if int(diceNum) > 100 or int(diceVal) > 100:
@@ -277,6 +277,7 @@ class rpg(commands.Cog):
         """
         Select a subcommand to use with this command.
         """
+
     @dm.command(aliases=["add"])
     async def register(self, ctx):
         """
@@ -286,13 +287,11 @@ class rpg(commands.Cog):
         output = self.lt_db.add_owner(Guild, Category, ID)
         await ctx.send(output)
 
-    @dm.command(pass_context=True, aliases=['unregister'])
-    async def remove(self, ctx ):
-        """
-        Unregister current DM for Category. Only usable by DM or administrator.
-        """
+    @dm.command(aliases=['remove'])
+    async def unregister(self, ctx):
+        """unregister current dm for category"""
         Category, Guild, ID = self.ctx_info(ctx)
-        override = ctx.message.author.permissions_in(ctx.channel).administrator
+        override=ctx.message.author.permissions_in(ctx.channel).administrator
         output = self.lt_db.remove_owner(Guild, Category, ID, override)
         await ctx.send(output)
 
@@ -344,7 +343,6 @@ class rpg(commands.Cog):
             await ctx.send(output)
         else:
             await ctx.send(f"{Name.title()} doesn't belong to you.")
-        
 
     @char.command(aliases=["set"])
     async def addfield(self, ctx, Name, field: str, *, value):
@@ -358,7 +356,7 @@ class rpg(commands.Cog):
             dmCheck = self.lt_db.owner_check(Guild, Category, ID)
         except:
             pass
-        
+
         try:
             ownerCheck = self.lt_db.char_owner(Guild, Category, ID, Name)
         except:
@@ -369,10 +367,10 @@ class rpg(commands.Cog):
                     f"Sorry! {field.capitalize()} hasn't been implemented yet!"
                 )
             elif field == "color":
-                
+
                 self.lt_db.set_field(Guild, Category, ID, Name, field, value)
                 await ctx.send(f"{Name.title()}'s {field} value has been updated!")
-            elif field in {"owner","category","public"}:
+            elif field in {"owner", "category", "public"}:
                 await ctx.send(
                     f"This value, {field.capitalize()}, is used for behind-the-scenes things, and cannot be modified. Sorry for the inconvenience!"
                 )
@@ -380,7 +378,7 @@ class rpg(commands.Cog):
                 self.lt_db.set_field(Guild, Category, ID, Name, field, value)
                 await ctx.send(f"{Name.title()}'s {field} value has been updated!")
 
-    @char.command(aliases=['unset'])
+    @char.command(aliases=["unset"])
     async def removefield(self, ctx, Name, field):
         """
         Remove a field from a character.
@@ -398,7 +396,7 @@ class rpg(commands.Cog):
         except:
             await ctx.send(f"Sorry, I guess {Name.title()} doesn't exist!")
         if ownerCheck == True or dmCheck == True:
-            if field == "owner" or field == "Category" or field == 'name':
+            if field == "owner" or field == "Category" or field == "name":
                 await ctx.send("Sorry, I can't let you do that.")
             else:
                 self.lt_db.unset_field(Guild, Category, ID, Name, field)
@@ -412,15 +410,14 @@ class rpg(commands.Cog):
         Name = Name.lower()
         Category, Guild, ID = self.ctx_info(ctx)
         results = self.lt_db.get_char(Guild, Category, Name)
-        
-        for output in results:
-            
-            embed = discord.Embed(
-                title= output['name'].title(),
-                description= output["description"],
-                color= int(output["color"], 16),
-            )
 
+        for output in results:
+
+            embed = discord.Embed(
+                title=output["name"].title(),
+                description=output["description"],
+                color=int(output["color"], 16),
+            )
 
             del (
                 output["_id"],
@@ -429,7 +426,7 @@ class rpg(commands.Cog):
                 output["name"],
                 output["description"],
                 output["color"],
-                output["public"]
+                output["public"],
             )
             keys = []
             vals = []
@@ -446,8 +443,6 @@ class rpg(commands.Cog):
                     embed.add_field(name=str(keys[i]), value=str(vals[i]))
 
             await ctx.send(embed=embed)
-
-        
 
 
 def setup(bot):
