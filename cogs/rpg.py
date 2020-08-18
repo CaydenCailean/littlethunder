@@ -360,7 +360,7 @@ class rpg(commands.Cog):
         try:
             ownerCheck = self.lt_db.char_owner(Guild, Category, ID, Name)
         except:
-            await ctx.send(f"Sorry, I guess {Name.title()} doesn't exist!")
+            await ctx.send(f"I don't think {Name.title()} belongs to you!")
         if ownerCheck == True or dmCheck == True:
             if field in {"inventory", "spells", "hp"}:
                 await ctx.send(
