@@ -427,6 +427,7 @@ class rpg(commands.Cog):
                 output["description"],
                 output["color"],
                 output["public"],
+                output['inventory']
             )
             keys = []
             vals = []
