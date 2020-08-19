@@ -440,6 +440,9 @@ class rpg(commands.Cog):
             else:
                 await ctx.send(f"It looks like {Name} doesn't exist!")
 
+    @commands.command()
+    async def webedit(self, ctx):
+        await ctx.send("The LT Web Editor can be found at https://webthunder.herokuapp.com/")
 
 def setup(bot):
     bot.add_cog(rpg(bot))
