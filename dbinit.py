@@ -177,12 +177,12 @@ class lt_db(object):
             check = False
             return check
 
-    def add_char(self, Guild, Category, ID, Name):
+    def add_char(self, Guild, ID, Name):
 
         self.db[str(Guild)].create_index([("name", "text")])
 
         try:
-            char = self.db[str(Guild)].find_one({"Category": Category, "name": Name})[
+            char = self.db[str(Guild)].find_one({"name": Name})[
                 "name"
             ]
             output = f"{char.title()} is already registered."
@@ -191,9 +191,8 @@ class lt_db(object):
             entry = {
                 "name": Name,
                 "description": f"Placeholder, replace with whatever you wish, by using the `.char set {Name.title()} description` command!",
-                "Category": Category,
                 "owner": ID,
-                "color": 000000,
+                "color": int('000000', 16),
                 "public": "False",
                 "inventory": {},
             }
@@ -201,13 +200,10 @@ class lt_db(object):
             output = f"{Name.title()} was added to the database."
             return output
 
-    def remove_char(self, Guild, Category, ID, Name: str):
-        query = {"Category": Category, "name": Name}
+    def remove_char(self, Guild, ID, Name: str):
+        query = {"name": Name}
         try:
-            if (
-                ID == self.db[str(Guild)].find_one(query)["owner"]
-                or self.owner_check(Guild, Category, ID) == True
-            ):
+            if ID == self.db[str(Guild)].find_one(query)["owner"] :
                 self.db[str(Guild)].delete_one(query)
                 output = f"{Name.title()} has been removed."
                 return output
@@ -219,16 +215,16 @@ class lt_db(object):
             output = f"{Name.title()} doesn't seem to exist in this category."
             return output
 
-    def get_char(self, Guild, Category, Name):
+    def get_char(self, Guild, Name):
 
-        query = {"$text": {"$search": Name}, "Category": Category}
+        query = {"$text": {"$search": Name}}
 
         output = self.db[str(Guild)].find(query)
 
         return output
 
-    def char_owner(self, Guild, Category, ID, Name):
-        query = {"Category": Category, "name": Name}
+    def char_owner(self, Guild, ID, Name):
+        query = {"name": Name}
 
         toCheck = self.db[str(Guild)].find_one(query)["owner"]
         if ID == toCheck:
@@ -236,8 +232,8 @@ class lt_db(object):
         else:
             return False
 
-    def set_field(self, Guild, Category, ID, Name, field, value):
-        query = {"Category": Category, "name": Name}
+    def set_field(self, Guild, ID, Name, field, value):
+        query = {"name": Name}
         output = (
             self.db[str(Guild)]
             .find_one_and_update(query, {"$set": {field: value}})["name"]
@@ -245,8 +241,8 @@ class lt_db(object):
         )
         return output
 
-    def unset_field(self, Guild, Category, ID, Name, field):
-        query = {"Category": Category, "name": Name}
+    def unset_field(self, Guild, ID, Name, field):
+        query = {"name": Name}
         self.db[str(Guild)].update(query, {"$unset": {field: 1}})
 
     def addto_inv(self, Guild, Category, ID, Name, Item, Value):

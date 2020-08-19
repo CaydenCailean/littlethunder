@@ -245,8 +245,11 @@ class rpg(commands.Cog):
         initraw = self.lt_db.init_get(Guild, Category)
         turnNum = self.lt_db.turn_get(Guild, Category)
         current = initraw[turnNum - 1]["ID"]
-
-        dmCheck = self.lt_db.owner_check(Guild, Category, ID)
+        dmCheck = ''
+        try:
+            dmCheck = self.lt_db.owner_check(Guild, Category, ID)
+        except:
+            pass
         if int(ID) == int(current) or dmCheck == True:
             self.lt_db.turn_next(Guild, Category)
 
@@ -319,7 +322,7 @@ class rpg(commands.Cog):
 
         Name = Name.lower()
 
-        output = self.lt_db.add_char(Guild, Category, ID, Name)
+        output = self.lt_db.add_char(Guild, ID, Name)
         await ctx.send(output)
 
     @char.command()
@@ -330,19 +333,17 @@ class rpg(commands.Cog):
         Category, Guild, ID = self.ctx_info(ctx)
 
         Name = Name.lower()
+        
+        ownerCheck = ''
         try:
-            dmCheck = self.lt_db.owner_check(Guild, Category, ID)
+            ownerCheck = self.lt_db.char_owner(Guild, ID, Name)
         except:
             pass
-        try:
-            ownerCheck = self.lt_db.char_owner(Guild, Category, ID, Name)
-        except:
-            await ctx.send(f"Sorry, I guess {Name.title()} doesn't exist!")
-        if dmCheck == True or ownerCheck == True:
-            output = self.lt_db.remove_char(Guild, Category, ID, Name)
+        if ownerCheck == True:
+            output = self.lt_db.remove_char(Guild, ID, Name)
             await ctx.send(output)
         else:
-            await ctx.send(f"{Name.title()} doesn't belong to you.")
+            await ctx.send(f"{Name.title()} doesn't belong to you, or doesn't exist.")
 
     @char.command(aliases=["set"])
     async def addfield(self, ctx, Name, field: str, *, value):
@@ -352,30 +353,26 @@ class rpg(commands.Cog):
         Name = Name.lower()
         Category, Guild, ID = self.ctx_info(ctx)
         field = field.lower()
+        ownerCheck = ''
         try:
-            dmCheck = self.lt_db.owner_check(Guild, Category, ID)
-        except:
-            pass
-
-        try:
-            ownerCheck = self.lt_db.char_owner(Guild, Category, ID, Name)
+            ownerCheck = self.lt_db.char_owner(Guild, ID, Name)
         except:
             await ctx.send(f"I don't think {Name.title()} belongs to you!")
-        if ownerCheck == True or dmCheck == True:
+        if ownerCheck == True:
             if field in {"inventory", "spells", "hp"}:
                 await ctx.send(
                     f"Sorry! {field.capitalize()} hasn't been implemented yet!"
                 )
             elif field == "color":
 
-                self.lt_db.set_field(Guild, Category, ID, Name, field, value)
+                self.lt_db.set_field(Guild, ID, Name, field, value)
                 await ctx.send(f"{Name.title()}'s {field} value has been updated!")
             elif field in {"owner", "category", "public"}:
                 await ctx.send(
                     f"This value, {field.capitalize()}, is used for behind-the-scenes things, and cannot be modified. Sorry for the inconvenience!"
                 )
             else:
-                self.lt_db.set_field(Guild, Category, ID, Name, field, value)
+                self.lt_db.set_field(Guild, ID, Name, field, value)
                 await ctx.send(f"{Name.title()}'s {field} value has been updated!")
 
     @char.command(aliases=["unset"])
@@ -386,20 +383,17 @@ class rpg(commands.Cog):
         Name = Name.lower()
         Category, Guild, ID = self.ctx_info(ctx)
         field = field.lower()
+        ownerCheck=''
+        
         try:
-            dmCheck = self.lt_db.owner_check(Guild, Category, ID)
+            ownerCheck = self.lt_db.char_owner(Guild, ID, Name)
         except:
             pass
-
-        try:
-            ownerCheck = self.lt_db.char_owner(Guild, Category, ID, Name)
-        except:
-            await ctx.send(f"Sorry, I guess {Name.title()} doesn't exist!")
-        if ownerCheck == True or dmCheck == True:
-            if field == "owner" or field == "Category" or field == "name":
+        if ownerCheck == True:
+            if field == "owner"  or field == "name":
                 await ctx.send("Sorry, I can't let you do that.")
             else:
-                self.lt_db.unset_field(Guild, Category, ID, Name, field)
+                self.lt_db.unset_field(Guild, ID, Name, field)
                 await ctx.send(f"{field} has been removed from {Name.title()}!")
 
     @char.command()
@@ -409,20 +403,19 @@ class rpg(commands.Cog):
         """
         Name = Name.lower()
         Category, Guild, ID = self.ctx_info(ctx)
-        results = self.lt_db.get_char(Guild, Category, Name)
+        results = self.lt_db.get_char(Guild, Name)
 
         for output in results:
 
             embed = discord.Embed(
                 title=output["name"].title(),
                 description=output["description"],
-                color=int(output["color"], 16),
+                color=int(str(output["color"]), 16),
             )
 
             del (
                 output["_id"],
                 output["owner"],
-                output["Category"],
                 output["name"],
                 output["description"],
                 output["color"],
@@ -442,8 +435,10 @@ class rpg(commands.Cog):
                     embed.set_thumbnail(url=vals[i])
                 else:
                     embed.add_field(name=str(keys[i]), value=str(vals[i]))
-
-            await ctx.send(embed=embed)
+            if embed:
+                await ctx.send(embed=embed)
+            else:
+                await ctx.send(f"It looks like {Name} doesn't exist!")
 
 
 def setup(bot):
