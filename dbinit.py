@@ -197,7 +197,7 @@ class lt_db(object):
                 "inventory": {},
             }
             self.db[str(Guild)].insert_one(entry).inserted_id
-            output = f"{Name.title()} was added to the database."
+            output = f"{Name.title()} was added to the database. You can edit them using commands via Discord, or using the Web Editor, found at https://webthunder.herokuapp.com/"
             return output
 
     def remove_char(self, Guild, ID, Name: str):
