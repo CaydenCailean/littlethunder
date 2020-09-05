@@ -17,9 +17,9 @@ class utility(commands.Cog):
 
     Examples:
 
-    ..purge 20 - Removes last 20 messages regardless of user.
-    ..purge 20 @CaydenCailean - Remove any messages in the last 20 that were written by @CaydenCailean
-    ..purge 20 everyone foo - Remove any messages in the last 20 which contain the keyword "foo".
+    .purge 20 - Removes last 20 messages regardless of user.
+    .purge 20 @CaydenCailean - Remove any messages in the last 20 that were written by @CaydenCailean
+    .purge 20 everyone foo - Remove any messages in the last 20 which contain the keyword "foo".
         """
         await ctx.channel.purge(limit=1)
         member_object_list = []

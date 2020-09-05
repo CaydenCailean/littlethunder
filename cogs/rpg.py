@@ -236,7 +236,7 @@ class rpg(commands.Cog):
         
 
     @init.command()
-    async def endcombat(self, ctx):
+    async def end(self, ctx): 
         """
         Clears the initiative table altogether. This cannot be undone.
         """
@@ -252,7 +252,7 @@ class rpg(commands.Cog):
                 "It doesn't look like you're the DM here, so you probably don't need to worry about this one."
             )
 
-    @init.command(aliases=["pass", "start"])
+    @init.command(aliases=["pass"])
     async def next(self, ctx):
         """
         Moves the initiative count to the next combatant.
@@ -324,7 +324,7 @@ class rpg(commands.Cog):
         """
 
     @char.command()
-    async def add(self, ctx, Name):
+    async def add(self, ctx, *, Name):
         """
         Register a user's character to the current Category.
         """
@@ -341,7 +341,7 @@ class rpg(commands.Cog):
         await ctx.send(output)
 
     @char.command()
-    async def remove(self, ctx, Name):
+    async def remove(self, ctx, *, Name):
         """
         Remove a user's character from the current category.
         """
@@ -455,7 +455,7 @@ class rpg(commands.Cog):
             else:
                 await ctx.send(f"It looks like {Name} doesn't exist!")
 
-    @commands.command()
+    @char.command()
     async def webedit(self, ctx):
         await ctx.send("The LT Web Editor can be found at https://webthunder.herokuapp.com/")
 
