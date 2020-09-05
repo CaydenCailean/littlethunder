@@ -230,8 +230,11 @@ class rpg(commands.Cog):
         if dmCheck == True:
             self.lt_db.init_remove(Guild, Category, name)
             await ctx.send(f"{name} has been removed from the initiative count.")
+            await self.init(ctx)
         else:
             await ctx.send("Try asking your DM to remove this entry!")
+
+        
 
     @init.command()
     async def endcombat(self, ctx):
