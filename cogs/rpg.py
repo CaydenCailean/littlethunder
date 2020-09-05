@@ -75,7 +75,7 @@ class rpg(commands.Cog):
                 bonusDice = re.findall(r"\+\d*d\d+", input)
                 for i in bonusDice:
                     idiceNum, idiceVal = i.split("d")
-                    print(idiceNum + ", " + idiceVal)
+                   
                     if idiceNum == "+":
                         idiceNum = "1"
                     if int(idiceNum) > 100 or int(idiceVal) > 100:
@@ -94,7 +94,7 @@ class rpg(commands.Cog):
                 for i in malusDice:
                     output = dice.roll(i)
                     idiceNum, idiceVal = i.split("d")
-                    print(idiceNum + ", " + idiceVal)
+                   
                     if idiceNum == "-":
                         idiceNum = "1"
                     if int(idiceNum) > 100 or int(idiceVal) > 100:
@@ -183,8 +183,7 @@ class rpg(commands.Cog):
                 await ctx.send(
                     "Before requesting an initiative table, make sure initiative has been added."
                 )
-            print(mentionMe)
-            print(char)
+           
             return mentionMe, char
             
             
@@ -323,8 +322,6 @@ class rpg(commands.Cog):
 
         All characters are saved on a per-guild, per-category basis.
         """
-
-    # print('todo')
 
     @char.command()
     async def add(self, ctx, Name):
