@@ -186,9 +186,9 @@ class rpg(commands.Cog):
             
             return mentionMe, char
             
-
-    @init.command(pass_context=True)
-    async def display(self, ctx, test):
+    
+    @init.command(pass_context=True, aliases=['display'])
+    async def show(self, ctx, test):
         await ctx.send(ctx)
         await ctx.send(test)
         mentionMe, char = self.init(ctx)
