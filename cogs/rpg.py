@@ -183,8 +183,10 @@ class rpg(commands.Cog):
                 await ctx.send(
                     "Before requesting an initiative table, make sure initiative has been added."
                 )
-            
+            print(mentionMe)
+            print(char)
             return mentionMe, char
+            
             
     
     @init.command(pass_context=True, aliases=['display'])
@@ -263,7 +265,7 @@ class rpg(commands.Cog):
 
         else:
             await ctx.send("I don't think it's your turn yet!")
-        await self.init(ctx)
+        await self.show(ctx)
 
     @init.command()
     async def delay(self, ctx, newInit):
