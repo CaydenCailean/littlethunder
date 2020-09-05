@@ -163,6 +163,7 @@ class rpg(commands.Cog):
                 initraw.append(moveEntry)
             try:
                 mentionMe = initraw[0].get("ID")
+                char = initraw[0]/get("name")
             except:
                 pass
 
@@ -182,8 +183,15 @@ class rpg(commands.Cog):
                 await ctx.send(
                     "Before requesting an initiative table, make sure initiative has been added."
                 )
-            if mentionMe != None:
-                await ctx.send(f"Hey, <@{mentionMe}>, you're up.")
+            
+            return mentionMe, char
+            
+
+    @init.command()
+    async def display(self, ctx):
+        mentionMe, char = self.init(ctx)
+        await ctx.send(f"Hey, <@{mentionMe}>, {char} is up.")
+
 
     @init.command(aliases=["add"])
     async def new(self, ctx, name, dieRoll):
