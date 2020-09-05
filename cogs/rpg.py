@@ -191,7 +191,7 @@ class rpg(commands.Cog):
     
     @init.command(pass_context=True, aliases=['display'])
     async def show(self, ctx):
-        mentionMe, char = self.init(ctx)
+        mentionMe, char = await self.init(ctx)
         await ctx.send(f"Hey, <@{mentionMe}>, {char} is up.")
 
 
