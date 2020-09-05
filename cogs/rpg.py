@@ -163,7 +163,7 @@ class rpg(commands.Cog):
                 initraw.append(moveEntry)
             try:
                 mentionMe = initraw[0].get("ID")
-                char = initraw[0].get("name")
+                char = initraw[0].get("Name")
             except:
                 pass
 
