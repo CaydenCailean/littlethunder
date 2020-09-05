@@ -222,6 +222,13 @@ class rpg(commands.Cog):
         """
         Category, Guild, ID = self.ctx_info(ctx)
         dmCheck = self.lt_db.owner_check(Guild, Category, ID)
+        initraw = self.lt_db.init_get(Guild, Category)
+        turnNum = int(self.lt_db.turn_get(Guild, Category))
+
+        if turnNum != len(initraw):
+            print('nope')
+        else:
+            print('shit')
         if dmCheck == True:
             self.lt_db.init_remove(Guild, Category, name)
             await ctx.send(f"{name} has been removed from the initiative count.")
