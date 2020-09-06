@@ -301,7 +301,7 @@ class rpg(commands.Cog):
     @dm.command(aliases=["add"])
     async def register(self, ctx):
         """
-        Register the user as a dungeon master within current channel category.
+        Regi    ster the user as a dungeon master within current channel category.
         """
         Category, Guild, ID = self.ctx_info(ctx)
         output = self.lt_db.add_owner(Guild, Category, ID)
@@ -382,7 +382,7 @@ class rpg(commands.Cog):
 
                 self.lt_db.set_field(Guild, ID, Name, field, value)
                 await ctx.send(f"{Name.title()}'s {field} value has been updated!")
-            elif field in {"owner", "category", "public"}:
+            elif field in {"owner", "category", "public","name"}:
                 await ctx.send(
                     f"This value, {field.capitalize()}, is used for behind-the-scenes things, and cannot be modified. Sorry for the inconvenience!"
                 )
