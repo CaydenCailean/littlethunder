@@ -13,7 +13,7 @@ from cogs.mw import mw
 
 # bot command prefix
 
-bot = commands.Bot(command_prefix=".")
+bot = commands.Bot(command_prefix=".", case_insensirive=True)
 
 # startup confirmation
 
