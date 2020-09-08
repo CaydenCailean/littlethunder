@@ -147,7 +147,7 @@ class rpg(commands.Cog):
                 )
             return Total
 
-    @commands.group()
+    @commands.group(case_insensitive=True)
     async def init(self, ctx):
         """
         The init command keeps track of initiative within a channel category. In order to use this with multiple games simultaneously, you will need to separate the games into different text channel categories.
