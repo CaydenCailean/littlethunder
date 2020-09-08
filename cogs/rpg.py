@@ -202,6 +202,7 @@ class rpg(commands.Cog):
         Syntax:
         .init add [name] [dice]
         """
+        dieRoll = dieRoll.lower()
         Category, Guild, ID = self.ctx_info(ctx)
         if dieRoll.find("d") == True:
             outcome = await rpg.d(self, ctx, dieRoll)
