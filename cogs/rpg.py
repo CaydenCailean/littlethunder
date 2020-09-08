@@ -293,7 +293,7 @@ class rpg(commands.Cog):
             await ctx.send("I don't think it's your turn yet!")
         await self.init(ctx)
 
-    @commands.group()
+    @commands.group(case_insensitive=True)
     async def dm(self, ctx):
         """
         Select a subcommand to use with this command.
@@ -316,7 +316,7 @@ class rpg(commands.Cog):
         output = self.lt_db.remove_owner(Guild, Category, ID, override)
         await ctx.send(output)
 
-    @commands.group()
+    @commands.group(case_insensitive=True)
     async def char(self, ctx):
         """
         Command Group for character management. Still under construction.
