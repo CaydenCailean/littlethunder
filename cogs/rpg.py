@@ -28,7 +28,7 @@ class rpg(commands.Cog):
         
         You may add or subtract flat modifiers or dice by appending them to your initial #d# roll.
         """
-
+        input = input.lower()
         try:
             isPlus = input.find("+")
             isMinus = input.find("-")
