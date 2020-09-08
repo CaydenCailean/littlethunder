@@ -182,9 +182,7 @@ class lt_db(object):
         self.db[str(Guild)].create_index([("name", "text")])
 
         try:
-            char = self.db[str(Guild)].find_one({"name": Name})[
-                "name"
-            ]
+            char = self.db[str(Guild)].find_one({"name": Name})["name"]
             output = f"{char.title()} is already registered."
             return output
         except:
@@ -192,7 +190,7 @@ class lt_db(object):
                 "name": Name,
                 "description": f"Placeholder, replace with whatever you wish, by using the `.char set {Name.title()} description` command!",
                 "owner": ID,
-                "color": int('000000', 16),
+                "color": int("000000", 16),
                 "public": "False",
                 "inventory": {},
             }
@@ -203,7 +201,7 @@ class lt_db(object):
     def remove_char(self, Guild, ID, Name: str):
         query = {"name": Name}
         try:
-            if ID == self.db[str(Guild)].find_one(query)["owner"] :
+            if ID == self.db[str(Guild)].find_one(query)["owner"]:
                 self.db[str(Guild)].delete_one(query)
                 output = f"{Name.title()} has been removed."
                 return output

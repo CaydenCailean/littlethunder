@@ -75,7 +75,7 @@ class rpg(commands.Cog):
                 bonusDice = re.findall(r"\+\d*d\d+", input)
                 for i in bonusDice:
                     idiceNum, idiceVal = i.split("d")
-                   
+
                     if idiceNum == "+":
                         idiceNum = "1"
                     if int(idiceNum) > 100 or int(idiceVal) > 100:
@@ -94,7 +94,7 @@ class rpg(commands.Cog):
                 for i in malusDice:
                     output = dice.roll(i)
                     idiceNum, idiceVal = i.split("d")
-                   
+
                     if idiceNum == "-":
                         idiceNum = "1"
                     if int(idiceNum) > 100 or int(idiceVal) > 100:
@@ -183,16 +183,13 @@ class rpg(commands.Cog):
                 await ctx.send(
                     "Before requesting an initiative table, make sure initiative has been added."
                 )
-           
+
             return mentionMe, char
-            
-            
-    
-    @init.command(pass_context=True, aliases=['display'])
+
+    @init.command(pass_context=True, aliases=["display"])
     async def show(self, ctx):
         mentionMe, char = await self.init(ctx)
         await ctx.send(f"Hey, <@{mentionMe}>, {char} is up.")
-
 
     @init.command(aliases=["add"])
     async def new(self, ctx, name, dieRoll):
@@ -234,10 +231,8 @@ class rpg(commands.Cog):
         else:
             await ctx.send("Try asking your DM to remove this entry!")
 
-        
-
     @init.command()
-    async def end(self, ctx): 
+    async def end(self, ctx):
         """
         Clears the initiative table altogether. This cannot be undone.
         """
@@ -263,7 +258,7 @@ class rpg(commands.Cog):
         initraw = self.lt_db.init_get(Guild, Category)
         turnNum = self.lt_db.turn_get(Guild, Category)
         current = initraw[turnNum - 1]["ID"]
-        dmCheck = ''
+        dmCheck = ""
         try:
             dmCheck = self.lt_db.owner_check(Guild, Category, ID)
         except:
@@ -308,11 +303,11 @@ class rpg(commands.Cog):
         output = self.lt_db.add_owner(Guild, Category, ID)
         await ctx.send(output)
 
-    @dm.command(aliases=['remove'])
+    @dm.command(aliases=["remove"])
     async def unregister(self, ctx):
         """unregister current dm for category"""
         Category, Guild, ID = self.ctx_info(ctx)
-        override=ctx.message.author.permissions_in(ctx.channel).administrator
+        override = ctx.message.author.permissions_in(ctx.channel).administrator
         output = self.lt_db.remove_owner(Guild, Category, ID, override)
         await ctx.send(output)
 
@@ -349,8 +344,8 @@ class rpg(commands.Cog):
         Category, Guild, ID = self.ctx_info(ctx)
 
         Name = Name.lower()
-        
-        ownerCheck = ''
+
+        ownerCheck = ""
         try:
             ownerCheck = self.lt_db.char_owner(Guild, ID, Name)
         except:
@@ -369,7 +364,7 @@ class rpg(commands.Cog):
         Name = Name.lower()
         Category, Guild, ID = self.ctx_info(ctx)
         field = field.lower()
-        ownerCheck = ''
+        ownerCheck = ""
         try:
             ownerCheck = self.lt_db.char_owner(Guild, ID, Name)
         except:
@@ -383,7 +378,7 @@ class rpg(commands.Cog):
 
                 self.lt_db.set_field(Guild, ID, Name, field, value)
                 await ctx.send(f"{Name.title()}'s {field} value has been updated!")
-            elif field in {"owner", "category", "public","name"}:
+            elif field in {"owner", "category", "public", "name"}:
                 await ctx.send(
                     f"This value, {field.capitalize()}, is used for behind-the-scenes things, and cannot be modified. Sorry for the inconvenience!"
                 )
@@ -399,14 +394,14 @@ class rpg(commands.Cog):
         Name = Name.lower()
         Category, Guild, ID = self.ctx_info(ctx)
         field = field.lower()
-        ownerCheck=''
-        
+        ownerCheck = ""
+
         try:
             ownerCheck = self.lt_db.char_owner(Guild, ID, Name)
         except:
             pass
         if ownerCheck == True:
-            if field == "owner"  or field == "name":
+            if field == "owner" or field == "name":
                 await ctx.send("Sorry, I can't let you do that.")
             else:
                 self.lt_db.unset_field(Guild, ID, Name, field)
@@ -436,7 +431,7 @@ class rpg(commands.Cog):
                 output["description"],
                 output["color"],
                 output["public"],
-                output['inventory']
+                output["inventory"],
             )
             keys = []
             vals = []
@@ -458,7 +453,10 @@ class rpg(commands.Cog):
 
     @char.command()
     async def webedit(self, ctx):
-        await ctx.send("The LT Web Editor can be found at https://webthunder.herokuapp.com/")
+        await ctx.send(
+            "The LT Web Editor can be found at https://webthunder.herokuapp.com/"
+        )
+
 
 def setup(bot):
     bot.add_cog(rpg(bot))
