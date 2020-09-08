@@ -27,6 +27,8 @@ class rpg(commands.Cog):
         Rolls dice using #d# format, with a maximum of 100d100.
         
         You may add or subtract flat modifiers or dice by appending them to your initial #d# roll.
+
+        Comments may be added to a dice output by appending the command with #, followed by the content of the comment you wish to be shown.
         """
         input = input.lower()
         try:
@@ -408,7 +410,7 @@ class rpg(commands.Cog):
                 await ctx.send(f"{field} has been removed from {Name.title()}!")
 
     @char.command()
-    async def display(self, ctx, *, Name):
+    async def display(self, ctx, *,  Name):
         """
         Display information regarding a stored character, including all stored fields.
         """

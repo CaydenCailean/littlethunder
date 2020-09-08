@@ -55,8 +55,8 @@ class lt_db(object):
     def init_clear(self, Guild, Category):
 
         self.db[str(Guild)][str(Category)].drop()
-        self.db[str(Guild)].find_one_and_update(
-            {"Category": Category,}, {"$unset": {"turn": 1}}
+        self.db[str(Guild)].update_one(
+            {"Category": Category, "Guild":Guild}, {"$unset": {"turn": 1}}
         )
 
     def init_remove(self, Guild, Category, Name):
