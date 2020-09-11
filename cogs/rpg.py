@@ -35,8 +35,9 @@ class rpg(commands.Cog):
         if ctx.invoked_subcommand is None:
             input = input.lower()
             if input.find('!') != -1:
-                Category, Guild, ID = self.ctx_info(ctx)
-                del Category    
+                Guild = ctx.message.guild.id
+                ID = ctx.message.author.id
+
                 try:
                     input, sep, extra = re.split(r'([+|-])',input, maxsplit=1)
                     label=input
