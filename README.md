@@ -58,11 +58,11 @@ The final command group which Little Thunder has is the Character Profile comman
 
 In addition to text or number values, there are a few fields you can set a little more specifically.
 
-`.char set <name> color` is used to set the color of your embed's sidebar, and accepts a 6 digit hexadecimal number which refers to a color.
+`.char set <name> color <int>` is used to set the color of your embed's sidebar, and accepts a 6 digit hexadecimal number which refers to a color.
 
-`.char set <name> image` is used to show character art, or something similar, below any text/number entries on the embed, and accepts a URL to an image.
+`.char set <name> image <img url>` is used to show character art, or something similar, below any text/number entries on the embed, and accepts a URL to an image.
 
-`.char set <name> token` is used to show a token-sized thumbnail in the upper right-hand corner of your character's embed, and also accepts a URL.
+`.char set <name> token <img url>` is used to show a token-sized thumbnail in the upper right-hand corner of your character's embed, and also accepts a URL.
 
 `.char [removefield|unset]` does the opposite, removing a field from an existing character.
 
@@ -77,9 +77,10 @@ In addition to these Tabletop RPG functions, there are a handful of additional t
 
 The `.[purge|clear|p]` command, for instance, can purge posts made, filtering by user or by keyword. This requires `manage_messages` permission level on the activating user, and is used as follows.
 
-`.purge 20` removes the last 20 messages, regardless of content or sender.
-`.purge 20 @CaydenCailean#0000` removes any messages within the last 20 which were sent by the user CaydenCailean#0000.
-`.purge 20 everyone foo` removes any messages within the last 20 which contain the keyword `foo`
+`.purge 20` removes the last 20 messages, regardless of content or sender.  
+`.purge 20 @CaydenCailean#6438` removes any messages within the last 20 which were sent by the user CaydenCailean#6438.  
+`.purge 20 everyone foo` removes any messages within the last 20 which contain the keyword `foo`.  
+These commands can be combined to purge only messages from a specific user that mention a keyword.
 
 There are 3 more bot-centric commands, as well.
 

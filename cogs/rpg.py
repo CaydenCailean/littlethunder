@@ -27,6 +27,8 @@ class rpg(commands.Cog):
         Rolls dice using #d# format, with a maximum of 100d100.
         
         You may add or subtract flat modifiers or dice by appending them to your initial #d# roll.
+        
+        You may also add comments to the dice output by appending the command with {#} followed by your comment
 
         Comments may be added to a dice output by appending the command with #, followed by the content of the comment you wish to be shown.
         """
@@ -188,7 +190,9 @@ class rpg(commands.Cog):
     @commands.group(case_insensitive=True)
     async def init(self, ctx):
         """
-        The init command keeps track of initiative within a channel category. In order to use this with multiple games simultaneously, you will need to separate the games into different text channel categories.
+        The init command keeps track of initiative within a channel category. 
+
+        Without a subcommand, this command will show the current initiative block.
         """
         if ctx.invoked_subcommand is None:
             Category, Guild, ID = self.ctx_info(ctx)
@@ -226,6 +230,9 @@ class rpg(commands.Cog):
 
     @init.command(pass_context=True, aliases=["display"])
     async def show(self, ctx):
+        """
+        Show current initiative block, and ping the owner of whichever combatant is currently up.
+        """
         mentionMe, char = await self.init(ctx)
         await ctx.send(f"Hey, <@{mentionMe}>, {char} is up.")
 
@@ -343,7 +350,7 @@ class rpg(commands.Cog):
 
     @dm.command(aliases=["remove"])
     async def unregister(self, ctx):
-        """unregister current dm for category"""
+        """Unregister current dm for category"""
         Category, Guild, ID = self.ctx_info(ctx)
         override = ctx.message.author.permissions_in(ctx.channel).administrator
         output = self.lt_db.remove_owner(Guild, Category, ID, override)
@@ -491,10 +498,10 @@ class rpg(commands.Cog):
 
     @char.command()
     async def webedit(self, ctx):
-        await ctx.send(
-            "The LT Web Editor can be found at https://webthunder.herokuapp.com/"
-        )
-
+        """
+        Sends a link to the Little Thunder Web Editor.
+        """
+        await ctx.send("The LT Web Editor can be found at https://webthunder.herokuapp.com/")
 
 def setup(bot):
     bot.add_cog(rpg(bot))
