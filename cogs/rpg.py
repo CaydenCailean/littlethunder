@@ -174,14 +174,14 @@ class rpg(commands.Cog):
     async def save(self, ctx, Alias, Value):
         Alias = Alias.lower()
         Guild = ctx.message.guild.id
-        ID = ctx.message.author.id
+        User = ctx.message.author.id
         self.lt_db.dice_add(User, Guild, Alias, Value)
         await ctx.send(f"{ctx.message.author.display_name} has added the variable {Alias} with the dice expression of {Value}.")
 
     @d.command(pass_context=True)
     async def delete(self, ctx, Alias):
         Guild = ctx.message.guild.id
-        ID = ctx.message.author.id
+        User = ctx.message.author.id
         self.lt_db.dice_delete(User, Guild, Alias)
         await ctx.send(f"If it existed, {Alias} has been removed!")
 
