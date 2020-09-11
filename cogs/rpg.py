@@ -20,8 +20,8 @@ class rpg(commands.Cog):
         ID = ctx.message.author.id
         return Category, Guild, ID
 
-    @commands.command(aliases=["dice", "r", "roll"])
-    async def d(self, ctx, input: str):
+    @commands.group(case_insensitive=True, invoke_without_command=True)
+    async def d(self, ctx, input: str, ):
 
         """
         Rolls dice using #d# format, with a maximum of 100d100.
@@ -30,124 +30,160 @@ class rpg(commands.Cog):
 
         Comments may be added to a dice output by appending the command with #, followed by the content of the comment you wish to be shown.
         """
-        input = input.lower()
-        try:
-            isPlus = input.find("+")
-            isMinus = input.find("-")
-
-            outList = "placeHolder"
-            outResults = []
-            Total = 0
-
-            if isPlus == -1 and isMinus == -1:
+        if ctx.invoked_subcommand is None:
+            input = input.lower()
+            if input.find('!') != -1:
+                
                 try:
-                    diceNum, diceVal = input.split("d")
-                except ValueError as e:
-                    raise Exception("Make sure your expression is in #d# format.")
+                    input, sep, extra = re.split(r'([+|-])',input, maxsplit=1)
+                    label=input
+                    Category, Guild, ID = self.ctx_info(ctx)
+                    del Category
+                    input = self.lt_db.dice_get(ID, Guild, input.replace('!',''))
+                    inputDice = input
+                    input = input + sep + str(extra)
+                    commentText= f'Rolling {label} : {inputDice} + {str(extra)}'    
 
-                if diceNum == "":
-                    diceNum = "1"
-                if int(diceNum) > 100 or int(diceVal) > 100:
-                    raise Exception(
-                        "That's too many numbers. The limit to this value is 100d100."
-                    )
+                except:
+                    Category, Guild, ID = self.ctx_info(ctx)
+                    label = input.replace('!','')
+                    input = self.lt_db.dice_get(ID, Guild, input.replace('!',''))
+                    commentText= f'Rolling {label} : {input}'    
+                   
+            try:
+                isPlus = input.find("+")
+                isMinus = input.find("-")
+
+                outList = "placeHolder"
+                outResults = []
+                Total = 0
+
+                if isPlus == -1 and isMinus == -1:
+                    try:
+                        diceNum, diceVal = input.split("d")
+                    except ValueError as e:
+                        raise Exception("Make sure your expression is in #d# format.")
+
+                    if diceNum == "":
+                        diceNum = "1"
+                    if int(diceNum) > 100 or int(diceVal) > 100:
+                        raise Exception(
+                            "That's too many numbers. The limit to this value is 100d100."
+                        )
+                    else:
+                        outList = dice.roll(input)
+                        for i in outList:
+                            Total += i
+                            outResults.append(i)
+
+                if isPlus != -1 or isMinus != -1:
+                    expr = re.split("[+-]", input)[0]
+
+                    diceNum, diceVal = expr.split("d")
+                    if diceNum == "":
+                        diceNum = "1"
+
+                    outResults = dice.roll(expr)
+
+                    posmod = 0
+                    negmod = 0
+
+                    bonus = re.findall(r"(\+\d+)(?:(?!d))", input)
+
+                    for i in bonus:
+                        posmod += int(i)
+
+                    bonusDice = re.findall(r"\+\d*d\d+", input)
+                    for i in bonusDice:
+                        idiceNum, idiceVal = i.split("d")
+
+                        if idiceNum == "+":
+                            idiceNum = "1"
+                        if int(idiceNum) > 100 or int(idiceVal) > 100:
+                            raise Exception(
+                                "That's too many numbers. The limit to this value is 100d100."
+                            )
+                        else:
+                            outResults.extend(dice.roll(i))
+
+                    malus = re.findall(r"(\-\d+)(?:(?!d))", input)
+
+                    for i in malus:
+                        negmod += int(i)
+
+                    malusDice = re.findall(r"\-\d*d\d+", input)
+                    for i in malusDice:
+                        output = dice.roll(i)
+                        idiceNum, idiceVal = i.split("d")
+
+                        if idiceNum == "-":
+                            idiceNum = "1"
+                        if int(idiceNum) > 100 or int(idiceVal) > 100:
+                            raise Exception(
+                                "That's too many numbers. The limit to this value is 100d100."
+                            )
+                        else:
+                            for i in output:
+                                outResults.append(str(i))
+
+                    for i in outResults:
+                        Total += int(i)
+                    Total += posmod
+                    Total += negmod
+
+                    if int(diceNum) > 100 or int(diceVal) > 100:
+                        raise Exception(
+                            "That's too many numbers. The limit to this value is 100d100."
+                        )
+
+                if ctx.message.content.find("#") != -1:
+                    commentText = re.search(r"#(.+)", ctx.message.content)
+                    commentText = commentText.group(0).replace("#", "")
+                elif commentText != None:
+                    pass
                 else:
-                    outList = dice.roll(input)
-                    for i in outList:
-                        Total += i
-                        outResults.append(i)
+                    commentText = "Rolling some dice"
 
-            if isPlus != -1 or isMinus != -1:
-                expr = re.split("[+-]", input)[0]
-
-                diceNum, diceVal = expr.split("d")
-                if diceNum == "":
-                    diceNum = "1"
-
-                outResults = dice.roll(expr)
-
-                posmod = 0
-                negmod = 0
-
-                bonus = re.findall(r"(\+\d+)(?:(?!d))", input)
-
-                for i in bonus:
-                    posmod += int(i)
-
-                bonusDice = re.findall(r"\+\d*d\d+", input)
-                for i in bonusDice:
-                    idiceNum, idiceVal = i.split("d")
-
-                    if idiceNum == "+":
-                        idiceNum = "1"
-                    if int(idiceNum) > 100 or int(idiceVal) > 100:
-                        raise Exception(
-                            "That's too many numbers. The limit to this value is 100d100."
-                        )
+                if hasattr(ctx.message.author, "nick") == True:
+                    if ctx.message.author.nick != None:
+                        discName = ctx.message.author.nick
                     else:
-                        outResults.extend(dice.roll(i))
-
-                malus = re.findall(r"(\-\d+)(?:(?!d))", input)
-
-                for i in malus:
-                    negmod += int(i)
-
-                malusDice = re.findall(r"\-\d*d\d+", input)
-                for i in malusDice:
-                    output = dice.roll(i)
-                    idiceNum, idiceVal = i.split("d")
-
-                    if idiceNum == "-":
-                        idiceNum = "1"
-                    if int(idiceNum) > 100 or int(idiceVal) > 100:
-                        raise Exception(
-                            "That's too many numbers. The limit to this value is 100d100."
-                        )
-                    else:
-                        for i in output:
-                            outResults.append(str(i))
-
-                for i in outResults:
-                    Total += int(i)
-                Total += posmod
-                Total += negmod
-
-                if int(diceNum) > 100 or int(diceVal) > 100:
-                    raise Exception(
-                        "That's too many numbers. The limit to this value is 100d100."
-                    )
-
-            if ctx.message.content.find("#") != -1:
-                commentText = re.search(r"#(.+)", ctx.message.content)
-                commentText = commentText.group(0).replace("#", "")
-            else:
-                commentText = "Rolling some dice"
-
-            if hasattr(ctx.message.author, "nick") == True:
-                if ctx.message.author.nick != None:
-                    discName = ctx.message.author.nick
+                        discName = ctx.message.author.name
                 else:
                     discName = ctx.message.author.name
-            else:
-                discName = ctx.message.author.name
 
-            embed = discord.Embed(
-                title=f"Results for {discName}",
-                description=commentText,
-                color=ctx.message.author.color,
-            )
-            embed.add_field(name="Results", value=outResults)
-            embed.add_field(name="Total", value=Total)
-            await ctx.send(embed=embed)
-            return int(Total)
-        except Exception as e:
-            if str(e).find("not enough values") != -1:
-                await ctx.send("Not enough values.")
-            elif str(e).find("400 bad request"):
-                await ctx.send(
-                    "Either your dice phrase was not formatted correctly or you are rolling too many dice. Please try again."
+                embed = discord.Embed(
+                    title=f"Results for {discName}",
+                    description=commentText,
+                    color=ctx.message.author.color,
                 )
-            return Total
+                embed.add_field(name="Results", value=outResults)
+                embed.add_field(name="Total", value=Total)
+                await ctx.send(embed=embed)
+                return int(Total)
+            except Exception as e:
+                if str(e).find("not enough values") != -1:
+                    await ctx.send("Not enough values.")
+                elif str(e).find("400 bad request"):
+                    await ctx.send(
+                        "Either your dice phrase was not formatted correctly or you are rolling too many dice. Please try again."
+                    )
+                return Total
+
+    @d.command(pass_context=True)
+    async def save(self, ctx, Alias, Value):
+        print("Test fuck")
+        Category, Guild, User = self.ctx_info(ctx)
+        del Category
+        self.lt_db.dice_add(User, Guild, Alias, Value)
+        await ctx.send(f"{User} has added the variable {Alias} with the dice expression of {Value}.")
+
+    @d.command(pass_context=True)
+    async def delete(self, ctx, Alias):
+        Category, Guild, User = self.ctx_info(ctx)
+        del Category
+        self.lt_db.dice_delete(User, Guild, Alias)
+        await ctx.send(f"If it existed, {Alias} has been removed!")
 
     @commands.group(case_insensitive=True)
     async def init(self, ctx):

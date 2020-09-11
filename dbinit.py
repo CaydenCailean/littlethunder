@@ -40,6 +40,22 @@ class lt_db(object):
         self.db = self.client.brertdtw29riga7
         return True
 
+    def dice_add(self, User, Guild, Alias, Value):
+        self.db.dice[str(Guild)]
+        entry= {"user":User, "Alias":Alias, "Value":Value}
+        self.db.dice[str(Guild)].insert_one(entry).inserted_id
+        
+    def dice_get(self, User, Guild, Alias):
+        self.db.dice[str(Guild)]
+        query= {"user":User, "Alias":Alias}
+        dice = self.db.dice[str(Guild)].find_one(query)
+        return dice["Value"]
+
+    def dice_delete(self, User, Guild, Alias):
+        self.db.dice[str(Guild)]
+        query= {"user":User, "Alias":Alias}
+        self.db.dice[str(Guild)].delete_one(query)
+
     def init_add(self, Guild, Category, Name, ID, Init):
         self.db[str(Guild)][str(Category)]
         Entry = {"Name": Name, "ID": ID, "Init": Init}
