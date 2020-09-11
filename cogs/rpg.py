@@ -37,7 +37,7 @@ class rpg(commands.Cog):
             if input.find('!') != -1:
                 Guild = ctx.message.guild.id
                 ID = ctx.message.author.id
-
+                
                 try:
                     input, sep, extra = re.split(r'([+|-])',input, maxsplit=1)
                     label=input
@@ -54,7 +54,7 @@ class rpg(commands.Cog):
             try:
                 isPlus = input.find("+")
                 isMinus = input.find("-")
-
+                print(input)
                 outList = "placeHolder"
                 outResults = []
                 Total = 0
@@ -67,15 +67,11 @@ class rpg(commands.Cog):
 
                     if diceNum == "":
                         diceNum = "1"
-                    if int(diceNum) > 100 or int(diceVal) > 100:
-                        raise Exception(
-                            "That's too many numbers. The limit to this value is 100d100."
-                        )
-                    else:
-                        outList = dice.roll(input)
-                        for i in outList:
-                            Total += i
-                            outResults.append(i)
+                    
+                    outList = dice.roll(input)
+                    for i in outList:
+                        Total += i
+                        outResults.append(i)
 
                 if isPlus != -1 or isMinus != -1:
                     expr = re.split("[+-]", input)[0]
@@ -136,14 +132,15 @@ class rpg(commands.Cog):
                         raise Exception(
                             "That's too many numbers. The limit to this value is 100d100."
                         )
+                try:
+                    commentText
+                except:
+                    if ctx.message.content.find("#") != -1:
+                        commentText = re.search(r"#(.+)", ctx.message.content)
+                        commentText = commentText.group(0).replace("#", "")
 
-                if ctx.message.content.find("#") != -1:
-                    commentText = re.search(r"#(.+)", ctx.message.content)
-                    commentText = commentText.group(0).replace("#", "")
-                elif commentText != None:
-                    pass
-                else:
-                    commentText = "Rolling some dice"
+                    else:
+                        commentText = "Rolling some dice"
 
                 if hasattr(ctx.message.author, "nick") == True:
                     if ctx.message.author.nick != None:
@@ -152,6 +149,10 @@ class rpg(commands.Cog):
                         discName = ctx.message.author.name
                 else:
                     discName = ctx.message.author.name
+                
+                print(outResults)
+                print(Total)
+                print(commentText)
 
                 embed = discord.Embed(
                     title=f"Results for {discName}",
