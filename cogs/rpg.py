@@ -173,11 +173,10 @@ class rpg(commands.Cog):
     @d.command(pass_context=True)
     async def save(self, ctx, Alias, Value):
         Alias = Alias.lower()
-        print("Test fuck")
         Category, Guild, User = self.ctx_info(ctx)
         del Category
         self.lt_db.dice_add(User, Guild, Alias, Value)
-        await ctx.send(f"{User} has added the variable {Alias} with the dice expression of {Value}.")
+        await ctx.send(f"{ctx.message.author.display_name} has added the variable {Alias} with the dice expression of {Value}.")
 
     @d.command(pass_context=True)
     async def delete(self, ctx, Alias):
