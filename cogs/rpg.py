@@ -35,19 +35,17 @@ class rpg(commands.Cog):
         if ctx.invoked_subcommand is None:
             input = input.lower()
             if input.find('!') != -1:
-                
+                Category, Guild, ID = self.ctx_info(ctx)
+                del Category    
                 try:
                     input, sep, extra = re.split(r'([+|-])',input, maxsplit=1)
                     label=input
-                    Category, Guild, ID = self.ctx_info(ctx)
-                    del Category
                     input = self.lt_db.dice_get(ID, Guild, input.replace('!',''))
                     inputDice = input
                     input = input + sep + str(extra)
                     commentText= f'Rolling {label} : {inputDice} + {str(extra)}'    
 
                 except:
-                    Category, Guild, ID = self.ctx_info(ctx)
                     label = input.replace('!','')
                     input = self.lt_db.dice_get(ID, Guild, input.replace('!',''))
                     commentText= f'Rolling {label} : {input}'    
@@ -174,6 +172,7 @@ class rpg(commands.Cog):
 
     @d.command(pass_context=True)
     async def save(self, ctx, Alias, Value):
+        Alias = Alias.lower()
         print("Test fuck")
         Category, Guild, User = self.ctx_info(ctx)
         del Category
@@ -342,7 +341,7 @@ class rpg(commands.Cog):
     @dm.command(aliases=["add"])
     async def register(self, ctx):
         """
-        Regi    ster the user as a dungeon master within current channel category.
+        Register the user as a dungeon master within current channel category.
         """
         Category, Guild, ID = self.ctx_info(ctx)
         output = self.lt_db.add_owner(Guild, Category, ID)
