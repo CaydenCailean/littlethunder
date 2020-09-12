@@ -183,8 +183,8 @@ class rpg(commands.Cog):
     async def delete(self, ctx, Alias):
         Guild = ctx.message.guild.id
         User = ctx.message.author.id
-        self.lt_db.dice_delete(User, Guild, Alias)
-        await ctx.send(f"If it existed, {Alias} has been removed!")
+        outMessage = self.lt_db.dice_delete(User, Guild, Alias)
+        await ctx.send(outMessage)
 
     @commands.group(case_insensitive=True)
     async def init(self, ctx):

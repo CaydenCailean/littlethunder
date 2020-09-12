@@ -55,7 +55,11 @@ class lt_db(object):
     def dice_delete(self, User, Guild, Alias):
         self.db.dice[str(Guild)]
         query= {"user":User, "Alias":Alias}
-        self.db.dice[str(Guild)].delete_one(query)
+        check = self.db.dice[str(Guild)].find_one_and_delete(query)
+        if check != None:
+            return f"{Alias} has been removed!"
+        else:
+            return f"It doesn't looks like {Alias} was a saved dice expression."
 
     def init_add(self, Guild, Category, Name, ID, Init):
         self.db[str(Guild)][str(Category)]
