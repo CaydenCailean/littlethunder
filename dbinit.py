@@ -42,8 +42,9 @@ class lt_db(object):
 
     def dice_add(self, User, Guild, Alias, Value):
         self.db.dice[str(Guild)]
-        entry= {"user":User, "Alias":Alias, "Value":Value}
-        self.db.dice[str(Guild)].insert_one(entry).inserted_id
+        updoot = {"$set": {"user":User, "Alias":Alias, "Value":Value}}
+        query = {"user":User, "Alias":Alias}
+        self.db.dice[str(Guild)].update_one(query, updoot, upsert=True)
         
     def dice_get(self, User, Guild, Alias):
         self.db.dice[str(Guild)]
