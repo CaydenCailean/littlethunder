@@ -40,14 +40,14 @@ class rpg(commands.Cog):
                 
                 try:
                     input, sep, extra = re.split(r'([+|-])',input, maxsplit=1)
-                    label=input
+                    label=input.replace('!','',1)
                     input = self.lt_db.dice_get(ID, Guild, input.replace('!',''))
                     inputDice = input
                     input = input + sep + str(extra)
                     commentText= f'Rolling {label} : {inputDice} + {str(extra)}'    
 
                 except:
-                    label = input.replace('!','')
+                    label = input.replace('!','',1)
                     input = self.lt_db.dice_get(ID, Guild, input.replace('!',''))
                     commentText= f'Rolling {label} : {input}'    
                    
