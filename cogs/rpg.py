@@ -33,7 +33,7 @@ class rpg(commands.Cog):
         Comments may be added to a dice output by appending the command with #, followed by the content of the comment you wish to be shown.
         """
         if ctx.invoked_subcommand is None:
-            input = input.lower()
+            
             if input.find('!') != -1:
                 Guild = ctx.message.guild.id
                 ID = ctx.message.author.id
