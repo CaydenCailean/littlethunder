@@ -174,7 +174,6 @@ class rpg(commands.Cog):
 
     @d.command(pass_context=True)
     async def save(self, ctx, Alias, Value):
-        Alias = Alias.lower()
         Guild = ctx.message.guild.id
         User = ctx.message.author.id
         self.lt_db.dice_add(User, Guild, Alias, Value)
