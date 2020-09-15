@@ -245,10 +245,12 @@ class rpg(commands.Cog):
         """
         dieRoll = dieRoll.lower()
         Category, Guild, ID = self.ctx_info(ctx)
-        if dieRoll.find("d") == True:
-            outcome = await rpg.d(self, ctx, dieRoll)
-        else:
+        try:
+            int(dieRoll)
             outcome = int(dieRoll)
+        except:
+            outcome = await rpg.d(self, ctx, dieRoll)
+            
         try:
             ID = ctx.message.mentions[0].id
         except:
