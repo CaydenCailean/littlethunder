@@ -243,7 +243,7 @@ class rpg(commands.Cog):
         Syntax:
         .init add [name] [dice]
         """
-        dieRoll = dieRoll.lower()
+        
         Category, Guild, ID = self.ctx_info(ctx)
         try:
             int(dieRoll)
