@@ -332,7 +332,7 @@ class rpg(commands.Cog):
 
         else:
             await ctx.send("I don't think it's your turn yet!")
-        await self.init(ctx)
+        await self.show(ctx)
 
     @commands.group(case_insensitive=True)
     async def dm(self, ctx):
