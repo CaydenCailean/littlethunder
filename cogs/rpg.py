@@ -20,7 +20,7 @@ class rpg(commands.Cog):
         ID = ctx.message.author.id
         return Category, Guild, ID
 
-    @commands.group(case_insensitive=True, invoke_without_command=True)
+    @commands.group(case_insensitive=True, invoke_without_command=True, aliases=['r','roll','dice'])
     async def d(self, ctx, input: str, ):
 
         """
@@ -54,7 +54,7 @@ class rpg(commands.Cog):
             try:
                 isPlus = input.find("+")
                 isMinus = input.find("-")
-                print(input)
+                
                 outList = "placeHolder"
                 outResults = []
                 Total = 0
@@ -150,10 +150,6 @@ class rpg(commands.Cog):
                 else:
                     discName = ctx.message.author.name
                 
-                print(outResults)
-                print(Total)
-                print(commentText)
-
                 embed = discord.Embed(
                     title=f"Results for {discName}",
                     description=commentText,
