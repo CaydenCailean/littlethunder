@@ -7,9 +7,11 @@ Dice
 ---
 Dice are an integral part to the majority of tabletop RPGs. While Little Thunder's dice are simple now, improvements are planned, and will be kept up to date here.
 
-There is only a single command surrounding the use of dice, which is `.[d|dice|r|roll]`. This command's syntax is fairly simple, following `XdX` notation seen standard in many games. You can add and subtract both dice expressions and flat numbers to your initlal dice.
+There main command to use dice is `.[d|dice|r|roll]`. This command's syntax is fairly simple, following `XdX` notation seen standard in many games. You can add and subtract both dice expressions and flat numbers to your initlal dice.
 
 This will look something like `.d 1d20+12+2d6` in practice. If you wish to label your roll, you can follow your dice expression with `#` and anything that follows it will be added to the dice output as a label.
+
+You're also able to save dice rolls. This is done via the `save` subcommand. The use of this command will look something like `.d save TestRoll 2d6+6`, and in order to roll any saved rolls, you simply prefix the variable name with an exclamation mark, as shown in `.d !TestRoll`. These saved rolls are unique to individual users.
 
 DM
 ---
