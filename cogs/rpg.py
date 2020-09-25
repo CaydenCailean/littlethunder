@@ -307,7 +307,7 @@ class rpg(commands.Cog):
             pass
         if int(ID) == int(current) or dmCheck == True:
             self.lt_db.turn_next(Guild, Category)
-            self.init.show(ctx)
+            self.show(ctx)
 
         else:
             await ctx.send("I don't think it's your turn yet!")
