@@ -263,15 +263,14 @@ class rpg(commands.Cog):
         dmCheck = self.lt_db.owner_check(Guild, Category, ID)
         initraw = self.lt_db.init_get(Guild, Category)
         turnNum = int(self.lt_db.turn_get(Guild, Category))
+        current = initraw[turnNum - 1]["ID"]
 
-        if turnNum == len(initraw):
-            self.lt_db.turn_next(Guild, Category)
-        if dmCheck == True:
+        if int(ID) == int(current) or dmCheck == True:
             self.lt_db.init_remove(Guild, Category, name)
+            if turnNum == len(initraw):
+                self.lt_db.turn_next(Guild, Category)
             await ctx.send(f"{name} has been removed from the initiative count.")
             await self.init(ctx)
-        else:
-            await ctx.send("Try asking your DM to remove this entry!")
 
     @init.command()
     async def end(self, ctx):
