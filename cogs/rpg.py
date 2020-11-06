@@ -349,12 +349,14 @@ class rpg(commands.Cog):
                         newPos = int(initraw.index(x)) +1
                         break
                 self.lt_db.turn_set(Guild, Category, newPos)
-                
+
             if type(newPos)== int and len(initraw) >= newPos:
                 self.lt_db.turn_set(Guild, Category, newPos)
-            
+
             await ctx.send("The initiative table's state has been updated!")
             await self.init(ctx)
+        else:
+            await ctx.send("It looks like you have no power here.")
 
     @commands.group(case_insensitive=True)
     async def dm(self, ctx):
