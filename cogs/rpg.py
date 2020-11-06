@@ -337,10 +337,14 @@ class rpg(commands.Cog):
         Category, Guild, ID = self.ctx_info(ctx)
         initraw = self.lt_db.init_get(Guild, Category)
         turnNum = self.lt_db.turn_get(Guild, Category)
-
+        try:
+            newPos = int(newPos)
+        except:
+            pass
+        
         if type(newPos) == str:
             for x in initraw:
-                if itemgetter('name')(x) == newPos:
+                if x["name"] == newPos:
                     print(initraw.index(x))
             #self.lt_db.turn_set(Guild, Category, newPos)
             
