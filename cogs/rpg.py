@@ -344,6 +344,8 @@ class rpg(commands.Cog):
                     if itemgetter('name')(s) == newPos:
                         print(initraw.index(x))
             #self.lt_db.turn_set(Guild, Category, newPos)
+            except:
+                pass
         if type(newPos)== int and turnNum >= newPos:
             self.lt_db.turn_set(Guild, Category, newPos)
         await ctx.send("The initiative table's state has been updated!")
