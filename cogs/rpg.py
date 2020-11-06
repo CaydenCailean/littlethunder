@@ -337,10 +337,10 @@ class rpg(commands.Cog):
         initraw = self.lt_db.init_get(Guild, Category)
         turnNum = self.lt_db.turn_get(Guild, Category)
 
-        if newPos.type() == str:
+        if type(newPos) == str:
             newPos = int(initraw.index(newPos))+1
             self.lt_db.turn_set(Guild, Category, newPos)
-        if newPos.type()== int and turnNum >= newPos:
+        if type(newPos)== int and turnNum >= newPos:
             self.lt_db.turn_set(Guild, Category, newPos)
         await ctx.send("The initiative table's state has been updated!")
         await self.init(ctx)
