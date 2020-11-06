@@ -336,24 +336,25 @@ class rpg(commands.Cog):
     async def setturn(self, ctx, newPos):
         Category, Guild, ID = self.ctx_info(ctx)
         initraw = self.lt_db.init_get(Guild, Category)
-        
-        try:
-            newPos = int(newPos)
-        except:
-            pass
-        
-        if type(newPos) == str:
-            for x in initraw:
-                if x["Name"] == newPos:
-                    newPos = int(initraw.index(x)) +1
-                    break
-            self.lt_db.turn_set(Guild, Category, newPos)
+        dmCheck = self.lt_db.owner_check(Guild, Category, ID)
+        if dmCheck == True:
+            try:
+                newPos = int(newPos)
+            except:
+                pass
             
-        if type(newPos)== int and len(initraw) >= newPos:
-            self.lt_db.turn_set(Guild, Category, newPos)
-        
-        #await ctx.send("The initiative table's state has been updated!")
-        #await self.init(ctx)
+            if type(newPos) == str:
+                for x in initraw:
+                    if x["Name"] == newPos:
+                        newPos = int(initraw.index(x)) +1
+                        break
+                self.lt_db.turn_set(Guild, Category, newPos)
+                
+            if type(newPos)== int and len(initraw) >= newPos:
+                self.lt_db.turn_set(Guild, Category, newPos)
+            
+            await ctx.send("The initiative table's state has been updated!")
+            await self.init(ctx)
 
     @commands.group(case_insensitive=True)
     async def dm(self, ctx):
