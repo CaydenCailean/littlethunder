@@ -344,14 +344,15 @@ class rpg(commands.Cog):
         
         if type(newPos) == str:
             for x in initraw:
-                if x["name"] == newPos:
+                if x["Name"] == newPos:
                     print(initraw.index(x))
             #self.lt_db.turn_set(Guild, Category, newPos)
             
         if type(newPos)== int and turnNum >= newPos:
             self.lt_db.turn_set(Guild, Category, newPos)
-        await ctx.send("The initiative table's state has been updated!")
-        await self.init(ctx)
+        
+        #await ctx.send("The initiative table's state has been updated!")
+        #await self.init(ctx)
 
     @commands.group(case_insensitive=True)
     async def dm(self, ctx):
