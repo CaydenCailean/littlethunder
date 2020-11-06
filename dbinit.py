@@ -48,7 +48,7 @@ class lt_db(object):
         
     def dice_get(self, User, Guild, Alias):
         self.db.dice[str(Guild)]
-        query= {"user":User, "Alias":Alias}
+        query= {"user":User, "Alias":Alias.lower()}
         dice = self.db.dice[str(Guild)].find_one(query)
         return dice["Value"]
 

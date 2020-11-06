@@ -42,7 +42,7 @@ class rpg(commands.Cog):
                     input, sep, extra = re.split(r'([+|-])',input, maxsplit=1)
                     label=input.replace('!','',1)
 
-                    input = self.lt_db.dice_get(ID, Guild, input.replace('!','').lower())
+                    input = self.lt_db.dice_get(ID, Guild, input.replace('!',''))
                     inputDice = input
                     input = input + sep + str(extra)
                     commentText= f'Rolling {label} : {inputDice} + {str(extra)}'    
