@@ -353,8 +353,7 @@ class rpg(commands.Cog):
             if type(newPos)== int and len(initraw) >= newPos:
                 self.lt_db.turn_set(Guild, Category, newPos)
 
-            await ctx.send("The initiative table's state has been updated!")
-            await self.init(ctx)
+            await self.show(ctx)
         else:
             await ctx.send("It looks like you have no power here.")
 
