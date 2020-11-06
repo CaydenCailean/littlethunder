@@ -4,6 +4,7 @@ import dice
 import asyncio
 from discord.ext import commands
 import sys
+from operator import itemgetter
 
 sys.path.append("..")
 from dbinit import lt_db
@@ -338,7 +339,7 @@ class rpg(commands.Cog):
         turnNum = self.lt_db.turn_get(Guild, Category)
 
         if type(newPos) == str:
-            newPos = int(initraw.index(newPos))+1
+            newPos = list(map(itemgetter('name'), initraw)).index(newPos)
             self.lt_db.turn_set(Guild, Category, newPos)
         if type(newPos)== int and turnNum >= newPos:
             self.lt_db.turn_set(Guild, Category, newPos)
