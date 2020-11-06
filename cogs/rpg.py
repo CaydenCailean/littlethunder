@@ -340,7 +340,7 @@ class rpg(commands.Cog):
 
         if type(newPos) == str:
             for x in initraw:
-                if itemgetter('name')(s) == newPos:
+                if itemgetter('name')(x) == newPos:
                     print(initraw.index(x))
             #self.lt_db.turn_set(Guild, Category, newPos)
             
