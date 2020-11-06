@@ -194,6 +194,7 @@ class rpg(commands.Cog):
             Category, Guild, ID = self.ctx_info(ctx)
             initraw = self.lt_db.init_get(Guild, Category)
             turnNum = int(self.lt_db.turn_get(Guild, Category))
+            print(initraw)
 
             for i in range(turnNum - 1):
                 moveEntry = initraw[0]
@@ -330,6 +331,11 @@ class rpg(commands.Cog):
         else:
             await ctx.send("I don't think it's your turn yet!")
         await self.show(ctx)
+
+    @init.command()
+    async def setturn(self, ctx, newPos):
+        Category, Guild, ID = self.ctx_info(ctx)
+        initraw = self.lt_db.init_get(Guild, Category)
 
     @commands.group(case_insensitive=True)
     async def dm(self, ctx):
