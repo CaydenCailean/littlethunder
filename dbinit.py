@@ -54,7 +54,7 @@ class lt_db(object):
 
     def dice_delete(self, User, Guild, Alias):
         self.db.dice[str(Guild)]
-        query= {"user":User, "Alias":Alias}
+        query= {"user":User, "Alias":Alias.lower()}
         check = self.db.dice[str(Guild)].find_one_and_delete(query)
         if check != None:
             return f"{Alias} has been removed!"
