@@ -116,6 +116,12 @@ class lt_db(object):
             turnCheck = self.db[str(Guild)].find_one({"Category": Category})
             return turnCheck["turn"]
 
+    def turn_set(self, Guild, Category, newPos):
+
+        self.db[str(Guild)].find_one_and_update(
+            {"Category": Category}, 
+            {"$set": {"turn":newPos}})
+
     def init_delay(self, Guild, Category, Name, newInit):
 
         turn = self.db[str(Guild)].find_one({"Category": Category})["turn"]

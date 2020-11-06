@@ -194,7 +194,6 @@ class rpg(commands.Cog):
             Category, Guild, ID = self.ctx_info(ctx)
             initraw = self.lt_db.init_get(Guild, Category)
             turnNum = int(self.lt_db.turn_get(Guild, Category))
-            print(initraw)
 
             for i in range(turnNum - 1):
                 moveEntry = initraw[0]
@@ -336,6 +335,15 @@ class rpg(commands.Cog):
     async def setturn(self, ctx, newPos):
         Category, Guild, ID = self.ctx_info(ctx)
         initraw = self.lt_db.init_get(Guild, Category)
+        turnNum = self.lt_db.turn_get(Guild, Category)
+
+        if newPos.type() == str:
+            newPos = int(initraw.index(newPos))+1
+            self.lt_db.turn_set(Guild, Category, newPos)
+        if newPos.type()== int and turnNum >= newPos:
+            self.lt_db.turn_set(Guild, Category, newPos)
+        await ctx.send("The initiative table's state has been updated!")
+        await self.init(ctx)
 
     @commands.group(case_insensitive=True)
     async def dm(self, ctx):
