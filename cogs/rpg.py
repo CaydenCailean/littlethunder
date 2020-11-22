@@ -22,7 +22,7 @@ class rpg(commands.Cog):
         return Category, Guild, ID
 
     @commands.group(case_insensitive=True, invoke_without_command=True, aliases=['r','roll','dice'])
-    async def d(self, ctx, input: str, ):
+    async def d(self, ctx, *, input: str, ):
 
         """
         Rolls dice using #d# format, with a maximum of 100d100.
