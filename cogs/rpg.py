@@ -189,9 +189,10 @@ class rpg(commands.Cog):
 
     @d.group(pass_context=True)
     async def ready(self, ctx, Alias, *, Value):
-        Category, Guild, ID = self.ctx_info(ctx)
-        outMessage = self.lt_db.ready_set(ID, Guild, Alias, Value)
-        await ctx.send(outMessage)
+        if ctx.invoked_subcommand == None:
+            Category, Guild, ID = self.ctx_info(ctx)
+            outMessage = self.lt_db.ready_set(ID, Guild, Alias, Value)
+            await ctx.send(outMessage)
 
         
     @ready.command(pass_context=True)
