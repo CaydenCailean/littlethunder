@@ -194,7 +194,7 @@ class rpg(commands.Cog):
         await ctx.send(outMessage)
 
         
-    @ready.command()
+    @ready.command(pass_context=True)
     async def trigger(self, ctx, Alias):
         """
         Stuff
@@ -207,7 +207,7 @@ class rpg(commands.Cog):
             await self.d(trigger["ctx"], trigger["Value"])
 
     
-    @ready.command()
+    @ready.command(pass_context=True)
     async def remove(self, ctx, Alias):
         Category, Guild, ID = self.ctx_info(ctx)
         dmCheck = self.lt_db.owner_check(Guild, Category, ID)
