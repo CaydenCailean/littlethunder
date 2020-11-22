@@ -52,7 +52,7 @@ class rpg(commands.Cog):
                     label = input.replace("!", "", 1)
                     input = self.lt_db.dice_get(ID, Guild, input.replace("!", ""))
                     commentText = f"Rolling {label} : {input}"
-            print(1)
+            
             try:
                 isPlus = input.find("+")
                 isMinus = input.find("-")
@@ -60,23 +60,23 @@ class rpg(commands.Cog):
                 outList = "placeHolder"
                 outResults = []
                 Total = 0
-                print(2)
+
                 if isPlus == -1 and isMinus == -1:
                     try:
                         print(input)
                         diceNum, diceVal = input.split("d")
-
+                        print(diceNum)
                     except ValueError as e:
                         raise Exception("Make sure your expression is in #d# format.")
-                    print(3)
+                    
                     if diceNum == "":
                         diceNum = "1"
-                    print(4)
+                    
                     outList = dice.roll(input)
                     for i in outList:
                         Total += i
                         outResults.append(i)
-                    print(5)
+                    
                 if isPlus != -1 or isMinus != -1:
                     expr = re.split("[+-]", input)[0]
 
@@ -93,7 +93,7 @@ class rpg(commands.Cog):
 
                     for i in bonus:
                         posmod += int(i)
-                    print(3)
+                    
                     bonusDice = re.findall(r"\+\d*d\d+", input)
                     for i in bonusDice:
                         idiceNum, idiceVal = i.split("d")
@@ -126,7 +126,7 @@ class rpg(commands.Cog):
                         else:
                             for i in output:
                                 outResults.append(str(i))
-                    print(4)
+
                     for i in outResults:
                         Total += int(i)
                     Total += posmod
