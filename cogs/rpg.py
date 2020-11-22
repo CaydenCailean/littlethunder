@@ -201,7 +201,7 @@ class rpg(commands.Cog):
         Stuff
         """ 
         Guild = ctx.message.guild.id
-        trigger = self.lt_db.ready_trigger(Guild, Alias,lower())
+        trigger = self.lt_db.ready_trigger(Guild, Alias.lower())
         User = trigger["User"]
         if trigger != None:
             if trigger["Value"].find("#") != -1:
