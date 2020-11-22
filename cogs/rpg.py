@@ -60,7 +60,7 @@ class rpg(commands.Cog):
                 outList = "placeHolder"
                 outResults = []
                 Total = 0
-
+                print(2)
                 if isPlus == -1 and isMinus == -1:
                     try:
                         diceNum, diceVal = input.split("d")
@@ -74,7 +74,7 @@ class rpg(commands.Cog):
                     for i in outList:
                         Total += i
                         outResults.append(i)
-                print(2)
+                
                 if isPlus != -1 or isMinus != -1:
                     expr = re.split("[+-]", input)[0]
 
