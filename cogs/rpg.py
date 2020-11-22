@@ -33,7 +33,6 @@ class rpg(commands.Cog):
 
         Comments may be added to a dice output by appending the command with #, followed by the content of the comment you wish to be shown.
         """
-        print(ctx)
         if ctx.invoked_subcommand is None:
 
             if input.find("!") != -1:
@@ -152,6 +151,11 @@ class rpg(commands.Cog):
                         discName = ctx.message.author.name
                 else:
                     discName = ctx.message.author.name
+                
+                print(discName)
+                print(commentText)
+                print(outResults)
+                print(Total)
                 
                 embed = discord.Embed(
                     title=f"Results for {discName}",
