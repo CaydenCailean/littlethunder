@@ -196,7 +196,7 @@ class rpg(commands.Cog):
 
         
     @d.command(pass_context=True)
-    async def (self, ctx, Alias):
+    async def trigger(self, ctx, Alias):
         """
         Stuff
         """ 
