@@ -202,12 +202,14 @@ class rpg(commands.Cog):
         """ 
         Guild = ctx.message.guild.id
         trigger = self.lt_db.ready_trigger(Guild, Alias)
-        ctx2 = discord.ext.commands.context.Context()
-        ctx2.message.author.id = trigger["User"]
-        ctx2.message.guild.id = trigger["Guild"]
         
+        trigger["Value"]
         if trigger != None:
-            await self.d(ctx2, trigger["Value"])
+            if trigger["Value"].find("#") != -1:
+                trigger["Value"] += f"; being rolled for <@{User}>"
+            else: 
+                trigger["Value"] += f"# Being Rolled for <@{User}>"
+            await self.d(ctx, trigger["Value"])
 
     
     @d.command(pass_context=True)
