@@ -66,6 +66,7 @@ class lt_db(object):
         updoot = {"$set": {"user":User, "Alias":Alias.lower(), "Value":Value}}
         query = {"user":User, "Alias":Alias.lower()}
         self.db.ready[str(Guild)].update_one(query, updoot, upsert=True)
+        return f"{Alias} has been set!"
 
     def ready_get(self, User, Guild, Alias):
         query = {"user":User, "Alias":Alias.lower()}
