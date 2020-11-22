@@ -63,13 +63,13 @@ class lt_db(object):
             return f"It doesn't looks like {Alias} was a saved dice expression."
 
     def ready_set(self, User, Guild, Alias, Value):
-        updoot = {"$set": {"user":User, "Alias":Alias.lower(), "Value":Value}}
-        query = {"user":User, "Alias":Alias.lower()}
+        updoot = {"$set": {"Sser":User, "Alias":Alias.lower(), "Value":Value}}
+        query = {"User":User, "Alias":Alias.lower()}
         self.db.ready[str(Guild)].update_one(query, updoot, upsert=True)
         return f"{Alias} has been set!"
 
     def ready_get(self, User, Guild, Alias):
-        query = {"user":User, "Alias":Alias.lower()}
+        query = {"User":User, "Alias":Alias.lower()}
         check = self.db.ready[str(Guild)].find_one(query)
         if check != None:
             return True
