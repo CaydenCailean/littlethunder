@@ -2,9 +2,9 @@ import discord
 import re
 import dice
 import asyncio
-from discord.ext import commands
+from discord.ext import commands, tasks
 import sys
-from operator import itemgetter
+from datetime import datetime
 
 sys.path.append("..")
 from dbinit import lt_db
@@ -34,11 +34,11 @@ class rpg(commands.Cog):
         Comments may be added to a dice output by appending the command with #, followed by the content of the comment you wish to be shown.
         """
         if ctx.invoked_subcommand is None:
-            
-            if input.find('!') != -1:
+
+            if input.find("!") != -1:
                 Guild = ctx.message.guild.id
                 ID = ctx.message.author.id
-                
+
                 try:
                     input, sep, extra = re.split(r'([+|-])',input, maxsplit=1)
                     label=input.replace('!','',1)
@@ -46,13 +46,13 @@ class rpg(commands.Cog):
                     input = self.lt_db.dice_get(ID, Guild, input.replace('!',''))
                     inputDice = input
                     input = input + sep + str(extra)
-                    commentText= f'Rolling {label} : {inputDice} + {str(extra)}'    
+                    commentText = f"Rolling {label} : {inputDice} + {str(extra)}"
 
                 except:
-                    label = input.replace('!','',1)
-                    input = self.lt_db.dice_get(ID, Guild, input.replace('!',''))
-                    commentText= f'Rolling {label} : {input}'    
-                   
+                    label = input.replace("!", "", 1)
+                    input = self.lt_db.dice_get(ID, Guild, input.replace("!", ""))
+                    commentText = f"Rolling {label} : {input}"
+
             try:
                 isPlus = input.find("+")
                 isMinus = input.find("-")
@@ -69,7 +69,7 @@ class rpg(commands.Cog):
 
                     if diceNum == "":
                         diceNum = "1"
-                    
+
                     outList = dice.roll(input)
                     for i in outList:
                         Total += i
@@ -175,7 +175,9 @@ class rpg(commands.Cog):
         Guild = ctx.message.guild.id
         User = ctx.message.author.id
         self.lt_db.dice_add(User, Guild, Alias, Value)
-        await ctx.send(f"{ctx.message.author.display_name} has added the variable {Alias} with the dice expression of {Value}.")
+        await ctx.send(
+            f"{ctx.message.author.display_name} has added the variable {Alias} with the dice expression of {Value}."
+        )
 
     @d.command(pass_context=True)
     async def delete(self, ctx, Alias):
@@ -183,6 +185,36 @@ class rpg(commands.Cog):
         User = ctx.message.author.id
         outMessage = self.lt_db.dice_delete(User, Guild, Alias)
         await ctx.send(outMessage)
+
+    @d.group(pass_context=True)
+    async def ready(self, ctx, Alias, *, Value):
+        Category, Guild, ID = self.ctx_info(ctx)
+        self.lt_db.ready_set(ID, Guild, Alias, Value, ctx)
+
+        
+    @ready.command()
+    async def trigger(self, ctx, Alias):
+        """
+        Stuff
+        """ 
+        Guild = ctx.message.guild.id
+        trigger = self.lt_db.ready_trigger(Guild, Alias)
+        
+        if trigger != None:
+            await self.d(trigger["ctx"], trigger["Value"])
+
+    
+    @ready.command()
+    async def remove(self, ctx, Alias):
+        Category, Guild, ID = self.ctx_info(ctx)
+        dmCheck = self.lt_db.owner_check(Guild, Category, ID)
+        playerCheck = self.lt_db.ready_get(ID, Guild, Alias)
+        if dmCheck == True or playerCheck == True:
+            outMessage = self.lt_db.ready_remove(Guild, Alias)
+            await ctx.send(outMessage)
+        else:
+            await ctx.send("Looks like either that doesn't exist, or you don't own it.")
+
 
     @commands.group(case_insensitive=True)
     async def init(self, ctx):
@@ -241,14 +273,13 @@ class rpg(commands.Cog):
         Syntax:
         .init add [name] [dice]
         """
-        
+
         Category, Guild, ID = self.ctx_info(ctx)
         try:
             int(dieRoll)
             outcome = int(dieRoll)
         except:
             outcome = await rpg.d(self, ctx, dieRoll)
-            
         try:
             ID = ctx.message.mentions[0].id
         except:
@@ -273,7 +304,7 @@ class rpg(commands.Cog):
                 self.lt_db.turn_next(Guild, Category)
             await ctx.send(f"{name} has been removed from the initiative count.")
             await self.init(ctx)
-
+            
     @init.command()
     async def end(self, ctx):
         """
@@ -477,7 +508,7 @@ class rpg(commands.Cog):
                 await ctx.send(f"{field} has been removed from {Name.title()}!")
 
     @char.command()
-    async def display(self, ctx, *,  Name):
+    async def display(self, ctx, *, Name):
         """
         Display information regarding a stored character, including all stored fields.
         """
@@ -525,7 +556,10 @@ class rpg(commands.Cog):
         """
         Sends a link to the Little Thunder Web Editor.
         """
-        await ctx.send("The LT Web Editor can be found at https://webthunder.herokuapp.com/")
+        await ctx.send(
+            "The LT Web Editor can be found at https://webthunder.herokuapp.com/"
+        )
+
 
 def setup(bot):
     bot.add_cog(rpg(bot))

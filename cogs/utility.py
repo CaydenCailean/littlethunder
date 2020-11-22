@@ -6,7 +6,6 @@ class utility(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    
     @commands.command(pass_context=True, no_pm=True, aliases=["clear", "p"])
     async def purge(self, ctx, number: int, members="everyone", *, txt=None):
         """
@@ -21,7 +20,7 @@ class utility(commands.Cog):
     .purge 20 everyone foo - Remove any messages in the last 20 which contain the keyword "foo".
         """
         await ctx.channel.purge(limit=1)
-        if ctx.message.author.permissions_in(ctx.channel).manage_messages: 
+        if ctx.message.author.permissions_in(ctx.channel).manage_messages:
             member_object_list = []
             if members != "everyone":
                 member_list = [x.strip() for x in members.split(" , ")]
@@ -56,7 +55,7 @@ class utility(commands.Cog):
             else:
                 await ctx.send("Too many messages. Enter a number less than 100.")
         else:
-            
+
             if number < 100:
                 async for message in ctx.message.channel.history(limit=number):
                     try:
