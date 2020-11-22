@@ -190,9 +190,6 @@ class rpg(commands.Cog):
     @d.group(pass_context=True)
     async def ready(self, ctx, Alias, *, Value):
         Category, Guild, ID = self.ctx_info(ctx)
-        
-        context.message.author.ID = ID
-        context.message.Guild.id = Guild
         self.lt_db.ready_set(ID, Guild, Alias, Value)
 
         
