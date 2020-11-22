@@ -202,7 +202,7 @@ class rpg(commands.Cog):
         """ 
         Guild = ctx.message.guild.id
         trigger = self.lt_db.ready_trigger(Guild, Alias,lower())
-        
+        User = trigger["User"]
         if trigger != None:
             if trigger["Value"].find("#") != -1:
                 trigger["Value"] += f"; being rolled for <@{User}>"
