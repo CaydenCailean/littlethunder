@@ -47,6 +47,7 @@ class rpg(commands.Cog):
                     inputDice = input
                     input = input + sep + str(extra)
                     commentText = f"Rolling {label} : {inputDice} + {str(extra)}"
+                    
 
                 except:
                     label = input.replace("!", "", 1)
@@ -64,7 +65,11 @@ class rpg(commands.Cog):
                 if isPlus == -1 and isMinus == -1:
                     try:
                         print(input)
-                        diceNum, diceVal = input.split("d")
+                        try:
+                            dice, comment = input.split("#")
+                        except:
+                            pass
+                        diceNum, diceVal = dice.split("d")
                         print(diceNum)
                     except ValueError as e:
                         raise Exception("Make sure your expression is in #d# format.")
