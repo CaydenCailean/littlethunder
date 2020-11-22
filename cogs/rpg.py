@@ -65,11 +65,7 @@ class rpg(commands.Cog):
                 if isPlus == -1 and isMinus == -1:
                     try:
                         print(input)
-                        try:
-                            dice, comment = input.split("#")
-                        except:
-                            pass
-                        diceNum, diceVal = dice.split("d")
+                        diceNum, diceVal = input.split("d")
                         print(diceNum)
                     except ValueError as e:
                         raise Exception("Make sure your expression is in #d# format.")
