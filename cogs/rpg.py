@@ -66,15 +66,15 @@ class rpg(commands.Cog):
                         diceNum, diceVal = input.split("d")
                     except ValueError as e:
                         raise Exception("Make sure your expression is in #d# format.")
-
+                    print(3)
                     if diceNum == "":
                         diceNum = "1"
-
+                    print(4)
                     outList = dice.roll(input)
                     for i in outList:
                         Total += i
                         outResults.append(i)
-                
+                    print(5)
                 if isPlus != -1 or isMinus != -1:
                     expr = re.split("[+-]", input)[0]
 
