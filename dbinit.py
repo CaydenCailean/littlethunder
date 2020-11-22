@@ -62,8 +62,8 @@ class lt_db(object):
         else:
             return f"It doesn't looks like {Alias} was a saved dice expression."
 
-    def ready_set(self, User, Guild, Alias, Value, context):
-        updoot = {"$set": {"user":User, "Alias":Alias.lower(), "Value":Value, "ctx":context}}
+    def ready_set(self, User, Guild, Alias, Value):
+        updoot = {"$set": {"user":User, "Alias":Alias.lower(), "Value":Value}}
         query = {"user":User, "Alias":Alias.lower()}
         self.db.ready[str(Guild)].update_one(query, updoot, upsert=True)
 

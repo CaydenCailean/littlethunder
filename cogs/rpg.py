@@ -193,7 +193,7 @@ class rpg(commands.Cog):
         
         context.message.author.ID = ID
         context.message.Guild.id = Guild
-        self.lt_db.ready_set(ID, Guild, Alias, Value, context)
+        self.lt_db.ready_set(ID, Guild, Alias, Value)
 
         
     @ready.command()
@@ -205,6 +205,7 @@ class rpg(commands.Cog):
         trigger = self.lt_db.ready_trigger(Guild, Alias)
         
         if trigger != None:
+            ctx.message.author.id = trigger["User"]
             await self.d(trigger["ctx"], trigger["Value"])
 
     
