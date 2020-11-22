@@ -213,7 +213,7 @@ class rpg(commands.Cog):
             if trigger["Value"].find("#") != -1:
                 trigger["Value"] += f"; being rolled for {User.name}"
             else: 
-                trigger["Value"] += f"# Being Rolled for {User.name}"
+                trigger["Value"] += f" # Being Rolled for {User.name}"
             await self.d(ctx, trigger["Value"])
 
     
