@@ -52,7 +52,7 @@ class rpg(commands.Cog):
                     label = input.replace("!", "", 1)
                     input = self.lt_db.dice_get(ID, Guild, input.replace("!", ""))
                     commentText = f"Rolling {label} : {input}"
-
+            print(1)
             try:
                 isPlus = input.find("+")
                 isMinus = input.find("-")
@@ -74,7 +74,7 @@ class rpg(commands.Cog):
                     for i in outList:
                         Total += i
                         outResults.append(i)
-
+                print(2)
                 if isPlus != -1 or isMinus != -1:
                     expr = re.split("[+-]", input)[0]
 
@@ -91,7 +91,7 @@ class rpg(commands.Cog):
 
                     for i in bonus:
                         posmod += int(i)
-
+                    print(3)
                     bonusDice = re.findall(r"\+\d*d\d+", input)
                     for i in bonusDice:
                         idiceNum, idiceVal = i.split("d")
@@ -124,7 +124,7 @@ class rpg(commands.Cog):
                         else:
                             for i in output:
                                 outResults.append(str(i))
-
+                    print(4)
                     for i in outResults:
                         Total += int(i)
                     Total += posmod
@@ -156,7 +156,7 @@ class rpg(commands.Cog):
                 print(commentText)
                 print(outResults)
                 print(Total)
-                
+
                 embed = discord.Embed(
                     title=f"Results for {discName}",
                     description=commentText,
