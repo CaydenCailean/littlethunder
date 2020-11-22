@@ -187,7 +187,7 @@ class rpg(commands.Cog):
         outMessage = self.lt_db.dice_delete(User, Guild, Alias)
         await ctx.send(outMessage)
 
-    @d.group(pass_context=True)
+    @d.command(pass_context=True)
     async def ready(self, ctx, Alias, *, Value):
         if ctx.invoked_subcommand == None:
             Category, Guild, ID = self.ctx_info(ctx)
@@ -195,8 +195,8 @@ class rpg(commands.Cog):
             await ctx.send(outMessage)
 
         
-    @ready.command(pass_context=True)
-    async def trigger(self, ctx, Alias):
+    @d.command(pass_context=True)
+    async def (self, ctx, Alias):
         """
         Stuff
         """ 
@@ -208,8 +208,8 @@ class rpg(commands.Cog):
             await self.d(trigger["ctx"], trigger["Value"])
 
     
-    @ready.command(pass_context=True)
-    async def remove(self, ctx, Alias):
+    @d.command(pass_context=True)
+    async def ready_remove(self, ctx, Alias):
         Category, Guild, ID = self.ctx_info(ctx)
         dmCheck = self.lt_db.owner_check(Guild, Category, ID)
         playerCheck = self.lt_db.ready_get(ID, Guild, Alias)
