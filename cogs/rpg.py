@@ -203,11 +203,11 @@ class rpg(commands.Cog):
         Guild = ctx.message.guild.id
         trigger = self.lt_db.ready_trigger(Guild, Alias)
         ctx2 = discord.ext.commands.context.Context()
-        ctx.message.author.id = trigger["User"]
-        ctx.message.guild.id = trigger["Guild"]
+        ctx2.message.author.id = trigger["User"]
+        ctx2.message.guild.id = trigger["Guild"]
         
         if trigger != None:
-            await self.d(trigger["ctx"], trigger["Value"])
+            await self.d(ctx2, trigger["Value"])
 
     
     @d.command(pass_context=True)
