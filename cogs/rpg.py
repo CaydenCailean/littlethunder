@@ -201,9 +201,8 @@ class rpg(commands.Cog):
         Stuff
         """ 
         Guild = ctx.message.guild.id
-        trigger = self.lt_db.ready_trigger(Guild, Alias)
+        trigger = self.lt_db.ready_trigger(Guild, Alias,lower())
         
-        trigger["Value"]
         if trigger != None:
             if trigger["Value"].find("#") != -1:
                 trigger["Value"] += f"; being rolled for <@{User}>"
@@ -216,9 +215,9 @@ class rpg(commands.Cog):
     async def ready_remove(self, ctx, Alias):
         Category, Guild, ID = self.ctx_info(ctx)
         dmCheck = self.lt_db.owner_check(Guild, Category, ID)
-        playerCheck = self.lt_db.ready_get(ID, Guild, Alias)
+        playerCheck = self.lt_db.ready_get(ID, Guild, Alias.lower())
         if dmCheck == True or playerCheck == True:
-            outMessage = self.lt_db.ready_remove(Guild, Alias)
+            outMessage = self.lt_db.ready_remove(Guild, Alias.lower())
             await ctx.send(outMessage)
         else:
             await ctx.send("Looks like either that doesn't exist, or you don't own it.")
