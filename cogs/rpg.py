@@ -308,10 +308,10 @@ class rpg(commands.Cog):
 
         Category, Guild, ID = self.ctx_info(ctx)
         try:
-            int(dieRoll)
-            outcome = int(dieRoll)
+            float(dieRoll)
+            outcome = float(dieRoll)
         except:
-            outcome = await rpg.d(self, ctx, dieRoll)
+            outcome = float(await rpg.d(self, ctx, dieRoll))
         try:
             ID = ctx.message.mentions[0].id
         except:
@@ -322,7 +322,7 @@ class rpg(commands.Cog):
     @init.command(pass_context=True, aliases=["remove"])
     async def kill(self, ctx, name):
         """
-        Remove a combant from the initiative tracker.
+        Remove a combant from the initiative tracker. Temporarily disabled the ability for non-DM users to remove combatants.
         """
         Category, Guild, ID = self.ctx_info(ctx)
         dmCheck = self.lt_db.owner_check(Guild, Category, ID)
@@ -330,7 +330,7 @@ class rpg(commands.Cog):
         turnNum = int(self.lt_db.turn_get(Guild, Category))
         current = initraw[turnNum - 1]["ID"]
 
-        if int(ID) == int(current) or dmCheck == True:
+        if dmCheck == True:
             self.lt_db.init_remove(Guild, Category, name)
             if turnNum == len(initraw):
                 self.lt_db.turn_next(Guild, Category)
