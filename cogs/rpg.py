@@ -180,6 +180,9 @@ class rpg(commands.Cog):
 
     @d.command(pass_context=True)
     async def save(self, ctx, Alias, Value):
+        """
+        Saves a dice expression as a variable, using the prefix '!'.
+        """
         Guild = ctx.message.guild.id
         User = ctx.message.author.id
         self.lt_db.dice_add(User, Guild, Alias, Value)
@@ -189,6 +192,9 @@ class rpg(commands.Cog):
 
     @d.command(pass_context=True)
     async def delete(self, ctx, Alias):
+        """
+        Removes a dice variable. Do not include the '!' prefix.
+        """
         Guild = ctx.message.guild.id
         User = ctx.message.author.id
         outMessage = self.lt_db.dice_delete(User, Guild, Alias)
@@ -196,6 +202,9 @@ class rpg(commands.Cog):
 
     @d.command(pass_context=True)
     async def ready(self, ctx, Alias, *, Value):
+        """
+        WIP. Do not use.
+        """
         if ctx.invoked_subcommand == None:
             Category, Guild, ID = self.ctx_info(ctx)
             outMessage = self.lt_db.ready_set(ID, Guild, Alias, Value)
@@ -205,7 +214,7 @@ class rpg(commands.Cog):
     @d.command(pass_context=True)
     async def trigger(self, ctx, Alias):
         """
-        Stuff
+        WIP. Do not use.
         """ 
         Guild = ctx.message.guild.id
         trigger = self.lt_db.ready_trigger(Guild, Alias.lower())
@@ -220,6 +229,9 @@ class rpg(commands.Cog):
     
     @d.command(pass_context=True)
     async def ready_remove(self, ctx, Alias):
+        """
+        WIP. Do not use.
+        """
         Category, Guild, ID = self.ctx_info(ctx)
         dmCheck = self.lt_db.owner_check(Guild, Category, ID)
         playerCheck = self.lt_db.ready_get(ID, Guild, Alias.lower())
@@ -379,6 +391,9 @@ class rpg(commands.Cog):
 
     @init.command()
     async def setturn(self, ctx, newPos):
+        """
+        Sets the current turn to an existing combatant, either by iniative total or combatant name.
+        """
         Category, Guild, ID = self.ctx_info(ctx)
         initraw = self.lt_db.init_get(Guild, Category)
         dmCheck = self.lt_db.owner_check(Guild, Category, ID)
@@ -430,13 +445,13 @@ class rpg(commands.Cog):
         """
         Command Group for character management. Still under construction.
 
-        All characters are saved on a per-guild, per-category basis.
+        All characters are saved on a per-guild basis..
         """
 
     @char.command()
     async def add(self, ctx, *, Name):
         """
-        Register a user's character to the current Category.
+        Register a user's character.
         """
         Category, Guild, ID = self.ctx_info(ctx)
 
@@ -453,7 +468,7 @@ class rpg(commands.Cog):
     @char.command()
     async def remove(self, ctx, *, Name):
         """
-        Remove a user's character from the current category.
+        Remove a user's character from the guild.
         """
         Category, Guild, ID = self.ctx_info(ctx)
 
