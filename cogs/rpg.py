@@ -181,7 +181,10 @@ class rpg(commands.Cog):
     @d.command(pass_context=True)
     async def save(self, ctx, Alias, Value):
         """
-        Saves a dice expression as a variable, using the prefix '!'.
+        Saves a dice expression as a variable.
+
+        Example:
+        .d save Attack_Longsword 1d20+8
         """
         Guild = ctx.message.guild.id
         User = ctx.message.author.id
@@ -193,7 +196,10 @@ class rpg(commands.Cog):
     @d.command(pass_context=True)
     async def delete(self, ctx, Alias):
         """
-        Removes a dice variable. Do not include the '!' prefix.
+        Removes a dice variable.
+        
+        Example:
+        .d delete Attack_Longsword
         """
         Guild = ctx.message.guild.id
         User = ctx.message.author.id
