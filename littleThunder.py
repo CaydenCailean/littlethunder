@@ -30,7 +30,7 @@ def weighted_random(pairs):
         r -= weight
         if r <= 0: return value
 
-@bot.command(pass_context="true", no_pm="true", aliases=["pet"])
+@bot.command(pass_context="true", aliases=["pet"])
 async def pat(ctx):
     user = ctx.author.display_name
     responses = [
