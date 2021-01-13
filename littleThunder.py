@@ -24,7 +24,7 @@ async def on_ready():
     print("I'm ready!")
 
 @bot.command(pass_context="true", no_pm="true", aliases=["pet"])
-async def pat(self, ctx):
+async def pat(ctx):
     user = ctx.author.display_name
     responses = [
         "_closes his eyes, enjoying the pat thoroughly._"
