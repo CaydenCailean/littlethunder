@@ -27,9 +27,9 @@ async def on_ready():
 async def pat(ctx):
     user = ctx.author.display_name
     responses = [
-        "_closes his eyes, enjoying the pat thoroughly._"
-        "_wags his tail energetically as he's pet._"
-        f"_licks {user} appreciatively._"
+        "_closes his eyes, enjoying the pat thoroughly._",
+        "_wags his tail energetically as he's pet._",
+        f"_licks {user} appreciatively._",
         "_rolls over and exposes his belly for more rubs._"
     ]
     await ctx.send(random.choice(responses))
