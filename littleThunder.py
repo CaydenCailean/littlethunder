@@ -23,7 +23,7 @@ bot = commands.Bot(command_prefix=".", case_insensitive=True)
 async def on_ready():
     print("I'm ready!")
 
-@bot.command(no_pm="true", aliases=["pet"])
+@bot.command(pass_context="true", no_pm="true", aliases=["pet"])
 async def pat(self, ctx):
     user = ctx.author.display_name
     responses = [
