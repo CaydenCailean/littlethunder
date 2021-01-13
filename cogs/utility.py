@@ -70,6 +70,10 @@ class utility(commands.Cog):
             else:
                 await ctx.send("Too many messages. Enter a number less than 100.")
 
+    @commands.command(no_pm="true", aliases=["pet"])
+    async def pat(self, ctx):
+        user = ctx.author.display_name
+        await ctx.send(f"{user} has patted LittleThunder.")
 
 def setup(bot):
     bot.add_cog(utility(bot))
