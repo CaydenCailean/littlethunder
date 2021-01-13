@@ -34,10 +34,10 @@ def weighted_random(pairs):
 async def pat(ctx):
     user = ctx.author.display_name
     responses = [
-        (10, "_closes his eyes, enjoying the pat thoroughly._",)
-        (10, "_wags his tail energetically as he's pet._",)
-        (10, f"_licks {user} appreciatively._",)
-        (10, "_rolls over and exposes his belly for more rubs._")
+        (10, "_closes his eyes, enjoying the pat thoroughly._"),
+        (10, "_wags his tail energetically as he's pet._"),
+        (10, f"_licks {user} appreciatively._"),
+        (10, "_rolls over and exposes his belly for more rubs._"),
         (1, "_uwu_")
     ]
     await ctx.send(weighted_random(responses))
