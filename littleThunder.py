@@ -4,6 +4,7 @@ import time
 import asyncio
 import configparser
 import re
+import random
 from discord.ext import commands
 from dbinit import lt_db
 from cogs.info import info
@@ -21,6 +22,17 @@ bot = commands.Bot(command_prefix=".", case_insensitive=True)
 @bot.event
 async def on_ready():
     print("I'm ready!")
+
+@bot.command(no_pm="true", aliases=["pet"])
+async def pat(self, ctx):
+    user = ctx.author.display_name
+    responses = [
+        "_closes his eyes, enjoying the pat thoroughly._"
+        "_wags his tail energetically as he's pet._"
+        f"_licks {user} appreciatively._"
+        "_rolls over and exposes his belly for more rubs._"
+    ]
+    await ctx.send(random.choice(responses))
 
 
 # Read config and connect to db
