@@ -23,16 +23,24 @@ bot = commands.Bot(command_prefix=".", case_insensitive=True)
 async def on_ready():
     print("I'm ready!")
 
+def weighted_random(pairs):
+    total = sum(pair[0] for pair in pairs)
+    r = random.randint(1, total)
+    for (weight, value) in pairs:
+        r -= weight
+        if r <= 0: return value
+
 @bot.command(pass_context="true", no_pm="true", aliases=["pet"])
 async def pat(ctx):
     user = ctx.author.display_name
     responses = [
-        "_closes his eyes, enjoying the pat thoroughly._",
-        "_wags his tail energetically as he's pet._",
-        f"_licks {user} appreciatively._",
-        "_rolls over and exposes his belly for more rubs._"
+        (10, "_closes his eyes, enjoying the pat thoroughly._",)
+        (10, "_wags his tail energetically as he's pet._",)
+        (10, f"_licks {user} appreciatively._",)
+        (10, "_rolls over and exposes his belly for more rubs._")
+        (1, "_uwu_")
     ]
-    await ctx.send(random.choice(responses))
+    await ctx.send(weighted_random(responses))
 
 
 # Read config and connect to db
