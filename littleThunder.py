@@ -4,13 +4,13 @@ import time
 import asyncio
 import configparser
 import re
-import random
 from discord.ext import commands
 from dbinit import lt_db
 from cogs.info import info
 from cogs.utility import utility
 from cogs.rpg import rpg
 from cogs.mw import mw
+from random import randint
 
 # bot command prefix
 
@@ -23,9 +23,9 @@ bot = commands.Bot(command_prefix=".", case_insensitive=True)
 async def on_ready():
     print("I'm ready!")
 
-def weighted_random(pairs):
+def weighted(pairs):
     total = sum(pair[0] for pair in pairs)
-    r = random.randint(1, total)
+    r = randint(1, total)
     for (weight, value) in pairs:
         r -= weight
         if r <= 0: return value
@@ -40,7 +40,7 @@ async def pat(ctx):
         (10, "_rolls over and exposes his belly for more rubs._"),
         (1, "_uwu_")
     ]
-    await ctx.send(weighted_random(responses))
+    await ctx.send(weighted(responses))
 
 
 # Read config and connect to db
