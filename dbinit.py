@@ -3,6 +3,7 @@ from pymongo import MongoClient, ReturnDocument, ASCENDING
 import datetime
 import configparser
 import os
+import re
 
 
 def init_order(self):
@@ -40,6 +41,14 @@ class lt_db(object):
     def db_init(self):
         self.db = self.client.brertdtw29riga7
         return True
+
+    def drop_collection(self, Guild):
+        collections = self.db.list_collection_names()
+        for c in collections:
+            if re.search(Guild, c) == None:
+                print(c)
+            else:
+                print(c + "would not be deleted")
 
     def dice_add(self, User, Guild, Alias, Value):
         self.db.dice[str(Guild)]

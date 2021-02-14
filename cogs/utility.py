@@ -1,9 +1,14 @@
 import discord
+import sys
 from discord.ext import commands
+
+sys.path.append("..")
+from dbinit import lt_db
 
 class utility(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.lt_db = lt_db
 
     @commands.command(pass_context=True, no_pm=True, aliases=["clear", "p"])
     async def purge(self, ctx, number: int, members="everyone", *, txt=None):
@@ -25,7 +30,6 @@ class utility(commands.Cog):
                 member_list = [x.strip() for x in members.split(" , ")]
                 for member in member_list:
                     if "@" in member:
-                        #print(member)
                         member = int(member[3:-1])
                         member_object = ctx.guild.get_member(member)
                     else:
@@ -70,7 +74,12 @@ class utility(commands.Cog):
             else:
                 await ctx.send("Too many messages. Enter a number less than or equal to 500.")
     
-
+    @commands.command(pass_context=True, no_pm=True)
+    @commands.has_guild_permissions(administrator=True)
+    async def drop(self, ctx):
+        Guild = ctx.guild.id 
+        self.lt_db.drop_collection(Guild)
+        
     
 
 def setup(bot):
