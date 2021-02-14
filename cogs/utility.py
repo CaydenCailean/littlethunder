@@ -77,6 +77,23 @@ class utility(commands.Cog):
     @commands.has_guild_permissions(administrator=True)
     @commands.command(pass_context=True, no_pm=True)
     async def drop(self, ctx):
+        """
+        Please do not use lightly.
+
+        Purges all information from Little Thunder's database related to the current server.
+        """
+        author = ctx.message.author
+                
+        await ctx.send("React with a 👍 if you're absolutely sure you want to go through with this. This cannot be reversed.")
+        
+        def check(reaction, user):
+            return user == ctx.message.author and str(reaction.emoji) == '👍'
+        
+        try:
+            reaction, user = self.bot.wait_for('reaction_add', timeout=60.0, check=check)
+        except:
+            pass
+
         Guild = ctx.guild.id
         dropped = self.lt_db.drop_collection(Guild)
         await ctx.send(f"Dropped {dropped} collections from lt_db.")
