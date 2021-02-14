@@ -50,7 +50,7 @@ class lt_db(object):
                 pass
             else:
                 check = self.db[c].drop()
-                if check == True:
+                if check != True:
                     dropped += 1
         return dropped
 
