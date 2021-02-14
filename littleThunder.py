@@ -76,7 +76,7 @@ lt_db.db_init()
 # add cogs before startup
 
 bot.add_cog(info(bot))
-bot.add_cog(utility(bot))
+bot.add_cog(utility(bot, lt_db))
 bot.add_cog(rpg(bot, lt_db))
 bot.add_cog(mw(bot))
 bot.run(discToken)

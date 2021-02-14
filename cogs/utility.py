@@ -77,7 +77,7 @@ class utility(commands.Cog):
     @commands.has_guild_permissions(administrator=True)
     @commands.command(pass_context=True, no_pm=True)
     async def drop(self, ctx):
-        Guild = ctx.guild.id 
+        Guild = ctx.guild.id
         self.lt_db.drop_collection(Guild)
         
     
