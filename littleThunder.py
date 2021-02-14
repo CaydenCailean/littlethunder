@@ -12,6 +12,10 @@ from cogs.rpg import rpg
 from cogs.mw import mw
 from random import randint
 
+intents = discord.Intents.default()
+intents.members = True
+
+
 # bot command prefix
 
 bot = commands.Bot(command_prefix=".", case_insensitive=True)

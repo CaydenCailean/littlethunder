@@ -1,7 +1,6 @@
 import discord
 from discord.ext import commands
 
-
 class utility(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -27,8 +26,8 @@ class utility(commands.Cog):
                 for member in member_list:
                     if "@" in member:
                         #print(member)
-                        #member = int(member[3:-1])
-                        #print(member)
+                        member = int(member[3:-1])
+                        print(member)
                         member_object = ctx.guild.get_member(member)
                         print(ctx.guild.get_member(member))
                         
@@ -73,6 +72,7 @@ class utility(commands.Cog):
                         await ctx.send(e)
             else:
                 await ctx.send("Too many messages. Enter a number less than 100.")
+    
 
     
 
