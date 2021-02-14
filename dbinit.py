@@ -46,9 +46,9 @@ class lt_db(object):
         collections = self.db.list_collection_names()
         for c in collections:
             if re.search(str(Guild), c) == None:
-                print(c)
+                pass
             else:
-                print(c + "would not be deleted")
+                self.db[c].find_one()
 
     def dice_add(self, User, Guild, Alias, Value):
         self.db.dice[str(Guild)]
