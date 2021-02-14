@@ -48,7 +48,7 @@ class lt_db(object):
             if re.search(str(Guild), c) == None:
                 pass
             else:
-                self.db[c].find_one()
+                print(self.db[c].find_one())
 
     def dice_add(self, User, Guild, Alias, Value):
         self.db.dice[str(Guild)]
