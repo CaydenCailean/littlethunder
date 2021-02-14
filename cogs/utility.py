@@ -26,7 +26,7 @@ class utility(commands.Cog):
                 member_list = [x.strip() for x in members.split(" , ")]
                 for member in member_list:
                     if "@" in member:
-                        member = member[3 if "!" in member else 2 : -1]
+                        member_object = member[3 if "!" in member else 2 : -1]
                     elif member.isdigit():
                         member_object = ctx.guild.get_member(int(member))
                     else:
