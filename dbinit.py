@@ -44,11 +44,15 @@ class lt_db(object):
 
     def drop_collection(self, Guild):
         collections = self.db.list_collection_names()
+        dropped = 0
         for c in collections:
             if re.search(str(Guild), c) == None:
                 pass
             else:
-                print(self.db[c].find_one())
+                check = self.db[c].drop()
+                if check == True:
+                    dropped += 1
+        return dropped
 
     def dice_add(self, User, Guild, Alias, Value):
         self.db.dice[str(Guild)]

@@ -78,7 +78,8 @@ class utility(commands.Cog):
     @commands.command(pass_context=True, no_pm=True)
     async def drop(self, ctx):
         Guild = ctx.guild.id
-        self.lt_db.drop_collection(Guild)
+        dropped = self.lt_db.drop_collection(Guild)
+        await ctx.send(f"Dropped {dropped} collections from lt_db.")
         
     
 
