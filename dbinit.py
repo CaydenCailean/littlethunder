@@ -45,7 +45,7 @@ class lt_db(object):
     def drop_collection(self, Guild):
         collections = self.db.list_collection_names()
         for c in collections:
-            if re.search(Guild, c) == None:
+            if re.search(str(Guild), c) == None:
                 print(c)
             else:
                 print(c + "would not be deleted")
