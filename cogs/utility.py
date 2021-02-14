@@ -26,9 +26,9 @@ class utility(commands.Cog):
                 member_list = [x.strip() for x in members.split(" , ")]
                 for member in member_list:
                     if "@" in member:
-                        print(member)
-                        member = int(member[3:-1])
-                        print(member)
+                        #print(member)
+                        #member = int(member[3:-1])
+                        #print(member)
                         member_object = ctx.guild.get_member(member)
                         print(ctx.guild.get_member(member))
                         
