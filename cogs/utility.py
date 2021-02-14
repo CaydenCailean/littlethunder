@@ -26,14 +26,15 @@ class utility(commands.Cog):
                 member_list = [x.strip() for x in members.split(" , ")]
                 for member in member_list:
                     if "@" in member:
-                        member = int(member[3 if "!" in member else 2 : -1])
-                        member_object = ctx.guild.get_member(member)
+                        member = int(member[3:-1])
                         print(member)
+                        member_object = ctx.guild.get_member(member)
+                        print(ctx.guild.get_member(member))
+                        
                     else:
                         member_object = ctx.guild.get_member_named(member)
-                        print("not a number")
+                        
                     if not member_object:
-                        print(member_object)
                         return await ctx.send("Invalid user.")
                     else:
                         member_object_list.append(member_object)
