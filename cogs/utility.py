@@ -27,10 +27,7 @@ class utility(commands.Cog):
                     if "@" in member:
                         #print(member)
                         member = int(member[3:-1])
-                        print(member)
                         member_object = ctx.guild.get_member(member)
-                        print(ctx.guild.get_member(member))
-                        
                     else:
                         member_object = ctx.guild.get_member_named(member)
                         
@@ -59,7 +56,7 @@ class utility(commands.Cog):
                 await ctx.send("Too many messages. Enter a number less than or equal to 500.")
         else:
 
-            if number < 100:
+            if number < 501:
                 async for message in ctx.message.channel.history(limit=number):
                     try:
                         if txt:
@@ -71,7 +68,7 @@ class utility(commands.Cog):
                     except Exception as e:
                         await ctx.send(e)
             else:
-                await ctx.send("Too many messages. Enter a number less than 100.")
+                await ctx.send("Too many messages. Enter a number less than or equal to 500.")
     
 
     
