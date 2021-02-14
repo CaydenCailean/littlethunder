@@ -90,7 +90,7 @@ class utility(commands.Cog):
             return user == ctx.message.author and str(reaction.emoji) == '👍'
         
         try:
-            reaction, user = self.bot.wait_for('reaction_add', timeout=60.0, check=check)
+            reaction, user = await self.bot.wait_for('reaction_add', timeout=60.0, check=check)
         except:
             pass
 
