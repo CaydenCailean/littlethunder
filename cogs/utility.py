@@ -26,14 +26,13 @@ class utility(commands.Cog):
                 member_list = [x.strip() for x in members.split(" , ")]
                 for member in member_list:
                     if "@" in member:
-                        member = member[3 if "!" in member else 2 : -1]
+                        member = int(member[3 if "!" in member else 2 : -1])
                         print(member)
                     if member.isdigit():
                         member_object = ctx.guild.get_member(int(member))
                         print(member_object)
                     else:
                         member_object = ctx.guild.get_member_named(member)
-                        print(member_object_list)
                         print("not a number")
                     if not member_object:
                         print(member_object)
@@ -41,7 +40,7 @@ class utility(commands.Cog):
                     else:
                         member_object_list.append(member_object)
 
-            if number < 100:
+            if number < 501:
                 async for message in ctx.message.channel.history(limit=number):
                     try:
                         if txt:
@@ -58,7 +57,7 @@ class utility(commands.Cog):
                         )
 
             else:
-                await ctx.send("Too many messages. Enter a number less than 100.")
+                await ctx.send("Too many messages. Enter a number less than or equal to 500.")
         else:
 
             if number < 100:
