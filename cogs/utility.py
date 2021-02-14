@@ -28,6 +28,9 @@ class utility(commands.Cog):
                     if "@" in member:
                         member = member_object = ctx.guild.get_member(int(member[3 if "!" in member else 2 : -1]))
                         print(member)
+                    if member.isdigit():
+                        member_object = ctx.guild.get_member(int(member))
+                        print(member_object)
                     else:
                         member_object = ctx.guild.get_member_named(member)
                         print("not a number")
