@@ -18,7 +18,7 @@ intents.members = True
 
 # bot command prefix
 
-bot = commands.Bot(command_prefix=".", case_insensitive=True)
+bot = commands.Bot(command_prefix=".", case_insensitive=True, intents=intents)
 
 # startup confirmation
 
