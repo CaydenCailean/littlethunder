@@ -9,7 +9,6 @@ from datetime import datetime
 sys.path.append("..")
 from dbinit import lt_db
 
-
 class rpg(commands.Cog):
     def __init__(self, bot, lt_db):
         self.bot = bot

@@ -6,7 +6,7 @@ sys.path.append("..")
 from dbinit import lt_db
 
 class utility(commands.Cog):
-    def __init__(self, bot):
+    def __init__(self, bot, lt_db):
         self.bot = bot
         self.lt_db = lt_db
 
@@ -74,8 +74,8 @@ class utility(commands.Cog):
             else:
                 await ctx.send("Too many messages. Enter a number less than or equal to 500.")
     
-    @commands.command(pass_context=True, no_pm=True)
     @commands.has_guild_permissions(administrator=True)
+    @commands.command(pass_context=True, no_pm=True)
     async def drop(self, ctx):
         Guild = ctx.guild.id 
         self.lt_db.drop_collection(Guild)
