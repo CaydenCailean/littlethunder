@@ -1,6 +1,7 @@
 import discord
 import sys
 from discord.ext import commands
+from asyncio import sleep
 
 sys.path.append("..")
 from dbinit import lt_db
@@ -81,9 +82,8 @@ class utility(commands.Cog):
         Please do not use lightly.
         Purges all information from Little Thunder's database related to the current server.
         """
-        author = ctx.message.author
                 
-        await ctx.send("React with a 👍 if you're absolutely sure you want to go through with this. This cannot be reversed.")
+        message = await ctx.send("React with a 👍 if you're absolutely sure you want to go through with this. This cannot be reversed.")
         
         def check(reaction, user):
             return user == ctx.message.author and str(reaction.emoji) == '👍'
@@ -92,10 +92,14 @@ class utility(commands.Cog):
             reaction, user = await self.bot.wait_for('reaction_add', timeout=5.0, check=check)
             Guild = ctx.guild.id
             dropped = 0 # self.lt_db.drop_collection(Guild)
+            message.delete()
             await ctx.send(f"Dropped {dropped} collections from lt_db.")
 
         except:
-            await ctx.send("You didn't react in time!")
+            message.delete()
+            message = await ctx.send("You didn't react in time!")
+            await sleep(5)
+            message.delete()
             pass
 
 
