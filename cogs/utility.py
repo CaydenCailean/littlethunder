@@ -75,32 +75,32 @@ class utility(commands.Cog):
             else:
                 await ctx.send("Too many messages. Enter a number less than or equal to 500.")
     
-    @commands.has_guild_permissions(administrator=True)
-    @commands.command(pass_context=True, no_pm=True)
-    async def drop(self, ctx):
-        """
-        Please do not use lightly.
-        Purges all information from Little Thunder's database related to the current server.
-        """
-                
-        message = await ctx.send("React with a 👍 if you're absolutely sure you want to go through with this. This cannot be reversed.")
-        
-        def check(reaction, user):
-            return user == ctx.message.author and str(reaction.emoji) == '👍'
-        
-        try:
-            reaction, user = await self.bot.wait_for('reaction_add', timeout=5.0, check=check)
-            Guild = ctx.guild.id
-            dropped = 0 # self.lt_db.drop_collection(Guild)
-            await message.delete()
-            await ctx.send(f"Dropped {dropped} collections from lt_db.")
-
-        except:
-            await message.delete()
-            message = await ctx.send("You didn't react in time!")
-            await sleep(5)
-            await message.delete()
-            pass
+    #@commands.has_guild_permissions(administrator=True)
+    #@commands.command(pass_context=True, no_pm=True)
+    #async def drop(self, ctx):
+    #    """
+    #    Please do not use lightly.
+    #    Purges all information from Little Thunder's database related to the current server.
+    #    """
+    #            
+    #    message = await ctx.send("React with a 👍 if you're absolutely sure you want to go through with this. This cannot be reversed.")
+    #    
+    #    def check(reaction, user):
+    #        return user == ctx.message.author and str(reaction.emoji) == '👍'
+    #    
+    #    try:
+    #        reaction, user = await self.bot.wait_for('reaction_add', timeout=5.0, check=check)
+    #        Guild = ctx.guild.id
+    #        dropped = self.lt_db.drop_collection(Guild)
+    #        await message.delete()
+    #        await ctx.send(f"Dropped {dropped} collections from lt_db for {ctx.message.author}")
+    #    except:
+    #        await message.delete()
+    #        message = await ctx.send("You didn't react in time!")
+    #        await sleep(5)
+    #        await message.delete()
+    #        await ctx.message.delete()
+    #        pass
 
 
 def setup(bot):
