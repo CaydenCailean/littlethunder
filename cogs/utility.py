@@ -89,12 +89,13 @@ class utility(commands.Cog):
             return user == ctx.message.author and str(reaction.emoji) == '👍'
         
         try:
-             reaction, user = await self.bot.wait_for('reaction_add', timeout=60.0, check=check)
-             Guild = ctx.guild.id
-             dropped = 0 # self.lt_db.drop_collection(Guild)
-             await ctx.send(f"Dropped {dropped} collections from lt_db.")
+            reaction, user = await self.bot.wait_for('reaction_add', timeout=5.0, check=check)
+            Guild = ctx.guild.id
+            dropped = 0 # self.lt_db.drop_collection(Guild)
+            await ctx.send(f"Dropped {dropped} collections from lt_db.")
 
         except:
+            await ctx.send("You didn't react in time!")
             pass
 
 
