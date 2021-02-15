@@ -92,14 +92,14 @@ class utility(commands.Cog):
             reaction, user = await self.bot.wait_for('reaction_add', timeout=5.0, check=check)
             Guild = ctx.guild.id
             dropped = 0 # self.lt_db.drop_collection(Guild)
-            message.delete()
+            await message.delete()
             await ctx.send(f"Dropped {dropped} collections from lt_db.")
 
         except:
-            message.delete()
+            await message.delete()
             message = await ctx.send("You didn't react in time!")
             await sleep(5)
-            message.delete()
+            await message.delete()
             pass
 
 
