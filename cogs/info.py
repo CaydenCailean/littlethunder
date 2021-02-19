@@ -31,7 +31,7 @@ class info(commands.Cog):
         embed.set_thumbnail(url="https://i.imgur.com/lacm87y.png")
         await ctx.send(embed=embed)
 
-    @commands.command()
+    @commands.command(aliases=["suggestion"])
     async def suggest(self, ctx, *, arg):
         user = ctx.message.author.name
 
