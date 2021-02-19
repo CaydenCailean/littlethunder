@@ -446,7 +446,7 @@ class rpg(commands.Cog):
         await ctx.send(output)
 
     @commands.group(case_insensitive=True)
-    async def char(self, ctx):
+    async def char(self, ctx, *, Name):
         """
         Command Group for character management. Still under construction.
 
