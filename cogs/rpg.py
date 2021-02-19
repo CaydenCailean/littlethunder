@@ -446,12 +446,15 @@ class rpg(commands.Cog):
         await ctx.send(output)
 
     @commands.group(case_insensitive=True)
-    async def char(self, ctx):
+    async def char(self, ctx, *, Name):
         """
         Command Group for character management. Still under construction.
 
         All characters are saved on a per-guild basis..
         """
+
+        if ctx.invoked_subcommand is None:
+            await self.display(ctx, Name)
 
     @char.command()
     async def add(self, ctx, *, Name):
