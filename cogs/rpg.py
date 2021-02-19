@@ -545,7 +545,7 @@ class rpg(commands.Cog):
                 await ctx.send(f"{field} has been removed from {Name.title()}!")
 
     @char.command()
-    async def display(self, ctx, *, Name):
+    async def display(self, ctx, Name):
         """
         Display information regarding a stored character, including all stored fields.
         """
