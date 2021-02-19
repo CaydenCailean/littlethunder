@@ -446,52 +446,12 @@ class rpg(commands.Cog):
         await ctx.send(output)
 
     @commands.group(case_insensitive=True)
-    async def char(self, ctx, *, Name):
+    async def char(self, ctx):
         """
         Command Group for character management. Still under construction.
 
         All characters are saved on a per-guild basis..
         """
-
-        Name = Name.lower()
-        Category, Guild, ID = self.ctx_info(ctx)
-        results = self.lt_db.get_char(Guild, Name)
-
-        for output in results:
-
-            embed = discord.Embed(
-                title="__" + output["name"].title() + "__",
-                description=output["description"],
-                color=int(str(output["color"]), 16),
-            )
-
-            del (
-                output["_id"],
-                output["owner"],
-                output["name"],
-                output["description"],
-                output["color"],
-                output["public"],
-                output["inventory"],
-            )
-            keys = []
-            vals = []
-
-            for i in output.items():
-                keys.append(i[0]), vals.append(i[1])
-
-            for i in range(len(output)):
-                if keys[i] == "image":
-                    embed.set_image(url=vals[i])
-                elif keys[i] == "token":
-                    embed.set_thumbnail(url=vals[i])
-                else:
-                    embed.add_field(name=str(keys[i]), value=str(vals[i]))
-            if embed:
-                await ctx.send(embed=embed)
-            else:
-                await ctx.send(f"It looks like {Name} doesn't exist!")
-
 
     @char.command()
     async def add(self, ctx, *, Name):
@@ -581,49 +541,49 @@ class rpg(commands.Cog):
                 self.lt_db.unset_field(Guild, ID, Name, field)
                 await ctx.send(f"{field} has been removed from {Name.title()}!")
 
-#    @char.command()
-#    async def display(self, ctx, *, Name):
-#        """
-#        Display information regarding a stored character, including all stored fields.
-#        """
-#        Name = Name.lower()
-#        Category, Guild, ID = self.ctx_info(ctx)
-#        results = self.lt_db.get_char(Guild, Name)
-#
-#        for output in results:
-#
-#            embed = discord.Embed(
-#                title="__" + output["name"].title() + "__",
-#                description=output["description"],
-#                color=int(str(output["color"]), 16),
-#            )
-#
-#            del (
-#                output["_id"],
-#                output["owner"],
-#                output["name"],
-#                output["description"],
-#                output["color"],
-#                output["public"],
-#                output["inventory"],
-#            )
-#            keys = []
-#            vals = []
-#
-#            for i in output.items():
-#                keys.append(i[0]), vals.append(i[1])
-#
-#            for i in range(len(output)):
-#                if keys[i] == "image":
-#                    embed.set_image(url=vals[i])
-#                elif keys[i] == "token":
-#                    embed.set_thumbnail(url=vals[i])
-#                else:
-#                    embed.add_field(name=str(keys[i]), value=str(vals[i]))
-#            if embed:
-#                await ctx.send(embed=embed)
-#            else:
-#                await ctx.send(f"It looks like {Name} doesn't exist!")
+    @char.command()
+    async def display(self, ctx, *, Name):
+        """
+        Display information regarding a stored character, including all stored fields.
+        """
+        Name = Name.lower()
+        Category, Guild, ID = self.ctx_info(ctx)
+        results = self.lt_db.get_char(Guild, Name)
+
+        for output in results:
+
+            embed = discord.Embed(
+                title="__" + output["name"].title() + "__",
+                description=output["description"],
+                color=int(str(output["color"]), 16),
+            )
+
+            del (
+                output["_id"],
+                output["owner"],
+                output["name"],
+                output["description"],
+                output["color"],
+                output["public"],
+                output["inventory"],
+            )
+            keys = []
+            vals = []
+
+            for i in output.items():
+                keys.append(i[0]), vals.append(i[1])
+
+            for i in range(len(output)):
+                if keys[i] == "image":
+                    embed.set_image(url=vals[i])
+                elif keys[i] == "token":
+                    embed.set_thumbnail(url=vals[i])
+                else:
+                    embed.add_field(name=str(keys[i]), value=str(vals[i]))
+            if embed:
+                await ctx.send(embed=embed)
+            else:
+                await ctx.send(f"It looks like {Name} doesn't exist!")
 
     @char.command()
     async def webedit(self, ctx):
