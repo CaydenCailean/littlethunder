@@ -545,7 +545,7 @@ class rpg(commands.Cog):
                 self.lt_db.unset_field(Guild, ID, Name, field)
                 await ctx.send(f"{field} has been removed from {Name.title()}!")
 
-    @char.command()
+    @char.command(hidden=True)
     async def display(self, ctx, Name):
         """
         Display information regarding a stored character, including all stored fields.
