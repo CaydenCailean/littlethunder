@@ -63,9 +63,7 @@ class rpg(commands.Cog):
 
                 if isPlus == -1 and isMinus == -1:
                     try:
-                        print(input)
                         diceNum, diceVal = input.split("d")
-                        print(diceNum)
                     except ValueError as e:
                         raise Exception("Make sure your expression is in #d# format.")
                     
@@ -154,11 +152,6 @@ class rpg(commands.Cog):
                 else:
                     discName = ctx.message.author.name
                 
-                print(discName)
-                print(commentText)
-                print(outResults)
-                print(Total)
-
                 embed = discord.Embed(
                     title=f"Results for {discName}",
                     description=commentText,
@@ -225,10 +218,12 @@ class rpg(commands.Cog):
         trigger = self.lt_db.ready_trigger(Guild, Alias.lower())
         User = self.bot.get_user(trigger["User"])
         if trigger != None:
-            if trigger["Value"].find("#") != -1:
-                trigger["Value"] += f"# being rolled for {User.name}"
-            else: 
-                trigger["Value"] += f" # Being Rolled for {User.name}"
+            #if trigger["Value"].find("#") != -1:
+            #    trigger["Value"] += f"# being rolled for {User.name}"
+            #else: 
+            #    trigger["Value"] += f" # Being Rolled for {User.name}"
+
+            ctx.content += " # " + trigger["Value"] + f"Being rolled for {User.name}"
             print(trigger["Value"])
             await self.d(ctx, trigger["Value"])
 
