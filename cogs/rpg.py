@@ -222,7 +222,7 @@ class rpg(commands.Cog):
         print(trigger["Value"])
         User = self.bot.get_user(trigger["User"])
         if trigger != None:
-            if re.match(pattern, trigger["Value"]) != None:
+            if re.match(pattern, trigger["Value"]) != "None":
                 print(re.match(pattern, trigger["Value"]))
                 print("no #")
                 ctx.message.content += trigger["Value"] + f": Being rolled for {User.name}"
