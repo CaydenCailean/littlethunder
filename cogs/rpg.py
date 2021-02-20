@@ -224,7 +224,8 @@ class rpg(commands.Cog):
 
         if trigger != None:
             if check.group(1) != "None":
-                print(re.search(pattern, trigger["Value"]))
+                print(check)
+                print(check.group(1))
                 print("no #")
                 ctx.message.content += " # " + trigger["Value"] + f": Being rolled for {User.name}"
                 print(ctx.message.content)
