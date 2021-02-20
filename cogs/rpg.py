@@ -202,7 +202,7 @@ class rpg(commands.Cog):
         outMessage = self.lt_db.dice_delete(User, Guild, Alias)
         await ctx.send(outMessage)
 
-    @d.command(pass_context=True)
+    @commands.command(pass_context=True)
     async def ready(self, ctx, Alias, *, Value):
         """
         Readies an action's dice. Preserves comments through value
@@ -212,7 +212,7 @@ class rpg(commands.Cog):
             outMessage = self.lt_db.ready_set(ID, Guild, Alias, Value)
             await ctx.send(outMessage)
 
-    @d.command(pass_context=True)
+    @commands.command(pass_context=True)
     async def trigger(self, ctx, Alias):
         """
         Triggers a readied action.
