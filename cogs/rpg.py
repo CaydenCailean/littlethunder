@@ -219,7 +219,8 @@ class rpg(commands.Cog):
         Guild = ctx.message.guild.id
         trigger = self.lt_db.ready_trigger(Guild, Alias.lower())
         User = self.bot.get_user(trigger["User"])
-        print(trigger)
+
+        check = re.search(pattern, trigger["Value"])
         if trigger != None:
             try:
                 print(check.group(1))
