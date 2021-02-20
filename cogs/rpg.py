@@ -226,7 +226,7 @@ class rpg(commands.Cog):
                 ctx.message.content += trigger["Value"] + f": Being rolled for {User.name}"
             else: 
                 print("#")
-                print(re.match(pattern, trigger["Value"]))
+                print(re.match(pattern, trigger["Value"]).group(1))
                 ctx.message.content += " # " + trigger["Value"] + f": Being Rolled for {User.name}"
             print(trigger["Value"])
             await self.d(ctx, trigger["Value"])
