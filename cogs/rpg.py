@@ -205,7 +205,7 @@ class rpg(commands.Cog):
     @d.command(pass_context=True)
     async def ready(self, ctx, Alias, *, Value):
         """
-        WIP. Do not use.
+        Readies an action's dice. Preserves comments through value
         """
         if ctx.invoked_subcommand == None:
             Category, Guild, ID = self.ctx_info(ctx)
@@ -215,7 +215,7 @@ class rpg(commands.Cog):
     @d.command(pass_context=True)
     async def trigger(self, ctx, Alias):
         """
-        WIP. Do not use.
+        Triggers a readied action.
         """
         pattern = r"(#\d|\D*)$"
 
@@ -227,10 +227,8 @@ class rpg(commands.Cog):
 
         if trigger != None:
             try:
-                print(check.group(1).find("#"))
                 if check.group(1).find("#") == -1:
-                    print(1)
-
+                    
                     ctx.message.content = (
                         ctx.message.content
                         + " # "
@@ -238,8 +236,6 @@ class rpg(commands.Cog):
                         + f": Being rolled for {User.name}"
                     )
                 else:
-                    print(2)
-                    print(check.group(1).find("#"))
                     start, end = trigger["Value"].split("#")
                     ctx.message.content = (
                         "# " + end + " :: " + start + f": Being rolled for {User.name}"
