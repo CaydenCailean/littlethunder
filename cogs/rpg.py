@@ -214,17 +214,17 @@ class rpg(commands.Cog):
         """
         WIP. Do not use.
         """ 
+        pattern = r'(#\d|\D*)$'
+
         Guild = ctx.message.guild.id
         trigger = self.lt_db.ready_trigger(Guild, Alias.lower())
         User = self.bot.get_user(trigger["User"])
         if trigger != None:
-            #if trigger["Value"].find("#") != -1:
-            #    trigger["Value"] += f"# being rolled for {User.name}"
-            #else: 
-            #    trigger["Value"] += f" # Being Rolled for {User.name}"
+            if re.search(pattern, trigger["Value"]) != -1:
+                ctx.message.content += trigger["Value"] + f": Being rolled for {User.name}"
+            else: 
+                ctx.message.content += "# " + trigger["Value"] + f": Being Rolled for {User.name}"
 
-            ctx.message.content += " # " + trigger["Value"] + f": Being rolled for {User.name}"
-            print(trigger["Value"])
             await self.d(ctx, trigger["Value"])
 
     
