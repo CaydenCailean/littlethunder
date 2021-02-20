@@ -233,12 +233,12 @@ class rpg(commands.Cog):
                         ctx.message.content
                         + " # "
                         + trigger["Value"]
-                        + f": Being rolled for {User.name}"
+                        + f": Being rolled for {User.display_name}"
                     )
                 else:
                     start, end = trigger["Value"].split("#")
                     ctx.message.content = (
-                        "# " + end + " :: " + start + f": Being rolled for {User.name}"
+                        "# " + end + " :: " + start + f": Being rolled for {User.display_name}"
                     )
 
             except:
