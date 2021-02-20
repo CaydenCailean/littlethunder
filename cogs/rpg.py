@@ -222,10 +222,9 @@ class rpg(commands.Cog):
 
         if trigger != None:
             try:
-                check = re.search(pattern, trigger["Value"])
-                print(check)
-                print(check.group(1))
-                if check == '':
+                if check.group(1).find('#'):
+                    print(ctx.message.content)
+                    print(trigger["Value"])
                     ctx.message.content = ctx.message.content + " # " + trigger["Value"] + f': Being rolld for {User}'  
             except:
                 pass
