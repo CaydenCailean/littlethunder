@@ -220,12 +220,12 @@ class rpg(commands.Cog):
         trigger = self.lt_db.ready_trigger(Guild, Alias.lower())
         User = self.bot.get_user(trigger["User"])
 
-        check = re.search(pattern, trigger["Value"])
+        check = re.match(pattern, trigger["Value"])
         if trigger != None:
             try:         
                 print(check.group(1).find('#'))       
                 if check.group(1).find('#') == -1:
-                    ctx.message.content = ctx.message.content + " # " + trigger["Value"] + f': Being rolld for {User}' 
+                    ctx.message.content = ctx.message.content + " # " + trigger["Value"] + f': Being rolled for {User}' 
                 else:
                     print(check.group(1).find('#'))
                     start, end = trigger["Value"].split('#')
