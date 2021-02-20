@@ -223,7 +223,7 @@ class rpg(commands.Cog):
             if re.search(pattern, trigger["Value"]) != -1:
                 ctx.message.content += trigger["Value"] + f": Being rolled for {User.name}"
             else: 
-                ctx.message.content += "# " + trigger["Value"] + f": Being Rolled for {User.name}"
+                ctx.message.content += " # " + trigger["Value"] + f": Being Rolled for {User.name}"
             print(trigger["Value"])
             await self.d(ctx, trigger["Value"])
 
