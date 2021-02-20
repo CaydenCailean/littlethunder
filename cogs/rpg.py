@@ -224,10 +224,12 @@ class rpg(commands.Cog):
         if trigger != None:
             try:         
                 print(check.group(1).find('#'))       
-                if check.group(1).find('#'):
+                if check.group(1).find('#') == -1:
                     print(ctx.message.content)
                     print(trigger["Value"])
-                    ctx.message.content = ctx.message.content + " # " + trigger["Value"] + f': Being rolld for {User}'  
+                    ctx.message.content = ctx.message.content + " # " + trigger["Value"] + f': Being rolld for {User}' 
+                else:
+                    pass 
             except:
                 pass
             await self.d(ctx, trigger["Value"])
