@@ -222,9 +222,8 @@ class rpg(commands.Cog):
 
         check = re.search(pattern, trigger["Value"])
         if trigger != None:
-            try:
-                print(check.group(1))
-                
+            try:         
+                print(check.group(1).find('#'))       
                 if check.group(1).find('#'):
                     print(ctx.message.content)
                     print(trigger["Value"])
