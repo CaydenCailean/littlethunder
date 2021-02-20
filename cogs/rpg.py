@@ -222,6 +222,8 @@ class rpg(commands.Cog):
 
         if trigger != None:
             try:
+                print(check.group(1))
+                
                 if check.group(1).find('#'):
                     print(ctx.message.content)
                     print(trigger["Value"])
