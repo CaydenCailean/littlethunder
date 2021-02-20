@@ -225,6 +225,8 @@ class rpg(commands.Cog):
                 check = re.search(pattern, trigger["Value"])
                 print(check)
                 print(check.group(1))
+                if check == '':
+                    ctx.message.content = ctx.message.content + " # " + trigger["Value"] + f': Being rolld for {User}'  
             except:
                 pass
             await self.d(ctx, trigger["Value"])
