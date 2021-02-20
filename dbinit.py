@@ -56,19 +56,19 @@ class lt_db(object):
 
     def dice_add(self, User, Guild, Alias, Value):
         self.db.dice[str(Guild)]
-        updoot = {"$set": {"user":User, "Alias":Alias.lower(), "Value":Value}}
-        query = {"user":User, "Alias":Alias.lower()}
+        updoot = {"$set": {"user": User, "Alias": Alias.lower(), "Value": Value}}
+        query = {"user": User, "Alias": Alias.lower()}
         self.db.dice[str(Guild)].update_one(query, updoot, upsert=True)
 
     def dice_get(self, User, Guild, Alias):
         self.db.dice[str(Guild)]
-        query= {"user":User, "Alias":Alias.lower()}
+        query = {"user": User, "Alias": Alias.lower()}
         dice = self.db.dice[str(Guild)].find_one(query)
         return dice["Value"]
 
     def dice_delete(self, User, Guild, Alias):
         self.db.dice[str(Guild)]
-        query= {"user":User, "Alias":Alias.lower()}
+        query = {"user": User, "Alias": Alias.lower()}
         check = self.db.dice[str(Guild)].find_one_and_delete(query)
         if check != None:
             return f"{Alias} has been removed!"
@@ -76,33 +76,32 @@ class lt_db(object):
             return f"It doesn't looks like {Alias} was a saved dice expression."
 
     def ready_set(self, User, Guild, Alias, Value):
-        updoot = {"$set": {"User":User, "Alias":Alias.lower(), "Value":Value}}
-        query = {"User":User, "Alias":Alias.lower()}
+        updoot = {"$set": {"User": User, "Alias": Alias.lower(), "Value": Value}}
+        query = {"User": User, "Alias": Alias.lower()}
         self.db.ready[str(Guild)].update_one(query, updoot, upsert=True)
         return f"{Alias} has been set!"
 
     def ready_get(self, User, Guild, Alias):
-        query = {"User":User, "Alias":Alias.lower()}
+        query = {"User": User, "Alias": Alias.lower()}
         check = self.db.ready[str(Guild)].find_one(query)
         if check != None:
             return True
-        
+
     def ready_trigger(self, Guild, Alias):
-        query = {"Alias" : Alias}
+        query = {"Alias": Alias}
         check = self.db.ready[str(Guild)].find_one_and_delete(query)
         if check != None:
             return check
         else:
-            return 
-    
+            return
+
     def ready_remove(self, Guild, Alias):
-        query = {"Alias":Alias}
+        query = {"Alias": Alias}
         check = self.db.ready[str(Guild)].find_one_and_delete(query)
         if check != None:
             return f"{Alias} has been removed!"
         else:
             return "It doesn't look like there was a readied action by that name!"
-        
 
     def init_add(self, Guild, Category, Name, ID, Init):
         self.db[str(Guild)][str(Category)]
@@ -119,9 +118,7 @@ class lt_db(object):
     def init_clear(self, Guild, Category):
 
         self.db[str(Guild)][str(Category)].drop()
-        self.db[str(Guild)].update_one(
-            {"Category": Category}, {"$unset": {"turn": 1}}
-        )
+        self.db[str(Guild)].update_one({"Category": Category}, {"$unset": {"turn": 1}})
 
     def init_remove(self, Guild, Category, Name):
         query = {"Name": Name}
@@ -162,8 +159,8 @@ class lt_db(object):
     def turn_set(self, Guild, Category, newPos):
 
         self.db[str(Guild)].find_one_and_update(
-            {"Category": Category}, 
-            {"$set": {"turn":newPos}})
+            {"Category": Category}, {"$set": {"turn": newPos}}
+        )
 
     def init_delay(self, Guild, Category, Name, newInit):
 
@@ -327,4 +324,3 @@ class lt_db(object):
         query = {"Category": Category, "name": Name}
         inventory = self.db[str(Guild)].find_one(query)["inventory"]
         return inventory
-

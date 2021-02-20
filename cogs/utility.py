@@ -6,6 +6,7 @@ from asyncio import sleep
 sys.path.append("..")
 from dbinit import lt_db
 
+
 class utility(commands.Cog):
     def __init__(self, bot, lt_db):
         self.bot = bot
@@ -35,7 +36,7 @@ class utility(commands.Cog):
                         member_object = ctx.guild.get_member(member)
                     else:
                         member_object = ctx.guild.get_member_named(member)
-                        
+
                     if not member_object:
                         return await ctx.send("Invalid user.")
                     else:
@@ -58,7 +59,9 @@ class utility(commands.Cog):
                         )
 
             else:
-                await ctx.send("Too many messages. Enter a number less than or equal to 500.")
+                await ctx.send(
+                    "Too many messages. Enter a number less than or equal to 500."
+                )
         else:
 
             if number < 501:
@@ -73,21 +76,23 @@ class utility(commands.Cog):
                     except Exception as e:
                         await ctx.send(e)
             else:
-                await ctx.send("Too many messages. Enter a number less than or equal to 500.")
-    
-    #@commands.has_guild_permissions(administrator=True)
-    #@commands.command(pass_context=True, no_pm=True)
-    #async def drop(self, ctx):
+                await ctx.send(
+                    "Too many messages. Enter a number less than or equal to 500."
+                )
+
+    # @commands.has_guild_permissions(administrator=True)
+    # @commands.command(pass_context=True, no_pm=True)
+    # async def drop(self, ctx):
     #    """
     #    Please do not use lightly.
     #    Purges all information from Little Thunder's database related to the current server.
     #    """
-    #            
+    #
     #    message = await ctx.send("React with a 👍 if you're absolutely sure you want to go through with this. This cannot be reversed.")
-    #    
+    #
     #    def check(reaction, user):
     #        return user == ctx.message.author and str(reaction.emoji) == '👍'
-    #    
+    #
     #    try:
     #        reaction, user = await self.bot.wait_for('reaction_add', timeout=5.0, check=check)
     #        Guild = ctx.guild.id

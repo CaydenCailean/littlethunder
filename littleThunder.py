@@ -27,12 +27,15 @@ bot = commands.Bot(command_prefix=".", case_insensitive=True, intents=intents)
 async def on_ready():
     print("I'm ready!")
 
+
 def weighted(pairs):
     total = sum(pair[0] for pair in pairs)
     r = randint(1, total)
     for (weight, value) in pairs:
         r -= weight
-        if r <= 0: return value
+        if r <= 0:
+            return value
+
 
 @bot.command(pass_context="true", aliases=["pet"])
 async def pat(ctx):
@@ -42,7 +45,7 @@ async def pat(ctx):
         (10, "_wags his tail energetically as he's pet._"),
         (10, f"_licks {user} appreciatively._"),
         (10, "_rolls over and exposes his belly for more rubs._"),
-        (1, "_uwu_")
+        (1, "_uwu_"),
     ]
     await ctx.send(weighted(responses))
 

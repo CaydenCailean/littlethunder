@@ -9,6 +9,7 @@ from datetime import datetime
 sys.path.append("..")
 from dbinit import lt_db
 
+
 class rpg(commands.Cog):
     def __init__(self, bot, lt_db):
         self.bot = bot
@@ -20,8 +21,12 @@ class rpg(commands.Cog):
         ID = ctx.message.author.id
         return Category, Guild, ID
 
-    @commands.group(case_insensitive=True, invoke_without_command=True, aliases=['r','roll','dice'])
-    async def d(self, ctx, input: str ):
+    @commands.group(
+        case_insensitive=True,
+        invoke_without_command=True,
+        aliases=["r", "roll", "dice"],
+    )
+    async def d(self, ctx, input: str):
 
         """
         Rolls dice using #d# format, with a maximum of 100d100.
@@ -39,24 +44,23 @@ class rpg(commands.Cog):
                 ID = ctx.message.author.id
 
                 try:
-                    input, sep, extra = re.split(r'([+|-])',input, maxsplit=1)
-                    label=input.replace('!','',1)
+                    input, sep, extra = re.split(r"([+|-])", input, maxsplit=1)
+                    label = input.replace("!", "", 1)
 
-                    input = self.lt_db.dice_get(ID, Guild, input.replace('!',''))
+                    input = self.lt_db.dice_get(ID, Guild, input.replace("!", ""))
                     inputDice = input
                     input = input + sep + str(extra)
                     commentText = f"Rolling {label} : {inputDice} + {str(extra)}"
-                    
 
                 except:
                     label = input.replace("!", "", 1)
                     input = self.lt_db.dice_get(ID, Guild, input.replace("!", ""))
                     commentText = f"Rolling {label} : {input}"
-            
+
             try:
                 isPlus = input.find("+")
                 isMinus = input.find("-")
-                
+
                 outList = "placeHolder"
                 outResults = []
                 Total = 0
@@ -66,15 +70,15 @@ class rpg(commands.Cog):
                         diceNum, diceVal = input.split("d")
                     except ValueError as e:
                         raise Exception("Make sure your expression is in #d# format.")
-                    
+
                     if diceNum == "":
                         diceNum = "1"
-                    
+
                     outList = dice.roll(input)
                     for i in outList:
                         Total += i
                         outResults.append(i)
-                    
+
                 if isPlus != -1 or isMinus != -1:
                     expr = re.split("[+-]", input)[0]
 
@@ -91,7 +95,7 @@ class rpg(commands.Cog):
 
                     for i in bonus:
                         posmod += int(i)
-                    
+
                     bonusDice = re.findall(r"\+\d*d\d+", input)
                     for i in bonusDice:
                         idiceNum, idiceVal = i.split("d")
@@ -151,7 +155,7 @@ class rpg(commands.Cog):
                         discName = ctx.message.author.name
                 else:
                     discName = ctx.message.author.name
-                
+
                 embed = discord.Embed(
                     title=f"Results for {discName}",
                     description=commentText,
@@ -208,13 +212,12 @@ class rpg(commands.Cog):
             outMessage = self.lt_db.ready_set(ID, Guild, Alias, Value)
             await ctx.send(outMessage)
 
-        
     @d.command(pass_context=True)
     async def trigger(self, ctx, Alias):
         """
         WIP. Do not use.
-        """ 
-        pattern = r'(#\d|\D*)$'
+        """
+        pattern = r"(#\d|\D*)$"
 
         Guild = ctx.message.guild.id
         trigger = self.lt_db.ready_trigger(Guild, Alias.lower())
@@ -223,18 +226,25 @@ class rpg(commands.Cog):
         check = re.search(pattern, trigger["Value"])
 
         if trigger != None:
-            try:         
-                print(check.group(1).find('#'))       
-                if check.group(1).find('#') == -1:
+            try:
+                print(check.group(1).find("#"))
+                if check.group(1).find("#") == -1:
                     print(1)
 
-                    ctx.message.content = ctx.message.content + " # " + trigger["Value"] + f': Being rolled for {User}' 
+                    ctx.message.content = (
+                        ctx.message.content
+                        + " # "
+                        + trigger["Value"]
+                        + f": Being rolled for {User.name}"
+                    )
                 else:
                     print(2)
-                    print(check.group(1).find('#'))
-                    start, end = trigger["Value"].split('#')
-                    ctx.message.content = '# ' + end + ' :: ' + start + f': Being rolled for {User}'
-                    
+                    print(check.group(1).find("#"))
+                    start, end = trigger["Value"].split("#")
+                    ctx.message.content = (
+                        "# " + end + " :: " + start + f": Being rolled for {User.name}"
+                    )
+
             except:
                 ctx.message.content
                 pass
@@ -242,7 +252,6 @@ class rpg(commands.Cog):
         else:
             await ctx.send(f"It looks like {Alias} was never readied.")
 
-    
     @d.command(pass_context=True)
     async def ready_remove(self, ctx, Alias):
         """
@@ -256,7 +265,6 @@ class rpg(commands.Cog):
             await ctx.send(outMessage)
         else:
             await ctx.send("Looks like either that doesn't exist, or you don't own it.")
-
 
     @commands.group(case_insensitive=True)
     async def init(self, ctx):
@@ -346,7 +354,7 @@ class rpg(commands.Cog):
                 self.lt_db.turn_next(Guild, Category)
             await ctx.send(f"{name} has been removed from the initiative count.")
             await self.init(ctx)
-            
+
     @init.command()
     async def end(self, ctx):
         """
@@ -385,7 +393,6 @@ class rpg(commands.Cog):
 
         else:
             await ctx.send("I don't think it's your turn yet!")
-        
 
     @init.command()
     async def delay(self, ctx, newInit):
@@ -418,15 +425,15 @@ class rpg(commands.Cog):
                 newPos = int(newPos)
             except:
                 pass
-            
+
             if type(newPos) == str:
                 for x in initraw:
                     if x["Name"] == newPos:
-                        newPos = int(initraw.index(x)) +1
+                        newPos = int(initraw.index(x)) + 1
                         break
                 self.lt_db.turn_set(Guild, Category, newPos)
 
-            if type(newPos)== int and len(initraw) >= newPos:
+            if type(newPos) == int and len(initraw) >= newPos:
                 self.lt_db.turn_set(Guild, Category, newPos)
 
             await self.show(ctx)
