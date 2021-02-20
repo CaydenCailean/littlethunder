@@ -218,7 +218,7 @@ class rpg(commands.Cog):
 
         Guild = ctx.message.guild.id
         trigger = self.lt_db.ready_trigger(Guild, Alias.lower())
-        print(re.match(pattern, trigger["Value"])
+        print(re.match(pattern, trigger["Value"]))
         print(trigger["Value"])
         User = self.bot.get_user(trigger["User"])
         if trigger != None:
