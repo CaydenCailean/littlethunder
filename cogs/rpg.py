@@ -218,6 +218,8 @@ class rpg(commands.Cog):
 
         Guild = ctx.message.guild.id
         trigger = self.lt_db.ready_trigger(Guild, Alias.lower())
+        print(re.match(pattern, trigger["Value"])
+        print(trigger["Value"])
         User = self.bot.get_user(trigger["User"])
         if trigger != None:
             if re.match(pattern, trigger["Value"]) != None:
@@ -226,7 +228,7 @@ class rpg(commands.Cog):
                 ctx.message.content += trigger["Value"] + f": Being rolled for {User.name}"
             else: 
                 print("#")
-                print(re.match(pattern, trigger["Value"]).group(1))
+                print(re.match(pattern, trigger["Value"]))
                 ctx.message.content += " # " + trigger["Value"] + f": Being Rolled for {User.name}"
             print(trigger["Value"])
             await self.d(ctx, trigger["Value"])
