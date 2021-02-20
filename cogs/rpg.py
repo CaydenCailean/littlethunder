@@ -229,6 +229,7 @@ class rpg(commands.Cog):
                 trigger["Value"] += f"; being rolled for {User.name}"
             else: 
                 trigger["Value"] += f" # Being Rolled for {User.name}"
+            print(trigger["Value"])
             await self.d(ctx, trigger["Value"])
 
     
