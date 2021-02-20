@@ -220,22 +220,16 @@ class rpg(commands.Cog):
         trigger = self.lt_db.ready_trigger(Guild, Alias.lower())
         User = self.bot.get_user(trigger["User"])
 
-        check = re.search(pattern, trigger["Value"])
-
         if trigger != None:
-            if check.group(1) != "None":
+            try:
+                check = re.search(pattern, trigger["Value"])
                 print(check)
                 print(check.group(1))
-                print("no #")
-                ctx.message.content += " # " + trigger["Value"] + f": Being rolled for {User.name}"
-                print(ctx.message.content)
-            else: 
-                print("#")
-                print(re.search(pattern, trigger["Value"]))
-                ctx.message.content += " # " + trigger["Value"] + f": Being Rolled for {User.name}"
-                print(ctx.message.content)
-            print(trigger["Value"])
+            except:
+                pass
             await self.d(ctx, trigger["Value"])
+        else:
+            await ctx.send(f"It looks like {Alias} was never readied.")
 
     
     @d.command(pass_context=True)
