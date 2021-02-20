@@ -226,7 +226,7 @@ class rpg(commands.Cog):
         User = self.bot.get_user(trigger["User"])
         if trigger != None:
             if trigger["Value"].find("#") != -1:
-                trigger["Value"] += f"; being rolled for {User.name}"
+                trigger["Value"] += f"# being rolled for {User.name}"
             else: 
                 trigger["Value"] += f" # Being Rolled for {User.name}"
             print(trigger["Value"])
