@@ -219,8 +219,11 @@ class rpg(commands.Cog):
         Guild = ctx.message.guild.id
         trigger = self.lt_db.ready_trigger(Guild, Alias.lower())
         User = self.bot.get_user(trigger["User"])
+
+        check = re.search(pattern, trigger["Value"])
+
         if trigger != None:
-            if re.search(pattern, trigger["Value"]) != "None":
+            if check.group(1) != "None":
                 print(re.search(pattern, trigger["Value"]))
                 print("no #")
                 ctx.message.content += " # " + trigger["Value"] + f": Being rolled for {User.name}"
