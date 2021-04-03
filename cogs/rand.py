@@ -83,7 +83,7 @@ class rand(commands.Cog):
         output = self.lt_db.rand_delete(Guild, ID, Table)
         await ctx.send(output)
 
-    @random.command(case_insensitive=True)
+    @random.command(case_insensitive=True, hidden=True)
     async def get(self, ctx, Table):
         Guild = ctx.message.guild.id
         image_ext = ['jpg','png','jpeg','gif']
