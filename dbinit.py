@@ -345,7 +345,7 @@ class lt_db(object):
             output = f"{Table.title()} was added to the database. You can edit this table using commands via Discord, or in the future, using the Web Editor, found at https://webthunder.herokuapp.com/"
             return output
     
-    def rand_add(self, Guild, ID, Table, Weight, Value):
+    def rand_add(self, Guild, ID, Table, Weight, *, Value):
         query = {"table": Table.lower()}
         table = self.db.rand[str(Guild)].find_one(query)
         if ID == table['user']:
@@ -357,7 +357,7 @@ class lt_db(object):
         else:
             return f"{Table.title()} doesn't seem to belong to you!"
 
-    def rand_remove(self, Guild, ID, Table, Value):
+    def rand_remove(self, Guild, ID, Table, *, Value):
         query = {"table": Table.lower()}
         table = self.db.rand[str(Guild)].find_one(query)
         if ID == table['user']:
