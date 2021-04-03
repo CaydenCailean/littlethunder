@@ -38,7 +38,7 @@ class rand(commands.Cog):
     async def random(self, ctx):
         if ctx.invoked_subcommand is None:
             Table = ctx.message.content.lstrip(' ')
-            self.get(ctx, Table)
+            await self.get(ctx, Table)
             
 
     @random.command(case_insensitive=True)
