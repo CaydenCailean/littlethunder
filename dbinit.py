@@ -357,7 +357,7 @@ class lt_db(object):
         else:
             return f"{Table.title()} doesn't seem to belong to you!"
 
-    def rand_remove(self, Guild, ID, Table, *, Value):
+    def rand_remove(self, Guild, ID, Table, Value):
         query = {"table": Table.lower()}
         table = self.db.rand[str(Guild)].find_one(query)
         if ID == table['user']:
