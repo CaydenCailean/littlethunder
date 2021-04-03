@@ -337,7 +337,7 @@ class lt_db(object):
             return output
         except:
             entry = {
-                "table": Table,
+                "table": Table.lower(),
                 "user" : ID,
                 "pairs": []
             }
