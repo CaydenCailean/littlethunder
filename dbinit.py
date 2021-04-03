@@ -369,7 +369,8 @@ class lt_db(object):
                 updoot = {"$set": {'pairs':pairs}}
                 self.db.rand[str(Guild)].update_one({query,updoot})
                 return f"{Value} has been removed from the table."
-            except:
+            except Exception as e:
+                print(e)
                 return f"{Value} was not found!"
 
 
