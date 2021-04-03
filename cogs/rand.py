@@ -76,7 +76,7 @@ class rand(commands.Cog):
         result['pairs'] = [tuple(x) for x in result['pairs']]
         randout = self.weighted(result['pairs'])
         print(randout.split('.')[-1])
-        if: 'jpg' in image_ext:
+        if 'jpg' in image_ext:
             print('yep')
         try:
             embed= discord.Embed(
