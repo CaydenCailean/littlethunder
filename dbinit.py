@@ -350,7 +350,7 @@ class lt_db(object):
         table = self.db.rand[str(Guild)].find_one(query)
         if ID == table['user']:
             pairs = table['pairs']
-            pairs.append((Value, Weight))
+            pairs.append([Value, Weight])
             updoot = {"$set": {"pairs":pairs}}
             self.db.rand[str(Guild)].update_one(query, updoot)
             return f"{Table.title()} has been updated!"  
