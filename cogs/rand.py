@@ -60,7 +60,7 @@ class rand(commands.Cog):
         await ctx.send(output)
 
     @random.command(case_insensitive=True)
-    async def remove(self, ctx, Table):
+    async def delete(self, ctx, Table):
         Guild, ID = self.ctx_info(ctx)
         output = self.lt_db.rand_delete(Guild, ID, Table)
         ctx.send(output)
