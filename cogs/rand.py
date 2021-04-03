@@ -72,7 +72,7 @@ class rand(commands.Cog):
         Table = Table.lower()
         result = self.lt_db.rand_get(Guild, Table)
         
-        randout = self.weighted(result["pairs"])
+        randout = self.weighted(result)
         
         try:
             embed= discord.Embed(
