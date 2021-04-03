@@ -70,7 +70,7 @@ class rand(commands.Cog):
     @random.command(case_insensitive=True)
     async def get(self, ctx, Table):
         Guild = ctx.message.guild.id
-        image_ext = ['.jpg','.png','.jpeg','.gif']
+        image_ext = ['jpg','png','jpeg','gif']
         Table = Table.lower()
         result = self.lt_db.rand_get(Guild, Table)
         result['pairs'] = [tuple(x) for x in result['pairs']]
