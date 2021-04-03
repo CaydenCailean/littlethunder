@@ -37,6 +37,11 @@ class rand(commands.Cog):
 
     @commands.group(case_insensitive=True, aliases=["rand"])
     async def random(self, ctx):
+        """
+        The Random command group surrounds the use of custom random tables which can be "rolled" on to give a random output. These tables can be weighted, or you can leave the "weight" argument at 1 for all entries for an unweighted table. Subcommands can only be used by the original creator of a table.
+
+        If you're wishing to roll on a random table, use this command followed by the table name, i.e. `.random Table2`
+        """
         if ctx.invoked_subcommand is None:
             Table = ctx.message.content.split(' ')[1]
             await self.get(ctx, Table)
@@ -44,25 +49,36 @@ class rand(commands.Cog):
 
     @random.command(case_insensitive=True)
     async def new(self, ctx, Table):
+        """
+        Adds a new table to the random tables for the server it is called in. Multiple word table names - "Wild Magic" for instance, must be surrounded in quotation marks.
+        """
         Guild, ID = self.ctx_info(ctx)
         output = self.lt_db.rand_new(Guild, ID, Table)
         await ctx.send(output)
 
     @random.command(case_insensitive=True, aliases=['add'])
     async def add_entry(self, ctx, Table, Weight, *, Value):
+        """
+        Adds a new weighted entry to the table. The table name requires quotation marks if it is longer than two words; the value does not.
+        """
         Guild, ID = self.ctx_info(ctx)
         output = self.lt_db.rand_add(Guild, ID, Table, Weight, Value)
         await ctx.send(output)
 
     @random.command(case_insensitive=True, aliases=['remove'])
     async def remove_entry(self, ctx, Table, *, Value):
-
+        """
+        Removes a weighted entry from the table. The table name requires quotation marks if it is longer than two words; the value does not.
+        """
         Guild, ID = self.ctx_info(ctx)
         output = self.lt_db.rand_remove(Guild, ID, Table, Value)
         await ctx.send(output)
 
     @random.command(case_insensitive=True)
     async def delete(self, ctx, Table):
+        """
+        Deletes the specified table from the database. This is not reversible.
+        """
         Guild, ID = self.ctx_info(ctx)
         output = self.lt_db.rand_delete(Guild, ID, Table)
         await ctx.send(output)
