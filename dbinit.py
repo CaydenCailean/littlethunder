@@ -365,7 +365,7 @@ class lt_db(object):
 
             try:               
                 for item in pairs:
-                    if item[1] == Value:
+                    if item[0] == Value:
                         pairs.remove(item)
                         updoot = {"$set": {'pairs':pairs}}
                         self.db.rand[str(Guild)].update_one(query,updoot)
