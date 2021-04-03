@@ -85,7 +85,7 @@ class rand(commands.Cog):
                 color = ctx.message.author.color
             )
 
-            if randout[4:] == "http" and randout.split('.')[-1] in image_ext:
+            if randout[0:4] == "http" and randout.split('.')[-1] in image_ext:
                 embed.set_image(url=randout)
 
             else:
