@@ -361,9 +361,8 @@ class lt_db(object):
         query = {"table": Table.lower()}
         table = self.db.rand[str(Guild)].find_one(query)
         if ID == table['user']:
-            pairs = table['pairs']
-            try:
-                
+            pairs = list(table['pairs'])
+            try:                
                 for item in pairs:
                     if item[1] == Value:
                         pairs.remove(item)
