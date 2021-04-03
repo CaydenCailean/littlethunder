@@ -384,6 +384,7 @@ class lt_db(object):
 
     def rand_get(self, Guild, Table):
         output = self.db.rand[str(Guild)].find_one({"table": Table.lower()})
+        output = [tuple(x) for x in output['pairs']]
         return output
 
 #endregion

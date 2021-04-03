@@ -24,7 +24,7 @@ class rpg(commands.Cog):
 #region Dice
 
     @commands.group(
-        case_insensitive=True, invoke_without_command=True, aliases=["roll", "dice"],
+        case_insensitive=True, invoke_without_command=True, aliases=["r","roll", "dice"],
     )
     async def d(self, ctx, input: str):
 
