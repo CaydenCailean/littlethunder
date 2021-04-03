@@ -352,7 +352,7 @@ class lt_db(object):
             pairs = table['pairs']
             pairs.append((Value, Weight))
             updoot = {"$set": {"pairs":pairs}}
-            self.db.rand[str(Guild)].update_one({query, updoot})
+            self.db.rand[str(Guild)].update_one(query, updoot)
             return f"{Table.title()} has been updated!"  
         else:
             return f"{Table.title()} doesn't seem to belong to you!"
