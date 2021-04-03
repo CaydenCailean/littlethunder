@@ -306,5 +306,3 @@ class lt_db(object):
     def unset_field(self, Guild, ID, Name, field):
         query = {"name": Name}
         self.db[str(Guild)].update(query, {"$unset": {field: 1}})
-
-

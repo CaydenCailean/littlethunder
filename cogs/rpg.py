@@ -22,9 +22,7 @@ class rpg(commands.Cog):
         return Category, Guild, ID
 
     @commands.group(
-        case_insensitive=True,
-        invoke_without_command=True,
-        aliases=["r", "roll", "dice"],
+        case_insensitive=True, invoke_without_command=True, aliases=["roll", "dice"],
     )
     async def d(self, ctx, input: str):
 
@@ -228,7 +226,7 @@ class rpg(commands.Cog):
         if trigger != None:
             try:
                 if check.group(1).find("#") == -1:
-                    
+
                     ctx.message.content = (
                         ctx.message.content
                         + " # "
@@ -238,7 +236,11 @@ class rpg(commands.Cog):
                 else:
                     start, end = trigger["Value"].split("#")
                     ctx.message.content = (
-                        "# " + end + " :: " + start + f": Being rolled for {User.display_name}"
+                        "# "
+                        + end
+                        + " :: "
+                        + start
+                        + f": Being rolled for {User.display_name}"
                     )
 
             except:
@@ -342,7 +344,6 @@ class rpg(commands.Cog):
         dmCheck = self.lt_db.owner_check(Guild, Category, ID)
         initraw = self.lt_db.init_get(Guild, Category)
         turnNum = int(self.lt_db.turn_get(Guild, Category))
-        
 
         if dmCheck == True:
             self.lt_db.init_remove(Guild, Category, name)
@@ -522,7 +523,7 @@ class rpg(commands.Cog):
         except:
             await ctx.send(f"I don't think {Name.title()} belongs to you!")
         if ownerCheck == True:
-            
+
             if field == "color":
 
                 self.lt_db.set_field(Guild, ID, Name, field, value)
