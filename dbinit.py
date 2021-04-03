@@ -368,7 +368,7 @@ class lt_db(object):
                 if item[1] == Value:
                     pairs.remove(item)
                     updoot = {"$set": {'pairs':pairs}}
-                    self.db.rand[str(Guild)].update_one({query,updoot})
+                    self.db.rand[str(Guild)].update_one(query,updoot)
                     return f"{Value} has been removed from the table."
                 else:
                     pass
