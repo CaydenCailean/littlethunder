@@ -374,8 +374,8 @@ class lt_db(object):
                         pass
             except Exception as e:
                 print(e)
-                return f"{Value} was not found!"
-
+                return 
+        return f"{Value} was not found!"
 
     def rand_delete(self, Guild, ID, Table):
         query = {'table':Table.lower()}
