@@ -10,6 +10,7 @@ from cogs.info import info
 from cogs.utility import utility
 from cogs.rpg import rpg
 from cogs.mw import mw
+from cogs.rand import rand
 from random import randint
 
 intents = discord.Intents.default()
@@ -81,5 +82,6 @@ lt_db.db_init()
 bot.add_cog(info(bot))
 bot.add_cog(utility(bot, lt_db))
 bot.add_cog(rpg(bot, lt_db))
+bot.add_cog(rand(bot, lt_db))
 bot.add_cog(mw(bot))
 bot.run(discToken)

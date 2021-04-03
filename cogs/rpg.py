@@ -208,7 +208,7 @@ class rpg(commands.Cog):
         Readies an action's dice. Preserves comments through value
         """
         if ctx.invoked_subcommand == None:
-            Category, Guild, ID = self.ctx_info(ctx)
+            _, Guild, ID = self.ctx_info(ctx)
             outMessage = self.lt_db.ready_set(ID, Guild, Alias, Value)
             await ctx.send(outMessage)
 
@@ -270,7 +270,7 @@ class rpg(commands.Cog):
         Without a subcommand, this command will show the current initiative block.
         """
         if ctx.invoked_subcommand is None:
-            Category, Guild, ID = self.ctx_info(ctx)
+            Category, Guild, _ = self.ctx_info(ctx)
             initraw = self.lt_db.init_get(Guild, Category)
             turnNum = int(self.lt_db.turn_get(Guild, Category))
 
@@ -342,7 +342,7 @@ class rpg(commands.Cog):
         dmCheck = self.lt_db.owner_check(Guild, Category, ID)
         initraw = self.lt_db.init_get(Guild, Category)
         turnNum = int(self.lt_db.turn_get(Guild, Category))
-        current = initraw[turnNum - 1]["ID"]
+        
 
         if dmCheck == True:
             self.lt_db.init_remove(Guild, Category, name)
@@ -442,18 +442,18 @@ class rpg(commands.Cog):
         Select a subcommand to use with this command.
         """
 
-    @dm.command(aliases=["add"])
-    async def register(self, ctx):
+    @dm.command()
+    async def claim(self, ctx):
         """
-        Register the user as a dungeon master within current channel category.
+        Claim the role of dungeon master within current channel category. Only one user can be the dungeon master for a given category.
         """
         Category, Guild, ID = self.ctx_info(ctx)
         output = self.lt_db.add_owner(Guild, Category, ID)
         await ctx.send(output)
 
-    @dm.command(aliases=["remove"])
-    async def unregister(self, ctx):
-        """Unregister current dm for category"""
+    @dm.command()
+    async def unclaim(self, ctx):
+        """Unclaim current dm for category. Administrators and the Current DM are the only users able to perform this action."""
         Category, Guild, ID = self.ctx_info(ctx)
         override = ctx.message.author.permissions_in(ctx.channel).administrator
         output = self.lt_db.remove_owner(Guild, Category, ID, override)
@@ -462,9 +462,9 @@ class rpg(commands.Cog):
     @commands.group(case_insensitive=True)
     async def char(self, ctx):
         """
-        Command Group for character management. Still under construction.
+        Use to display a character's profile, if one exists. Subcommands cover the creation and alteration of character profiles.
 
-        All characters are saved on a per-guild basis..
+        All characters are saved on a per-guild basis.
         """
 
         if ctx.invoked_subcommand is None:
@@ -476,7 +476,7 @@ class rpg(commands.Cog):
         """
         Register a user's character.
         """
-        Category, Guild, ID = self.ctx_info(ctx)
+        _, Guild, ID = self.ctx_info(ctx)
 
         try:
             ID = ctx.message.mentions[0].id
@@ -493,7 +493,7 @@ class rpg(commands.Cog):
         """
         Remove a user's character from the guild.
         """
-        Category, Guild, ID = self.ctx_info(ctx)
+        _, Guild, ID = self.ctx_info(ctx)
 
         Name = Name.lower()
 
@@ -514,7 +514,7 @@ class rpg(commands.Cog):
         Add a field to a character, or update a field to a new value.
         """
         Name = Name.lower()
-        Category, Guild, ID = self.ctx_info(ctx)
+        _, Guild, ID = self.ctx_info(ctx)
         field = field.lower()
         ownerCheck = ""
         try:
@@ -522,11 +522,8 @@ class rpg(commands.Cog):
         except:
             await ctx.send(f"I don't think {Name.title()} belongs to you!")
         if ownerCheck == True:
-            if field in {"inventory", "spells", "hp"}:
-                await ctx.send(
-                    f"Sorry! {field.capitalize()} hasn't been implemented yet!"
-                )
-            elif field == "color":
+            
+            if field == "color":
 
                 self.lt_db.set_field(Guild, ID, Name, field, value)
                 await ctx.send(f"{Name.title()}'s {field} value has been updated!")
@@ -544,7 +541,7 @@ class rpg(commands.Cog):
         Remove a field from a character.
         """
         Name = Name.lower()
-        Category, Guild, ID = self.ctx_info(ctx)
+        _, Guild, ID = self.ctx_info(ctx)
         field = field.lower()
         ownerCheck = ""
 
@@ -565,7 +562,7 @@ class rpg(commands.Cog):
         Display information regarding a stored character, including all stored fields.
         """
         Name = Name.lower()
-        Category, Guild, ID = self.ctx_info(ctx)
+        Guild = ctx.message.guild.id
         results = self.lt_db.get_char(Guild, Name)
 
         for output in results:
@@ -583,7 +580,6 @@ class rpg(commands.Cog):
                 output["description"],
                 output["color"],
                 output["public"],
-                output["inventory"],
             )
             keys = []
             vals = []

@@ -257,7 +257,6 @@ class lt_db(object):
                 "owner": ID,
                 "color": int("000000", 16),
                 "public": "False",
-                "inventory": {},
             }
             self.db[str(Guild)].insert_one(entry).inserted_id
             output = f"{Name.title()} was added to the database. You can edit them using commands via Discord, or using the Web Editor, found at https://webthunder.herokuapp.com/"
@@ -308,19 +307,4 @@ class lt_db(object):
         query = {"name": Name}
         self.db[str(Guild)].update(query, {"$unset": {field: 1}})
 
-    def addto_inv(self, Guild, Category, ID, Name, Item, Value):
-        query = {"Category": Category, "name": Name}
-        self.db[str(Guild)].find_one_and_update(
-            query, {"$set": {f"inventory.{Item}": int(Value)}}
-        )
 
-    def increment_inv(self, Guild, Category, ID, Name, Item, Value):
-        query = {"Category": Category, "name": Name}
-        self.db[str(Guild)].find_one_and_update(
-            query, {"$inc": {f"inventory.{Item}": int(Value)}}
-        )
-
-    def inv_get(self, Guild, Category, Name):
-        query = {"Category": Category, "name": Name}
-        inventory = self.db[str(Guild)].find_one(query)["inventory"]
-        return inventory
