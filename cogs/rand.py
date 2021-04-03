@@ -37,7 +37,7 @@ class rand(commands.Cog):
     @commands.group(case_insensitive=True, aliases=["r", "rand"])
     async def random(self, ctx):
         if ctx.invoked_subcommand is None:
-            Table = ctx.message.content.lstrip(' ')
+            Table = ctx.message.content.split(' ')[1]
             await self.get(ctx, Table)
             
 
@@ -70,7 +70,7 @@ class rand(commands.Cog):
         Guild = ctx.message.guild.id
         image_ext = ['.jpg','.png','.jpeg','.gif']
         Table = Table.lower()
-        print(Table)
+        print
         result = self.lt_db.rand_get(Guild, Table)
         print(result["pairs"])
         randout = self.weighted(result["pairs"])
