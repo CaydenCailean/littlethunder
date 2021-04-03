@@ -73,8 +73,8 @@ class rand(commands.Cog):
         image_ext = ['.jpg','.png','.jpeg','.gif']
         Table = Table.lower()
         result = self.lt_db.rand_get(Guild, Table)
-        
-        randout = self.weighted(result)
+        result['pairs'] = [tuple(x) for x in result['pairs']]
+        randout = self.weighted(result['pairs'])
         
         try:
             embed= discord.Embed(

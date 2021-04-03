@@ -383,8 +383,7 @@ class lt_db(object):
             return f"{Table.title()} doesn't seem to belong to you."
 
     def rand_get(self, Guild, Table):
-        output = self.db.rand[str(Guild)].find_one({"table": Table.lower()})
-        output = [tuple(x) for x in output['pairs']]
+        output = self.db.rand[str(Guild)].find_one({"table": Table.lower()}
         return output
 
 #endregion
