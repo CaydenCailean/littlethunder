@@ -44,7 +44,7 @@ class rand(commands.Cog):
     @random.command(case_insensitive=True)
     async def new(self, ctx, Table):
         Guild, ID = self.ctx_info(ctx)
-        output = self.lt_db.rand_new(self, Guild, ID, Table)
+        output = self.lt_db.rand_new(Guild, ID, Table)
         await ctx.send(output)
 
     @random.command(case_insensitive=True, aliases=['add'])
