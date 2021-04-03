@@ -75,7 +75,7 @@ class rand(commands.Cog):
         result = self.lt_db.rand_get(Guild, Table)
         result['pairs'] = [tuple(x) for x in result['pairs']]
         randout = self.weighted(result['pairs'])
-        
+        print(randout.split('.')[-1])
         try:
             embed= discord.Embed(
                 title="__" + result["table"].title() + "__",
