@@ -23,10 +23,10 @@ class rand(commands.Cog):
         return Guild, ID
 
     def weighted(self, pairs):
-        total = sum(int(pair[0]) for pair in pairs)
+        total = sum(int(pair[1]) for pair in pairs)
         r = randint(1, total)
         
-        for (weight, value) in pairs:    
+        for (value, weight) in pairs:    
             r -= int(weight)
             if r <= 0:
                 return value
