@@ -71,6 +71,7 @@ class rand(commands.Cog):
         image_ext = ['.jpg','.png','.jpeg','.gif']
         Table = Table.lower()
         result = self.lt_db.rand_get(Guild, Table)
+        print(result)
         randout = self.weighted(result["pairs"])
         
         try:
