@@ -363,15 +363,15 @@ class lt_db(object):
         if ID == table['user']:
             pairs = table['pairs']
             pair_dict = dict(pairs)
-            try:
-                pair_dict.pop(Value)
-                pairs = list(pair_dict)
-                updoot = {"$set": {'pairs':pairs}}
-                self.db.rand[str(Guild)].update_one({query,updoot})
-                return f"{Value} has been removed from the table."
-            except Exception as e:
-                print(e)
-                return f"{Value} was not found!"
+            #    try:
+            pair_dict.pop(Value)
+            pairs = list(pair_dict)
+            updoot = {"$set": {'pairs':pairs}}
+            self.db.rand[str(Guild)].update_one({query,updoot})
+            return f"{Value} has been removed from the table."
+            #except Exception as e:
+            #    print(e)
+            #    return f"{Value} was not found!"
 
 
     def rand_delete(self, Guild, ID, Table):
