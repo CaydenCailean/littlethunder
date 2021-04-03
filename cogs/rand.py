@@ -15,19 +15,24 @@ class rand(commands.Cog):
         self.bot = bot
         self.lt_db = lt_db
 
+#region Utility
+
     def ctx_info(self, ctx):
-        Category = ctx.channel.category.id
         Guild = ctx.message.guild.id
         ID = ctx.message.author.id
-        return Category, Guild, ID
+        return Guild, ID
 
     def weighted(self, pairs):
-        total = sum(pair[0] for pair in pairs)
+        total = sum(pair[1] for pair in pairs)
         r = randint(1, total)
-        for (weight, value) in pairs:
+        for (value, weight) in pairs:
             r -= weight
             if r <= 0:
                 return value
+
+#endregion
+
+#region Random Tables
 
     @commands.group(case_insensitive=True, aliases=["r", "rand"])
     async def random(self, ctx):
@@ -38,21 +43,54 @@ class rand(commands.Cog):
 
     @random.command(case_insensitive=True)
     async def add(self, ctx, Table):
+        Guild, ID = self.ctx_info(ctx)
+        output = self.lt_db.rand_new(self, Guild, ID, Table)
+        await ctx.send(output)
 
-        return
+    @random.command(case_insensitive=True, aliases=['add'])
+    async def add_entry(self, ctx, Table, Weight, Value):
+        Guild, ID = self.ctx_info(ctx)
+        output = self.lt_db.rand_add(Guild, ID, Table, Weight, Value)
+        await ctx.send(output)
+
+    @random.command(case_insensitive=True, aliases=['remove'])
+    async def remove_entry(self, ctx, Table, *, Value):
+        Guild, ID = self.ctx_info(ctx)
+        output = self.lt_db.rand_remove(Guild, ID, Table, Value)
+        await ctx.send(output)
 
     @random.command(case_insensitive=True)
-    async def remove(self, ctx, Table, *, Value):
-        return
-
-    @random.command(case_insensitive=True)
-    async def delete(self, ctx, Table):
-        return
+    async def remove(self, ctx, Table):
+        Guild, ID = self.ctx_info(ctx)
+        output = self.lt_db.rand_delete(Guild, ID, Table)
+        ctx.send(output)
 
     @random.command(case_insensitive=True)
     async def get(self, ctx, Table):
-        return
+        Guild = ctx.message.guild.id
+        image_ext = ['.jpg','.png','.jpeg','.gif']
+        Table = Table.lower()
+        result = self.lt_db.rand_get(Guild, Table)
+        randout = self.weighted(result["pairs"])
+        
+        try:
+            embed= discord.Embed(
+                title="__" + result["table"].title() + "__",
+                description = f"{ctx.message.author.display_name} rolled on the {Table.title()} random table!",
+                color = ctx.message.author.color
+            )
 
+            if randout[4:] == "http" and randout.split('.')[-1] in image_ext:
+                embed.set_image(url=randout)
+
+            else:
+                embed.add_field(name = "Random Result", value = randout)
+            await ctx.send(embed=embed)
+
+        except:
+            await ctx.send(f"It looks like {Table.title()} doesn't exist yet, or your spelling is incorrect.")
+
+#endregion
 
 def setup(bot):
     bot.add_cog(rand(bot))

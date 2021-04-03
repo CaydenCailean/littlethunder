@@ -21,6 +21,8 @@ class rpg(commands.Cog):
         ID = ctx.message.author.id
         return Category, Guild, ID
 
+#region Dice
+
     @commands.group(
         case_insensitive=True, invoke_without_command=True, aliases=["roll", "dice"],
     )
@@ -200,6 +202,10 @@ class rpg(commands.Cog):
         outMessage = self.lt_db.dice_delete(User, Guild, Alias)
         await ctx.send(outMessage)
 
+#endregion
+
+#region Readied actions
+
     @commands.command(pass_context=True)
     async def ready(self, ctx, Alias, *, Value):
         """
@@ -263,6 +269,10 @@ class rpg(commands.Cog):
             await ctx.send(outMessage)
         else:
             await ctx.send("Looks like either that doesn't exist, or you don't own it.")
+
+#endregion
+
+#region Initiative
 
     @commands.group(case_insensitive=True)
     async def init(self, ctx):
@@ -437,6 +447,10 @@ class rpg(commands.Cog):
         else:
             await ctx.send("It looks like you have no power here.")
 
+#endregion
+
+#region DM Claim
+
     @commands.group(case_insensitive=True)
     async def dm(self, ctx):
         """
@@ -459,6 +473,10 @@ class rpg(commands.Cog):
         override = ctx.message.author.permissions_in(ctx.channel).administrator
         output = self.lt_db.remove_owner(Guild, Category, ID, override)
         await ctx.send(output)
+
+#endregion
+
+#region Character Profiles
 
     @commands.group(case_insensitive=True)
     async def char(self, ctx):
@@ -608,6 +626,8 @@ class rpg(commands.Cog):
         await ctx.send(
             "The LT Web Editor can be found at https://webthunder.herokuapp.com/"
         )
+
+#endregion
 
 
 def setup(bot):

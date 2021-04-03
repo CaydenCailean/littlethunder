@@ -332,7 +332,7 @@ class lt_db(object):
     def rand_new(self, Guild, ID, Table):
         
         try:
-            table = self.db[str(Guild)].find_one({"table": Table})["table"]
+            table = self.db.rand[str(Guild)].find_one({"table": Table.lower()})["table"]
             output = f"{table.title()} is already registered."
             return output
         except:
@@ -346,12 +346,44 @@ class lt_db(object):
             return output
     
     def rand_add(self, Guild, ID, Table, Weight, Value):
-        return
+        query = {"table": Table.lower()}
+        table = self.db.rand[str(Guild)].find_one(query)
+        if ID == table['user']:
+            pairs = table['pairs']
+            pairs.append((Value, Weight))
+            updoot = {"$set": {"pairs":pairs}}
+            self.db.rand[str(Guild)].update_one({query, updoot})
+            return f"{Table.title()} has been updated!"  
+        else:
+            return f"{Table.title()} doesn't seem to belong to you!"
 
     def rand_remove(self, Guild, ID, Table, Value):
-        return
+        query = {"table": Table.lower()}
+        table = self.db.rand[str(Guild)].find_one(query)
+        if ID == table['user']:
+            pairs = table['pairs']
+            pair_dict = dict(pairs)
+            try:
+                pair_dict.pop(Value)
+                pairs = list(pair_dict)
+                updoot = {"$set": {'pairs':pairs}}
+                self.db.rand[str(Guild)].update_one({query,updoot})
+                return f"{Value} has been removed from the table."
+            except:
+                return f"{Value} was not found!"
 
-    def rand_get(self, Guild, ID, Table):
-        return
+
+    def rand_delete(self, Guild, ID, Table):
+        query = {'table':Table.lower()}
+        table = self.db.rand[str(Guild)].find_one(query)
+        if ID == table['user']:
+            self.db.rand[str(Guild)].delete_one(query)
+            return f"{Table.title()} has been deleted."
+        else:
+            return f"{Table.title()} doesn't seem to belong to you."
+
+    def rand_get(self, Guild, Table):
+        output = self.db.rand[str(Guild)].find_one({"table": Table.lower()})
+        return output
 
 #endregion
