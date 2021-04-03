@@ -469,7 +469,7 @@ class rpg(commands.Cog):
         """
 
         if ctx.invoked_subcommand is None:
-            Name = ctx.message.content[6:]
+            Name = ctx.message.content.lstrip(' ')
             await self.display(ctx, Name)
 
     @char.command()

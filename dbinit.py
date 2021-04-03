@@ -54,6 +54,8 @@ class lt_db(object):
                     dropped += 1
         return dropped
 
+#region Dice
+
     def dice_add(self, User, Guild, Alias, Value):
         self.db.dice[str(Guild)]
         updoot = {"$set": {"user": User, "Alias": Alias.lower(), "Value": Value}}
@@ -74,6 +76,10 @@ class lt_db(object):
             return f"{Alias} has been removed!"
         else:
             return f"It doesn't looks like {Alias} was a saved dice expression."
+
+#endregion
+
+#region Readied Actions
 
     def ready_set(self, User, Guild, Alias, Value):
         updoot = {"$set": {"User": User, "Alias": Alias.lower(), "Value": Value}}
@@ -102,6 +108,10 @@ class lt_db(object):
             return f"{Alias} has been removed!"
         else:
             return "It doesn't look like there was a readied action by that name!"
+
+#endregion
+
+#region Initiative
 
     def init_add(self, Guild, Category, Name, ID, Init):
         self.db[str(Guild)][str(Category)]
@@ -186,6 +196,10 @@ class lt_db(object):
                 {"Category": Category}, {"$inc": {"turn": 1}}
             )
 
+#endregion
+
+#region Category Ownership
+
     def add_owner(self, Guild, Category, ID):
         existCheck = self.db[str(Guild)].find_one({"Category": Category})
 
@@ -241,6 +255,10 @@ class lt_db(object):
             return True
         else:
             return False
+
+#endregion
+
+#region Character Profiles
 
     def add_char(self, Guild, ID, Name):
 
@@ -306,3 +324,34 @@ class lt_db(object):
     def unset_field(self, Guild, ID, Name, field):
         query = {"name": Name}
         self.db[str(Guild)].update(query, {"$unset": {field: 1}})
+
+#endregion
+
+#region Random Tables
+
+    def rand_new(self, Guild, ID, Table):
+        
+        try:
+            table = self.db[str(Guild)].find_one({"table": Table})["table"]
+            output = f"{table.title()} is already registered."
+            return output
+        except:
+            entry = {
+                "table": Table,
+                "user" : ID,
+                "pairs": []
+            }
+            self.db.rand[str(Guild)].insert_one(entry).inserted_id
+            output = f"{Table.title()} was added to the database. You can edit this table using commands via Discord, or in the future, using the Web Editor, found at https://webthunder.herokuapp.com/"
+            return output
+    
+    def rand_add(self, Guild, ID, Table, Weight, Value):
+        return
+
+    def rand_remove(self, Guild, ID, Table, Value):
+        return
+
+    def rand_get(self, Guild, ID, Table):
+        return
+
+#endregion

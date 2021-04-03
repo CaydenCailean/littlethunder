@@ -3,6 +3,7 @@ import re
 import asyncio
 from discord.ext import commands
 import sys
+from random import randint
 
 sys.path.append("..")
 
@@ -20,17 +21,36 @@ class rand(commands.Cog):
         ID = ctx.message.author.id
         return Category, Guild, ID
 
+    def weighted(self, pairs):
+        total = sum(pair[0] for pair in pairs)
+        r = randint(1, total)
+        for (weight, value) in pairs:
+            r -= weight
+            if r <= 0:
+                return value
+
     @commands.group(case_insensitive=True, aliases=["r", "rand"])
     async def random(self, ctx):
         if ctx.invoked_subcommand is None:
+            Table = ctx.message.lstrip(' ')
+            self.get(ctx, Table)
             return
 
     @random.command(case_insensitive=True)
-    async def add(self, ctx, Weight, *, Value):
+    async def add(self, ctx, Table):
+
         return
 
     @random.command(case_insensitive=True)
-    async def remove(self, ctx, *, Value):
+    async def remove(self, ctx, Table, *, Value):
+        return
+
+    @random.command(case_insensitive=True)
+    async def delete(self, ctx, Table):
+        return
+
+    @random.command(case_insensitive=True)
+    async def get(self, ctx, Table):
         return
 
 
