@@ -25,7 +25,7 @@ class rand(commands.Cog):
     def weighted(self, pairs):
         total = sum(pair[0] for pair in pairs)
         r = randint(1, total)
-        for (value, weight) in pairs:
+        for (weight, value) in pairs:
             r -= weight
             if r <= 0:
                 return value
