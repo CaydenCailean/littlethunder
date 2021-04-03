@@ -57,7 +57,9 @@ class rand(commands.Cog):
     @random.command(case_insensitive=True, aliases=['remove'])
     async def remove_entry(self, ctx, Table, *, Value):
         print(Value)
+        print(Table)
         Guild, ID = self.ctx_info(ctx)
+        print(Guild + '\n' + ID)
         output = self.lt_db.rand_remove(Guild, ID, Table, Value)
         await ctx.send(output)
 
