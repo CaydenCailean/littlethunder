@@ -49,7 +49,7 @@ class rand(commands.Cog):
         await ctx.send(output)
 
     @random.command(case_insensitive=True, aliases=['add'])
-    async def add_entry(self, ctx, Table, Weight, Value):
+    async def add_entry(self, ctx, Table, Weight, *, Value):
         Guild, ID = self.ctx_info(ctx)
         output = self.lt_db.rand_add(Guild, ID, Table, Weight, Value)
         await ctx.send(output)
