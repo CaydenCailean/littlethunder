@@ -88,11 +88,13 @@ class rand(commands.Cog):
         image_ext = ["jpg", "png", "jpeg", "gif"]
         Table = Table.lower()
         result = self.lt_db.rand_get(Guild, Table)
+        
         result["pairs"] = [tuple(x) for x in result["pairs"]]
         randout = self.weighted(result["pairs"])
-        print(randout.split(".")[-1])
-        if "jpg" in image_ext:
-            print("yep")
+        
+        if result["deckMode"] == "on":
+            self.lt_db.rand_discard()
+
         try:
             embed = discord.Embed(
                 title="__" + result["table"].title() + "__",

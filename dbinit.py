@@ -391,17 +391,14 @@ class lt_db(object):
         table = self.db.rand[str(Guild)].find_one(query)
 
         if ID == table["user"]:
-            try:
-                if table["deckMode"] == "off":
-                    updoot = {"$set": {"deckMode": "on"}}
-                    output = f"Deckmode has been enabled for {Table.title()}."
-                else:
-                    updoot = {"$set": {"deckMode": "off"}}
-                    output = f"Deckmode has been disabled. for {Table.title()}."
-            except:
+        
+            if table["deckMode"] == "off":
                 updoot = {"$set": {"deckMode": "on"}}
                 output = f"Deckmode has been enabled for {Table.title()}."
-
+            else:
+                updoot = {"$set": {"deckMode": "off"}}
+                output = f"Deckmode has been disabled. for {Table.title()}."
+        
         self.db.rand[str(Guild)].update_one(query, updoot)
         return output
 
