@@ -54,7 +54,7 @@ class lt_db(object):
                     dropped += 1
         return dropped
 
-#region Dice
+    # region Dice
 
     def dice_add(self, User, Guild, Alias, Value):
         self.db.dice[str(Guild)]
@@ -77,9 +77,9 @@ class lt_db(object):
         else:
             return f"It doesn't looks like {Alias} was a saved dice expression."
 
-#endregion
+    # endregion
 
-#region Readied Actions
+    # region Readied Actions
 
     def ready_set(self, User, Guild, Alias, Value):
         updoot = {"$set": {"User": User, "Alias": Alias.lower(), "Value": Value}}
@@ -109,9 +109,9 @@ class lt_db(object):
         else:
             return "It doesn't look like there was a readied action by that name!"
 
-#endregion
+    # endregion
 
-#region Initiative
+    # region Initiative
 
     def init_add(self, Guild, Category, Name, ID, Init):
         self.db[str(Guild)][str(Category)]
@@ -196,9 +196,9 @@ class lt_db(object):
                 {"Category": Category}, {"$inc": {"turn": 1}}
             )
 
-#endregion
+    # endregion
 
-#region Category Ownership
+    # region Category Ownership
 
     def add_owner(self, Guild, Category, ID):
         existCheck = self.db[str(Guild)].find_one({"Category": Category})
@@ -256,9 +256,9 @@ class lt_db(object):
         else:
             return False
 
-#endregion
+    # endregion
 
-#region Character Profiles
+    # region Character Profiles
 
     def add_char(self, Guild, ID, Name):
 
@@ -325,62 +325,58 @@ class lt_db(object):
         query = {"name": Name}
         self.db[str(Guild)].update(query, {"$unset": {field: 1}})
 
-#endregion
+    # endregion
 
-#region Random Tables
+    # region Random Tables
 
     def rand_new(self, Guild, ID, Table):
-        
+
         try:
             table = self.db.rand[str(Guild)].find_one({"table": Table.lower()})["table"]
             output = f"{table.title()} is already registered."
             return output
         except:
-            entry = {
-                "table": Table.lower(),
-                "user" : ID,
-                "pairs": []
-            }
+            entry = {"table": Table.lower(), "user": ID, "pairs": [], "deckMode": "off"}
             self.db.rand[str(Guild)].insert_one(entry).inserted_id
             output = f"{Table.title()} was added to the database. You can edit this table using commands via Discord, or in the future, using the Web Editor, found at https://webthunder.herokuapp.com/"
             return output
-    
+
     def rand_add(self, Guild, ID, Table, Weight, Value):
         query = {"table": Table.lower()}
         table = self.db.rand[str(Guild)].find_one(query)
-        if ID == table['user']:
-            pairs = table['pairs']
+        if ID == table["user"]:
+            pairs = table["pairs"]
             pairs.append([Value, Weight])
-            updoot = {"$set": {"pairs":pairs}}
+            updoot = {"$set": {"pairs": pairs}}
             self.db.rand[str(Guild)].update_one(query, updoot)
-            return f"{Table.title()} has been updated!"  
+            return f"{Table.title()} has been updated!"
         else:
             return f"{Table.title()} doesn't seem to belong to you!"
 
     def rand_remove(self, Guild, ID, Table, Value):
         query = {"table": Table.lower()}
         table = self.db.rand[str(Guild)].find_one(query)
-        if ID == table['user']:
-            pairs = list(table['pairs'])
+        if ID == table["user"]:
+            pairs = list(table["pairs"])
 
-            try:               
+            try:
                 for item in pairs:
                     if item[0] == Value:
                         pairs.remove(item)
-                        updoot = {"$set": {'pairs':pairs}}
-                        self.db.rand[str(Guild)].update_one(query,updoot)
+                        updoot = {"$set": {"pairs": pairs}}
+                        self.db.rand[str(Guild)].update_one(query, updoot)
                         return f"{Value} has been removed from the table."
                     else:
                         pass
             except Exception as e:
                 print(e)
-                return 
+                return
         return f"{Value} was not found!"
 
     def rand_delete(self, Guild, ID, Table):
-        query = {'table':Table.lower()}
+        query = {"table": Table.lower()}
         table = self.db.rand[str(Guild)].find_one(query)
-        if ID == table['user']:
+        if ID == table["user"]:
             self.db.rand[str(Guild)].delete_one(query)
             return f"{Table.title()} has been deleted."
         else:
@@ -390,4 +386,27 @@ class lt_db(object):
         output = self.db.rand[str(Guild)].find_one({"table": Table.lower()})
         return output
 
-#endregion
+    def deck_toggle(self, Guild, ID, Table):
+        query = {"table": Table.lower()}
+        table = self.db.rand[str(Guild)].find_one(query)
+
+        if ID == table["user"]:
+            try:
+                if table["deckMode"] == "off":
+                    updoot = {"$set": {"deckMode": "on"}}
+                    output = f"Deckmode has been enabled for {Table.title()}."
+                else:
+                    updoot = {"$set": {"deckMode": "off"}}
+                    output = f"Deckmode has been disabled. for {Table.title()}."
+            except:
+                updoot = {"$set": {"deckMode": "on"}}
+                output = f"Deckmode has been enabled for {Table.title()}."
+
+        self.db.rand[str(Guild)].update_one(query, updoot)
+        return output
+
+    def deck_shuffle(self, Guild, ID, Table):
+        return
+
+
+# endregion

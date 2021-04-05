@@ -21,10 +21,12 @@ class rpg(commands.Cog):
         ID = ctx.message.author.id
         return Category, Guild, ID
 
-#region Dice
+    # region Dice
 
     @commands.group(
-        case_insensitive=True, invoke_without_command=True, aliases=["r","roll", "dice"],
+        case_insensitive=True,
+        invoke_without_command=True,
+        aliases=["r", "roll", "dice"],
     )
     async def d(self, ctx, input: str):
 
@@ -202,9 +204,9 @@ class rpg(commands.Cog):
         outMessage = self.lt_db.dice_delete(User, Guild, Alias)
         await ctx.send(outMessage)
 
-#endregion
+    # endregion
 
-#region Readied actions
+    # region Readied actions
 
     @commands.command(pass_context=True)
     async def ready(self, ctx, Alias, *, Value):
@@ -270,9 +272,9 @@ class rpg(commands.Cog):
         else:
             await ctx.send("Looks like either that doesn't exist, or you don't own it.")
 
-#endregion
+    # endregion
 
-#region Initiative
+    # region Initiative
 
     @commands.group(case_insensitive=True)
     async def init(self, ctx):
@@ -447,9 +449,9 @@ class rpg(commands.Cog):
         else:
             await ctx.send("It looks like you have no power here.")
 
-#endregion
+    # endregion
 
-#region DM Claim
+    # region DM Claim
 
     @commands.group(case_insensitive=True)
     async def dm(self, ctx):
@@ -474,9 +476,9 @@ class rpg(commands.Cog):
         output = self.lt_db.remove_owner(Guild, Category, ID, override)
         await ctx.send(output)
 
-#endregion
+    # endregion
 
-#region Character Profiles
+    # region Character Profiles
 
     @commands.group(case_insensitive=True)
     async def char(self, ctx):
@@ -487,7 +489,7 @@ class rpg(commands.Cog):
         """
 
         if ctx.invoked_subcommand is None:
-            Name = ctx.message.content.lstrip(' ')
+            Name = ctx.message.content.lstrip(" ")
             await self.display(ctx, Name)
 
     @char.command()
@@ -627,7 +629,8 @@ class rpg(commands.Cog):
             "The LT Web Editor can be found at https://webthunder.herokuapp.com/"
         )
 
-#endregion
+
+# endregion
 
 
 def setup(bot):

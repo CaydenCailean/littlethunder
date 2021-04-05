@@ -15,7 +15,7 @@ class rand(commands.Cog):
         self.bot = bot
         self.lt_db = lt_db
 
-#region Utility
+    # region Utility
 
     def ctx_info(self, ctx):
         Guild = ctx.message.guild.id
@@ -25,15 +25,15 @@ class rand(commands.Cog):
     def weighted(self, pairs):
         total = sum(int(pair[1]) for pair in pairs)
         r = randint(1, total)
-        
-        for (value, weight) in pairs:    
+
+        for (value, weight) in pairs:
             r -= int(weight)
             if r <= 0:
                 return value
 
-#endregion
+    # endregion
 
-#region Random Tables
+    # region Random Tables
 
     @commands.group(case_insensitive=True, aliases=["rand"])
     async def random(self, ctx):
@@ -43,9 +43,8 @@ class rand(commands.Cog):
         If you're wishing to roll on a random table, use this command followed by the table name, i.e. `.random Table2`
         """
         if ctx.invoked_subcommand is None:
-            Table = ctx.message.content.split(' ')[1]
+            Table = ctx.message.content.split(" ")[1]
             await self.get(ctx, Table)
-            
 
     @random.command(case_insensitive=True)
     async def new(self, ctx, Table):
@@ -56,7 +55,7 @@ class rand(commands.Cog):
         output = self.lt_db.rand_new(Guild, ID, Table)
         await ctx.send(output)
 
-    @random.command(case_insensitive=True, aliases=['add'])
+    @random.command(case_insensitive=True, aliases=["add"])
     async def add_entry(self, ctx, Table, Weight, *, Value):
         """
         Adds a new weighted entry to the table. The table name requires quotation marks if it is longer than two words; the value does not.
@@ -65,7 +64,7 @@ class rand(commands.Cog):
         output = self.lt_db.rand_add(Guild, ID, Table, Weight, Value)
         await ctx.send(output)
 
-    @random.command(case_insensitive=True, aliases=['remove'])
+    @random.command(case_insensitive=True, aliases=["remove"])
     async def remove_entry(self, ctx, Table, *, Value):
         """
         Removes a weighted entry from the table. The table name requires quotation marks if it is longer than two words; the value does not.
@@ -86,32 +85,52 @@ class rand(commands.Cog):
     @random.command(case_insensitive=True, hidden=True)
     async def get(self, ctx, Table):
         Guild = ctx.message.guild.id
-        image_ext = ['jpg','png','jpeg','gif']
+        image_ext = ["jpg", "png", "jpeg", "gif"]
         Table = Table.lower()
         result = self.lt_db.rand_get(Guild, Table)
-        result['pairs'] = [tuple(x) for x in result['pairs']]
-        randout = self.weighted(result['pairs'])
-        print(randout.split('.')[-1])
-        if 'jpg' in image_ext:
-            print('yep')
+        result["pairs"] = [tuple(x) for x in result["pairs"]]
+        randout = self.weighted(result["pairs"])
+        print(randout.split(".")[-1])
+        if "jpg" in image_ext:
+            print("yep")
         try:
-            embed= discord.Embed(
+            embed = discord.Embed(
                 title="__" + result["table"].title() + "__",
-                description = f"{ctx.message.author.display_name} rolled on the {Table.title()} random table!",
-                color = ctx.message.author.color
+                description=f"{ctx.message.author.display_name} rolled on the {Table.title()} random table!",
+                color=ctx.message.author.color,
             )
 
-            if randout[0:4] == "http" and randout.split('.')[-1] in image_ext:
+            if randout[0:4] == "http" and randout.split(".")[-1] in image_ext:
                 embed.set_image(url=randout)
 
             else:
-                embed.add_field(name = "Random Result", value = randout)
+                embed.add_field(name="Random Result", value=randout)
             await ctx.send(embed=embed)
 
         except:
-            await ctx.send(f"It looks like {Table.title()} doesn't exist yet, or your spelling is incorrect.")
+            await ctx.send(
+                f"It looks like {Table.title()} doesn't exist yet, or your spelling is incorrect."
+            )
 
-#endregion
+    @random.command(aliases=["toggle"])
+    async def toggle_deck(self, ctx, Table):
+        Guild, ID = self.ctx_info(ctx)
+        output = self.lt_db.deck_toggle(Guild, ID, Table)
+        await ctx.send(output)
+
+    @random.command(aliases=["reset"])
+    async def shuffle(self, ctx, Table):
+        Guild, ID = self.ctx_info(ctx)
+        return
+
+    @random.command(aliases=["return"])
+    async def return_one(self, ctx, Table, Value):
+        Guild, ID = self.ctx_info(ctx)
+        return
+
+
+# endregion
+
 
 def setup(bot):
     bot.add_cog(rand(bot))
