@@ -407,13 +407,12 @@ class lt_db(object):
         table = self.db.rand[str(Guild)].find_one(query)
         if ID == table["user"]:
         
-            for v, w in table['spentPairs']:
-                print(v)
-                print(w)
+            for item in table['spentPairs']:
+                print(item)
                 print(table['spentPairs'])
                 print(table['pairs'])
-                table['spentPairs'].remove([v, w])
-                table['pairs'].append([v, w])
+                table['spentPairs'].remove(item)
+                table['pairs'].append(item)
             
             updoot = {'$set':{'pairs':table['pairs'], 'spentPairs':table['spentPairs']}}
             self.db.rand[str(Guild)].update_one(query, updoot)
