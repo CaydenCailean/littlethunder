@@ -403,14 +403,14 @@ class lt_db(object):
         return output
 
     def deck_shuffle(self, Guild, ID, Table):
-        query = {'table':Table}
+        query = {'table':Table.lower()}
         table = self.db.rand[str(Guild)].find_one(query)
         if ID == table["user"]:
         
-            for k, v in table['spentPairs']:
+            for item in table['spentPairs']:
                 
-                table['spentPairs'].remove([k,v])
-                table['pairs'].append([k, v])
+                table['spentPairs'].remove(item)
+                table['pairs'].append(item)
         return f'{Table} has been shuffled.'
 
     def deck_draw(self, Guild, ID, mid, Value):
