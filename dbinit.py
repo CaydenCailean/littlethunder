@@ -408,7 +408,7 @@ class lt_db(object):
         if ID == table["user"]:
         
             for item in table['spentPairs']:
-                
+                print(item)
                 table['spentPairs'].remove(item)
                 table['pairs'].append(item)
         return f'{Table} has been shuffled.'
