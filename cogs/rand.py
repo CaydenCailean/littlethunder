@@ -93,8 +93,10 @@ class rand(commands.Cog):
         randout = self.weighted(result["pairs"])
         
         if result["deckMode"] == "on":
-            self.lt_db.rand_discard()
-
+            ID = ctx.message.author.id
+            mid = result["_id"]
+            output = self.lt_db.deck_draw(Guild, ID, mid, randout)
+            print(output)
         try:
             embed = discord.Embed(
                 title="__" + result["table"].title() + "__",

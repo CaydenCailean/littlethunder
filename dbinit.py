@@ -397,13 +397,25 @@ class lt_db(object):
                 output = f"Deckmode has been enabled for {Table.title()}."
             else:
                 updoot = {"$set": {"deckMode": "off"}}
-                output = f"Deckmode has been disabled. for {Table.title()}."
+                output = f"Deckmode has been disabled for {Table.title()}."
         
         self.db.rand[str(Guild)].update_one(query, updoot)
         return output
 
     def deck_shuffle(self, Guild, ID, Table):
         return
+
+    def deck_draw(self, Guild, ID, mid, Value):
+        query = {"_id": mid}
+        table = self.db.rand[str(Guild)].find_one(query)
+        table["pairs"].pop('Value')
+        table["spentPairs"].append('Value')
+        updoot = {"$set":{
+            "pairs": table['pairs'],
+            "spentPairs" : table["spentPairs"]}}
+        self.db.rand[str(Guild)].update_one(query, updoot)
+        output = f"{Value} has been taken out of the deck."
+        return output
 
 
 # endregion
