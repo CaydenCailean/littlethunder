@@ -409,6 +409,7 @@ class lt_db(object):
         query = {"_id": mid}
         table = self.db.rand[str(Guild)].find_one(query)
         for k, v in table["pairs"]:
+            print(v)
             if v == Value:
                 table["pairs"].pop(k)
                 try:
@@ -420,10 +421,15 @@ class lt_db(object):
 
             else:
                 pass
-        
-        updoot = {"$set":{
-            "pairs": table['pairs'],
-            "spentPairs" : table["spentPairs"]}}
+        try:
+            updoot = {"$set":{
+                "pairs": table['pairs'],
+                "spentPairs" : table["spentPairs"]
+                }
+            }
+        except:
+            pass
+
         self.db.rand[str(Guild)].update_one(query, updoot)
         output = f"{Value} has been taken out of the deck."
         return output
