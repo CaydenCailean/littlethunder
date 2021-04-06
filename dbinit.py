@@ -407,7 +407,8 @@ class lt_db(object):
         table = self.db.rand[str(Guild)].find_one(query)
         if ID == table["user"]:
         
-            for [k, v] in table['spentPairs']:
+            for k, v in table['spentPairs']:
+                print
                 table['spentPairs'].remove([k,v])
                 table['pairs'].append([k, v])
         return f'{Table} has been shuffled.'
