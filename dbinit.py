@@ -290,8 +290,7 @@ class lt_db(object):
             else:
                 output = f"{Name.title()} doesn't belong to you."
                 return output
-        except TypeError as e:
-            print(e)
+        except:
             output = f"{Name.title()} doesn't seem to exist in this category."
             return output
 
@@ -368,9 +367,8 @@ class lt_db(object):
                         return f"{Value} has been removed from the table."
                     else:
                         pass
-            except Exception as e:
-                print(e)
-                return
+            except:
+                pass
         return f"{Value} was not found!"
 
     def rand_delete(self, Guild, ID, Table):
@@ -412,12 +410,7 @@ class lt_db(object):
                 del table['spentPairs'][0]
 
 
-            #for item in table['spentPairs']:
-            #    print(item)
-            #    print(table['spentPairs'])
-            #    print(table['pairs'])
-            #    table['spentPairs'].remove(item)
-            #    table['pairs'].append(item)
+            
             
             updoot = {'$set':{'pairs':table['pairs'], 'spentPairs':table['spentPairs']}}
             self.db.rand[str(Guild)].update_one(query, updoot)
@@ -428,7 +421,7 @@ class lt_db(object):
         table = self.db.rand[str(Guild)].find_one(query)
         if ID == table['user']:
             for v, w in table["pairs"]:
-                print(v)
+
                 if v == Value:
                     table["pairs"].remove([v, w])
                     try:
@@ -439,7 +432,7 @@ class lt_db(object):
 
                 else:
                     pass
-            print(table['spentPairs'])
+            
             try:
                 updoot = {"$set":{
                     "pairs": table['pairs'],
