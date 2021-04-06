@@ -408,8 +408,19 @@ class lt_db(object):
     def deck_draw(self, Guild, ID, mid, Value):
         query = {"_id": mid}
         table = self.db.rand[str(Guild)].find_one(query)
-        table["pairs"].pop('Value')
-        table["spentPairs"].append('Value')
+        for k, v in table["pairs"]:
+            if v == Value:
+                table["pairs"].pop(k)
+                try:
+                    table["spentPairs"].append({k:v})
+                except:
+                    table["spentPairs"] = []
+                    table["spentPairs"].append({k:v})                    ]
+
+
+            else:
+                pass
+        
         updoot = {"$set":{
             "pairs": table['pairs'],
             "spentPairs" : table["spentPairs"]}}
