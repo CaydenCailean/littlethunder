@@ -411,12 +411,12 @@ class lt_db(object):
         for v, w in table["pairs"]:
             print(v)
             if v == Value:
-                table["pairs"].remove({v:w})
+                table["pairs"].remove({w:v})
                 try:
-                    table["spentPairs"].append({v:w})
+                    table["spentPairs"].append({w:v})
                 except:
                     table["spentPairs"] = []
-                    table["spentPairs"].append({v:w})
+                    table["spentPairs"].append({w:v})
 
             else:
                 pass
