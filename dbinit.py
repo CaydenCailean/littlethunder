@@ -406,10 +406,10 @@ class lt_db(object):
         query = {'table':Table.lower()}
         table = self.db.rand[str(Guild)].find_one(query)
         if ID == table["user"]:
-            print(len(table['spentPairs']))
-            for _, val in enumerate(table['spentPairs']):
-                table['spentPairs'].remove(val)
+            while len(table['spentPairs']) > 0:
+                val = table['spentPairs'][0]
                 table['pairs'].append(val)
+                del table['spentPairs'][0]
 
 
             #for item in table['spentPairs']:
