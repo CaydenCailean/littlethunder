@@ -408,10 +408,10 @@ class lt_db(object):
     def deck_draw(self, Guild, ID, mid, Value):
         query = {"_id": mid}
         table = self.db.rand[str(Guild)].find_one(query)
-        for k, v in table["pairs"]:
+        for v, w in table["pairs"]:
             print(v)
             if v == Value:
-                table["pairs"].pop(k)
+                table["pairs"].remove({v:w})
                 try:
                     table["spentPairs"].append({k:v})
                 except:
