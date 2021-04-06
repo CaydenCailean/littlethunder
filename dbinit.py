@@ -409,7 +409,7 @@ class lt_db(object):
             length = len(table['spentPairs'])
             i = 0
             while i < length:
-                table['pairs'].append([table['spentPairs'][0]])
+                table['pairs'].append(table['spentPairs'][0])
                 table['spentPairs'].pop(0)
             #for item in table['spentPairs']:
             #    print(item)
