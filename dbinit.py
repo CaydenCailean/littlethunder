@@ -415,7 +415,7 @@ class lt_db(object):
                     table["spentPairs"].append({k:v})
                 except:
                     table["spentPairs"] = []
-                    table["spentPairs"].append({k:v})                    ]
+                    table["spentPairs"].append({k:v})
 
 
             else:
