@@ -420,7 +420,7 @@ class lt_db(object):
 
             else:
                 pass
-
+        print(table['spentPairs'])
         try:
             updoot = {"$set":{
                 "pairs": table['pairs'],
