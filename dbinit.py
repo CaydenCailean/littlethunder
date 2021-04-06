@@ -405,7 +405,8 @@ class lt_db(object):
     def deck_shuffle(self, Guild, ID, Table):
         query = {'table':Table}
         table = self.db.rand[str(Guild)].find_one(query)
-        if ID == table['user']:
+        if ID == table["user"]:
+        
             for [k, v] in table['spentPairs']:
                 table['spentPairs'].remove([k,v])
                 table['pairs'].append([k, v])
