@@ -413,14 +413,14 @@ class lt_db(object):
             if v == Value:
                 table["pairs"].remove({v:w})
                 try:
-                    table["spentPairs"].append({k:v})
+                    table["spentPairs"].append({v:w})
                 except:
                     table["spentPairs"] = []
-                    table["spentPairs"].append({k:v})
-
+                    table["spentPairs"].append({v:w})
 
             else:
                 pass
+
         try:
             updoot = {"$set":{
                 "pairs": table['pairs'],
