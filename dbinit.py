@@ -403,36 +403,45 @@ class lt_db(object):
         return output
 
     def deck_shuffle(self, Guild, ID, Table):
-        return
+        query = {'table':Table}
+        table = self.db.rand[str(Guild)].find_one(query)
+        if ID == table['user']:
+            for [k, v] in table['spentPairs']:
+                table['spentPairs'].remove([k,v])
+                table['pairs'].append([k, v])
+        return f'{Table} has been shuffled.'
 
     def deck_draw(self, Guild, ID, mid, Value):
         query = {"_id": mid}
         table = self.db.rand[str(Guild)].find_one(query)
-        for v, w in table["pairs"]:
-            print(v)
-            if v == Value:
-                table["pairs"].remove([v, w])
-                try:
-                    table["spentPairs"].append([v,w])
-                except:
-                    table["spentPairs"] = []
-                    table["spentPairs"].append([v,w])
+        if ID == table['user']:
+            for v, w in table["pairs"]:
+                print(v)
+                if v == Value:
+                    table["pairs"].remove([v, w])
+                    try:
+                        table["spentPairs"].append([v,w])
+                    except:
+                        table["spentPairs"] = []
+                        table["spentPairs"].append([v,w])
 
-            else:
-                pass
-        print(table['spentPairs'])
-        try:
-            updoot = {"$set":{
-                "pairs": table['pairs'],
-                "spentPairs" : table["spentPairs"]
+                else:
+                    pass
+            print(table['spentPairs'])
+            try:
+                updoot = {"$set":{
+                    "pairs": table['pairs'],
+                    "spentPairs" : table["spentPairs"]
+                    }
                 }
-            }
-        except:
-            pass
+            except:
+                pass
 
-        self.db.rand[str(Guild)].update_one(query, updoot)
-        output = f"{Value} has been taken out of the deck."
-        return output
+            self.db.rand[str(Guild)].update_one(query, updoot)
+            output = f"{Value} has been taken out of the deck."
+            return output
+        else:
+            return f"{Value} does not appear to belong to you."
 
 
 # endregion

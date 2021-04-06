@@ -86,7 +86,6 @@ class rand(commands.Cog):
     async def get(self, ctx, Table):
         Guild = ctx.message.guild.id
         image_ext = ["jpg", "png", "jpeg", "gif"]
-        Table = Table.lower()
         result = self.lt_db.rand_get(Guild, Table)
         
         result["pairs"] = [tuple(x) for x in result["pairs"]]
@@ -125,7 +124,8 @@ class rand(commands.Cog):
     @random.command(aliases=["reset"])
     async def shuffle(self, ctx, Table):
         Guild, ID = self.ctx_info(ctx)
-        return
+        output = self.lt_db.deck_shuffle(Guild, ID, Table)
+        await ctx.send(output)
 
     @random.command(aliases=["return"])
     async def return_one(self, ctx, Table, Value):
