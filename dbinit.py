@@ -409,8 +409,12 @@ class lt_db(object):
         
             for item in table['spentPairs']:
                 print(item)
+                print('spentPairs')[1]
                 table['spentPairs'].remove(item)
                 table['pairs'].append(item)
+            
+            updoot = {'$set':{'pairs':table['pairs'], 'spentPairs':table['spentPairs']}}
+            self.db.rand[str(Guild)].update_one(query, updoot)
         return f'{Table} has been shuffled.'
 
     def deck_draw(self, Guild, ID, mid, Value):
