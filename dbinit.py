@@ -408,6 +408,10 @@ class lt_db(object):
         if ID == table["user"]:
         
             for v, w in table['spentPairs']:
+                print(v)
+                print(w)
+                print(table['spentPairs'])
+                print(table['pairs'])
                 table['spentPairs'].remove([v, w])
                 table['pairs'].append([v, w])
             
