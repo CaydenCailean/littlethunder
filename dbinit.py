@@ -406,7 +406,8 @@ class lt_db(object):
         query = {'table':Table.lower()}
         table = self.db.rand[str(Guild)].find_one(query)
         if ID == table["user"]:
-            i = len(table['spentPairs'])
+            length = len(table['spentPairs'])
+            i = 0
             while i < length:
                 table['pairs'].append([table['spentPairs'][0]])
                 table['spentPairs'].pop(0)
