@@ -350,7 +350,9 @@ class rpg(commands.Cog):
     @init.command(pass_context=True, aliases=["remove"])
     async def kill(self, ctx, name):
         """
-        Remove a combant from the initiative tracker. Temporarily disabled the ability for non-DM users to remove combatants.
+        DM Only.
+
+        Remove a combant from the initiative tracker.
         """
         Category, Guild, ID = self.ctx_info(ctx)
         dmCheck = self.lt_db.owner_check(Guild, Category, ID)
@@ -367,6 +369,8 @@ class rpg(commands.Cog):
     @init.command()
     async def end(self, ctx):
         """
+        DM Only.
+
         Clears the initiative table altogether. This cannot be undone.
         """
         Category, Guild, ID = self.ctx_info(ctx)
@@ -424,6 +428,8 @@ class rpg(commands.Cog):
     @init.command()
     async def setturn(self, ctx, newPos):
         """
+        DM Only.
+
         Sets the current turn to an existing combatant, either by iniative total or combatant name.
         """
         Category, Guild, ID = self.ctx_info(ctx)
