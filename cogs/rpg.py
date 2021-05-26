@@ -301,7 +301,7 @@ class rpg(commands.Cog):
             output = ""
             for i in initraw:
                 del i["ID"], i["_id"]
-                outstring = f"{list(i.values())[0]} : {list(i.values())[1]}"
+                outstring = f"{list(i.values())[0].title()} : {list(i.values())[1]}"
                 output += outstring + "\n"
             embed = discord.Embed(
                 Title=f"Initiative for {ctx.channel.category}", colour=0x00FF00
