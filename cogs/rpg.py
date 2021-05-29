@@ -148,7 +148,7 @@ class rpg(commands.Cog):
                         commentText = commentText.group(0).replace("#", "")
 
                     else:
-                        commentText = "Rolling some dice"
+                        commentText = f"Rolling {inputDice}"
 
                 if hasattr(ctx.message.author, "nick") == True:
                     if ctx.message.author.nick != None:
