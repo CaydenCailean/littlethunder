@@ -3,7 +3,7 @@ import re
 import dice
 import asyncio
 from discord.ext import commands, tasks
-import sys
+import sys, traceback
 from datetime import datetime
 
 sys.path.append("..")
@@ -146,7 +146,7 @@ class rpg(commands.Cog):
                         discFooter = re.search(r"#(.+)", ctx.message.content)
                         discFooter = f"\n{discFooter.group(0).replace('#', '')}"
                     except Exception as e:
-                        print(e.with_traceback)
+                        traceback.print_stack()
 
                 if hasattr(ctx.message.author, "nick") == True:
                     if ctx.message.author.nick != None:
