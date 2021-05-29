@@ -164,11 +164,9 @@ class rpg(commands.Cog):
                     color=ctx.message.author.color,
                 )
 
-                try:
+                if discFooter != None:
                     embed.set_footer(text=discFooter)
-                except:
-                    pass
-
+                
                 embed.add_field(name="Results", value=outResults)
                 embed.add_field(name="Total", value=Total)
                     
