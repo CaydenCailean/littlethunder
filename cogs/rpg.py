@@ -147,8 +147,8 @@ class rpg(commands.Cog):
                         commentText = f"Rolling {input}"
                         discFooter = re.search(r"#(.+)", ctx.message.content)
                         discFooter = f"\n{discFooter.group(0).replace('#', '')}"
-                    except:
-                        pass
+                    except Exception as e:
+                        print(e.with_traceback)
 
                 if hasattr(ctx.message.author, "nick") == True:
                     if ctx.message.author.nick != None:
