@@ -147,7 +147,7 @@ class rpg(commands.Cog):
                         commentText = re.search(r"#(.+)", ctx.message.content)
                         commentText = commentText.group(0).replace("#", "")
                     except:
-                        commentText = input
+                        commentText = f"Rolling {input}"
 
                 if hasattr(ctx.message.author, "nick") == True:
                     if ctx.message.author.nick != None:
