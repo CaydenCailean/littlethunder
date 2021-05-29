@@ -145,8 +145,8 @@ class rpg(commands.Cog):
                 except:
                     try:
                         commentText = f"Rolling {input}"
-                        commentText += re.search(r"#(.+)", ctx.message.content)
-                        commentText += f"\n{commentText.group(0).replace('#', '')}"
+                        text = re.search(r"#(.+)", ctx.message.content)
+                        commentText += f"\n{text.group(0).replace('#', '')}"
                     except:
                         pass
 
