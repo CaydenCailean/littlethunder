@@ -35,8 +35,6 @@ class rpg(commands.Cog):
         
         You may add or subtract flat modifiers or dice by appending them to your initial #d# roll.
         
-        You may also add comments to the dice output by appending the command with {#} followed by your comment
-
         Comments may be added to a dice output by appending the command with #, followed by the content of the comment you wish to be shown.
         """
         if ctx.invoked_subcommand is None:
@@ -115,7 +113,7 @@ class rpg(commands.Cog):
 
                     for i in malus:
                         negmod += int(i)
-
+                    
                     malusDice = re.findall(r"\-\d*d\d+", input)
                     for i in malusDice:
                         output = dice.roll(i)
@@ -130,7 +128,7 @@ class rpg(commands.Cog):
                         else:
                             for i in output:
                                 outResults.append(str(i))
-
+                    
                     for i in outResults:
                         Total += int(i)
                     Total += posmod
@@ -157,7 +155,7 @@ class rpg(commands.Cog):
                         discName = ctx.message.author.name
                 else:
                     discName = ctx.message.author.name
-
+                
                 embed = discord.Embed(
                     title=f"Results for {discName}",
                     description=commentText,
@@ -179,6 +177,7 @@ class rpg(commands.Cog):
                     await ctx.send(
                         "Either your dice phrase was not formatted correctly or you are rolling too many dice. Please try again."
                     )
+                    print(e.with_traceback)
                 return Total
 
     @d.command(pass_context=True)
