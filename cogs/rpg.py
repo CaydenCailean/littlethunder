@@ -77,11 +77,11 @@ class rpg(commands.Cog):
                         outList = dice.roll(input)
                     except:
                         traceback.print_stack()
-                    print(outList)
+                    
                     for i in outList:
                         Total += i
                         outResults.append(i)
-                    print(outResults)
+                    
                 if isPlus != -1 or isMinus != -1:
                     expr = re.split("[+-]", input)[0]
 
@@ -111,7 +111,7 @@ class rpg(commands.Cog):
                             )
                         else:
                             outResults.extend(dice.roll(i))
-                            print(outResults)
+                            
                     malus = re.findall(r"(\-\d+)(?:(?!d))", input)
 
                     for i in malus:
@@ -142,7 +142,7 @@ class rpg(commands.Cog):
                             "That's too many numbers. The limit to this value is 500d500."
                         )
                 try:
-                    print(commentText)
+                    commentText
                 except:
                     commentText = f"Rolling {input}"
                 try:
@@ -162,8 +162,7 @@ class rpg(commands.Cog):
                     pass
 
                 embed.add_field(name="Results", value=outResults)
-                embed.add_field(name="Total", value=Total)
-                print("please send")    
+                embed.add_field(name="Total", value=Total)   
                 await ctx.send(embed=embed)
                 return int(Total)
             except Exception as e:
