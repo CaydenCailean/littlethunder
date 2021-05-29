@@ -73,8 +73,10 @@ class rpg(commands.Cog):
 
                     if diceNum == "":
                         diceNum = "1"
-
-                    outList = dice.roll(input)
+                    try:
+                        outList = dice.roll(input)
+                    except:
+                        traceback.print_stack()
                     print(outList)
                     for i in outList:
                         Total += i
@@ -147,7 +149,7 @@ class rpg(commands.Cog):
                         discFooter = re.search(r"#(.+)", ctx.message.content)
                         discFooter = f"\n{discFooter.group(0).replace('#', '')}"
                     except Exception as e:
-                        traceback.print_stack()
+                        print(e)
                 
                 embed = discord.Embed(
                     title=f"Results for {ctx.message.author.display_name}",
@@ -170,7 +172,7 @@ class rpg(commands.Cog):
                     await ctx.send(
                         "Either your dice phrase was not formatted correctly or you are rolling too many dice. Please try again."
                     )
-                    traceback.print_stack()
+                    print(e)
                 return Total
 
     @d.command(pass_context=True)
