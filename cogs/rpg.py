@@ -156,7 +156,7 @@ class rpg(commands.Cog):
                     description=commentText,
                     color=ctx.message.author.color,
                 )
-                print(discFooter)
+                
                 if discFooter != None:
                     embed.set_footer(text=discFooter)
                 
