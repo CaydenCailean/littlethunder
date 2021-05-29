@@ -144,10 +144,11 @@ class rpg(commands.Cog):
                     print(commentText)
                 except:
                     try:
-                        commentText = re.search(r"#(.+)", ctx.message.content)
-                        commentText = commentText.group(0).replace("#", "")
-                    except:
                         commentText = f"Rolling {input}"
+                        commentText += re.search(r"#(.+)", ctx.message.content)
+                        commentText += f"\n{commentText.group(0).replace('#', '')}"
+                    except:
+                        pass
 
                 if hasattr(ctx.message.author, "nick") == True:
                     if ctx.message.author.nick != None:
