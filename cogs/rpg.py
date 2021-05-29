@@ -147,27 +147,19 @@ class rpg(commands.Cog):
                         discFooter = f"\n{discFooter.group(0).replace('#', '')}"
                     except Exception as e:
                         traceback.print_stack()
-
-                if hasattr(ctx.message.author, "nick") == True:
-                    if ctx.message.author.nick != None:
-                        discName = ctx.message.author.nick
-                    else:
-                        discName = ctx.message.author.name
-                else:
-                    discName = ctx.message.author.name
                 
                 embed = discord.Embed(
-                    title=f"Results for {discName}",
+                    title=f"Results for {ctx.message.author.display_name}",
                     description=commentText,
                     color=ctx.message.author.color,
                 )
-
+                print(discFooter)
                 if discFooter != None:
                     embed.set_footer(text=discFooter)
                 
                 embed.add_field(name="Results", value=outResults)
                 embed.add_field(name="Total", value=Total)
-                    
+                print("please send")    
                 await ctx.send(embed=embed)
                 return int(Total)
             except Exception as e:
