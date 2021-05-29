@@ -145,8 +145,8 @@ class rpg(commands.Cog):
                 except:
                     try:
                         commentText = f"Rolling {input}"
-                        text = re.search(r"#(.+)", ctx.message.content)
-                        commentText += f"\n{text.group(0).replace('#', '')}"
+                        discFooter = re.search(r"#(.+)", ctx.message.content)
+                        discFooter = f"\n{discFooter.group(0).replace('#', '')}"
                     except:
                         pass
 
@@ -163,8 +163,15 @@ class rpg(commands.Cog):
                     description=commentText,
                     color=ctx.message.author.color,
                 )
+
+                try:
+                    embed.set_footer(text=discFooter)
+                except:
+                    pass
+
                 embed.add_field(name="Results", value=outResults)
                 embed.add_field(name="Total", value=Total)
+                    
                 await ctx.send(embed=embed)
                 return int(Total)
             except Exception as e:
