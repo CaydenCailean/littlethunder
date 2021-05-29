@@ -156,7 +156,8 @@ class rpg(commands.Cog):
                 print(discFooter)
                 if discFooter != None:
                     embed.set_footer(text=discFooter)
-                
+                print(outResults)
+                print(Total)
                 embed.add_field(name="Results", value=outResults)
                 embed.add_field(name="Total", value=Total)
                 print("please send")    
