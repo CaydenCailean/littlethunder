@@ -177,7 +177,7 @@ class rpg(commands.Cog):
                     await ctx.send(
                         "Either your dice phrase was not formatted correctly or you are rolling too many dice. Please try again."
                     )
-                    print(e.with_traceback)
+                    traceback.print_stack()
                 return Total
 
     @d.command(pass_context=True)
