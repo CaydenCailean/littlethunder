@@ -141,7 +141,7 @@ class rpg(commands.Cog):
                             "That's too many numbers. The limit to this value is 100d100."
                         )
                 try:
-                    commentText
+                    print(commentText)
                 except:
                     try:
                         commentText = re.search(r"#(.+)", ctx.message.content)
