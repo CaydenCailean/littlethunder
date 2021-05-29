@@ -144,12 +144,12 @@ class rpg(commands.Cog):
                 try:
                     print(commentText)
                 except:
-                    try:
-                        commentText = f"Rolling {input}"
-                        discFooter = re.search(r"#(.+)", ctx.message.content)
-                        discFooter = f"\n{discFooter.group(0).replace('#', '')}"
-                    except Exception as e:
-                        print(e)
+                    commentText = f"Rolling {input}"
+                try:
+                    discFooter = re.search(r"#(.+)", ctx.message.content)
+                    discFooter = f"\n{discFooter.group(0).replace('#', '')}"
+                except Exception as e:
+                    print(e)
                 
                 embed = discord.Embed(
                     title=f"Results for {ctx.message.author.display_name}",
