@@ -31,7 +31,7 @@ class rpg(commands.Cog):
     async def d(self, ctx, input: str):
 
         """
-        Rolls dice using #d# format, with a maximum of 500d500.
+        Rolls dice using #d# format, with a maximum of 100d1000.
         
         You may add or subtract flat modifiers or dice by appending them to your initial #d# roll.
         
@@ -105,9 +105,9 @@ class rpg(commands.Cog):
 
                         if idiceNum == "+":
                             idiceNum = "1"
-                        if int(idiceNum) > 500 or int(idiceVal) > 500:
+                        if int(idiceNum) > 100 or int(idiceVal) > 1000:
                             raise Exception(
-                                "That's too many numbers. The limit to this value is 500d500."
+                                "That's too many numbers. The limit to this value is 100d1000."
                             )
                         else:
                             outResults.extend(dice.roll(i))
@@ -124,9 +124,9 @@ class rpg(commands.Cog):
 
                         if idiceNum == "-":
                             idiceNum = "1"
-                        if int(idiceNum) > 100 or int(idiceVal) > 100:
+                        if int(idiceNum) > 100 or int(idiceVal) > 1000:
                             raise Exception(
-                                "That's too many numbers. The limit to this value is 500d500."
+                                "That's too many numbers. The limit to this value is 100d1000."
                             )
                         else:
                             for i in output:
@@ -137,9 +137,9 @@ class rpg(commands.Cog):
                     Total += posmod
                     Total += negmod
 
-                    if int(diceNum) > 100 or int(diceVal) > 100:
+                    if int(diceNum) > 100 or int(diceVal) > 1000:
                         raise Exception(
-                            "That's too many numbers. The limit to this value is 500d500."
+                            "That's too many numbers. The limit to this value is 100d1000."
                         )
                 try:
                     commentText
