@@ -31,7 +31,7 @@ class rpg(commands.Cog):
     async def d(self, ctx, input: str):
 
         """
-        Rolls dice using #d# format, with a maximum of 100d100.
+        Rolls dice using #d# format, with a maximum of 500d500.
         
         You may add or subtract flat modifiers or dice by appending them to your initial #d# roll.
         
@@ -75,10 +75,11 @@ class rpg(commands.Cog):
                         diceNum = "1"
 
                     outList = dice.roll(input)
+                    print(outList)
                     for i in outList:
                         Total += i
                         outResults.append(i)
-
+                    print(outResults)
                 if isPlus != -1 or isMinus != -1:
                     expr = re.split("[+-]", input)[0]
 
@@ -102,13 +103,13 @@ class rpg(commands.Cog):
 
                         if idiceNum == "+":
                             idiceNum = "1"
-                        if int(idiceNum) > 100 or int(idiceVal) > 100:
+                        if int(idiceNum) > 500 or int(idiceVal) > 500:
                             raise Exception(
-                                "That's too many numbers. The limit to this value is 100d100."
+                                "That's too many numbers. The limit to this value is 500d500."
                             )
                         else:
                             outResults.extend(dice.roll(i))
-
+                            print(outResults)
                     malus = re.findall(r"(\-\d+)(?:(?!d))", input)
 
                     for i in malus:
@@ -123,7 +124,7 @@ class rpg(commands.Cog):
                             idiceNum = "1"
                         if int(idiceNum) > 100 or int(idiceVal) > 100:
                             raise Exception(
-                                "That's too many numbers. The limit to this value is 100d100."
+                                "That's too many numbers. The limit to this value is 500d500."
                             )
                         else:
                             for i in output:
@@ -136,7 +137,7 @@ class rpg(commands.Cog):
 
                     if int(diceNum) > 100 or int(diceVal) > 100:
                         raise Exception(
-                            "That's too many numbers. The limit to this value is 100d100."
+                            "That's too many numbers. The limit to this value is 500d500."
                         )
                 try:
                     print(commentText)
@@ -156,8 +157,7 @@ class rpg(commands.Cog):
                 print(discFooter)
                 if discFooter != None:
                     embed.set_footer(text=discFooter)
-                print(outResults)
-                print(Total)
+                
                 embed.add_field(name="Results", value=outResults)
                 embed.add_field(name="Total", value=Total)
                 print("please send")    
