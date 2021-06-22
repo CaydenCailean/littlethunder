@@ -61,9 +61,7 @@ class lt_db(object):
         query = {"user": User, "Alias": Alias.lower()}
         try:
             macro = self.db.dice[str(Guild)].find_one(query)
-            print(1)
             macro['Value'].append(Value)
-            print(2)
             updoot = {"$set": macro}
             self.db.dice[str(Guild)].update_one(query, updoot, upsert=True)
             return f"The {Alias} macro has been updated."

@@ -22,6 +22,123 @@ class rpg(commands.Cog):
         return Category, Guild, ID
 
     # region Dice
+    def diceroll(self, ctx, input):
+        try:
+            input, discFooter = input.split('#', 1)
+        except:
+            pass
+        isPlus = input.find("+")
+        isMinus = input.find("-")
+
+        outList = "placeHolder"
+        outResults = []
+        Total = 0
+
+        try:
+            if isPlus == -1 and isMinus == -1:
+                try:
+                    diceNum, diceVal = input.split("d")
+                except ValueError as e:
+                    raise Exception("Make sure your expression is in #d# format.")
+
+                if diceNum == "":
+                    diceNum = "1"
+                try:
+                    outList = dice.roll(input)
+                except:
+                    traceback.print_stack()
+                
+                for i in outList:
+                    Total += i
+                    outResults.append(i)
+
+            if isPlus != -1 or isMinus != -1:
+                expr = re.split("[+-]", input)[0]
+
+                diceNum, diceVal = expr.split("d")
+                if diceNum == "":
+                    diceNum = "1"
+
+                outResults = dice.roll(expr)
+
+                posmod = 0
+                negmod = 0
+
+                bonus = re.findall(r"(\+\d+)(?:(?!d))", input)
+
+                for i in bonus:
+                    posmod += int(i)
+
+                bonusDice = re.findall(r"\+\d*d\d+", input)
+                for i in bonusDice:
+                    idiceNum, idiceVal = i.split("d")
+
+                    if idiceNum == "+":
+                        idiceNum = "1"
+                    if int(idiceNum) > 100 or int(idiceVal) > 1000:
+                        raise Exception(
+                            "That's too many numbers. The limit to this value is 100d1000."
+                        )
+                    else:
+                        outResults.extend(dice.roll(i))
+
+                malus = re.findall(r"(\-\d+)(?:(?!d))", input)
+
+                for i in malus:
+                    negmod += int(i)
+
+                malusDice = re.findall(r"\-\d*d\d+", input)
+                for i in malusDice:
+                    output = dice.roll(i)
+                    idiceNum, idiceVal = i.split("d")
+
+                    if idiceNum == "-":
+                        idiceNum = "1"
+                    if int(idiceNum) > 100 or int(idiceVal) > 1000:
+                        raise Exception(
+                            "That's too many numbers. The limit to this value is 100d1000."
+                        )
+                    else:
+                        for i in output:
+                            outResults.append(str(i))
+
+                for i in outResults:
+                    Total += int(i)
+                Total += posmod
+                Total += negmod
+
+                if int(diceNum) > 100 or int(diceVal) > 1000:
+                    raise Exception(
+                        "That's too many numbers. The limit to this value is 100d1000."
+                    )
+            try:
+                commentText
+            except:
+                commentText = f"Rolling {input}"
+
+            #try:
+            #    discFooter = re.search(r"#(.+)", input)
+            #    discFooter = f"\n{discFooter.group(0).replace('#', '')}"
+            #except Exception as e:
+            #    print(e)
+
+            embed = discord.Embed(
+                title=f"Results for {ctx.message.author.display_name}",
+                description=commentText,
+                color=ctx.message.author.color,
+            )
+            try:
+                embed.set_footer(text=discFooter)
+            except:
+                pass
+            
+            embed.add_field(name="Results", value=outResults)
+            embed.add_field(name="Total", value=Total)   
+
+            return embed
+        except Exception as e:
+            print(e)
+            traceback.print_stack()            
 
     @commands.group(
         case_insensitive=True,
@@ -38,145 +155,30 @@ class rpg(commands.Cog):
         Comments may be added to a dice output by appending the command with #, followed by the content of the comment you wish to be shown.
         """
         if ctx.invoked_subcommand is None:
-
+            
+            #region Macro dice
             if input.find("!") != -1:
                 Guild = ctx.message.guild.id
                 ID = ctx.message.author.id
                 
-                try:
-                    input, sep, extra = re.split(r"([+|-])", input, maxsplit=1)
-                    label = input.replace("!", "", 1)
+                label = input.replace("!", "", 1)
+                macro = self.lt_db.dice_get(ID, Guild, label)
 
-                    input = self.lt_db.dice_get(ID, Guild, label)
-                    inputDice = input
-                    input = input + sep + str(extra)
-                    commentText = f"Rolling {label} : {inputDice} + {str(extra)}"
-
-                except:
-                    label = input.replace("!", "", 1)
-                    input = self.lt_db.dice_get(ID, Guild, input.replace("!", ""))
-                    commentText = f"Rolling {label} : {input}"
-
-            try:
-                isPlus = input.find("+")
-                isMinus = input.find("-")
-
-                outList = "placeHolder"
-                outResults = []
-                Total = 0
-
-                if isPlus == -1 and isMinus == -1:
+                for input in macro:
+                    print(input)
                     try:
-                        diceNum, diceVal = input.split("d")
-                    except ValueError as e:
-                        raise Exception("Make sure your expression is in #d# format.")
-
-                    if diceNum == "":
-                        diceNum = "1"
-                    try:
-                        outList = dice.roll(input)
+                        embed = self.diceroll(ctx, input)
+                        await ctx.send(embed=embed)
                     except:
-                        traceback.print_stack()
-                    
-                    for i in outList:
-                        Total += i
-                        outResults.append(i)
-                    
-                if isPlus != -1 or isMinus != -1:
-                    expr = re.split("[+-]", input)[0]
-
-                    diceNum, diceVal = expr.split("d")
-                    if diceNum == "":
-                        diceNum = "1"
-
-                    outResults = dice.roll(expr)
-
-                    posmod = 0
-                    negmod = 0
-
-                    bonus = re.findall(r"(\+\d+)(?:(?!d))", input)
-
-                    for i in bonus:
-                        posmod += int(i)
-
-                    bonusDice = re.findall(r"\+\d*d\d+", input)
-                    for i in bonusDice:
-                        idiceNum, idiceVal = i.split("d")
-
-                        if idiceNum == "+":
-                            idiceNum = "1"
-                        if int(idiceNum) > 100 or int(idiceVal) > 1000:
-                            raise Exception(
-                                "That's too many numbers. The limit to this value is 100d1000."
-                            )
-                        else:
-                            outResults.extend(dice.roll(i))
-                            
-                    malus = re.findall(r"(\-\d+)(?:(?!d))", input)
-
-                    for i in malus:
-                        negmod += int(i)
-                    
-                    malusDice = re.findall(r"\-\d*d\d+", input)
-                    for i in malusDice:
-                        output = dice.roll(i)
-                        idiceNum, idiceVal = i.split("d")
-
-                        if idiceNum == "-":
-                            idiceNum = "1"
-                        if int(idiceNum) > 100 or int(idiceVal) > 1000:
-                            raise Exception(
-                                "That's too many numbers. The limit to this value is 100d1000."
-                            )
-                        else:
-                            for i in output:
-                                outResults.append(str(i))
-                    
-                    for i in outResults:
-                        Total += int(i)
-                    Total += posmod
-                    Total += negmod
-
-                    if int(diceNum) > 100 or int(diceVal) > 1000:
-                        raise Exception(
-                            "That's too many numbers. The limit to this value is 100d1000."
-                        )
-                try:
-                    commentText
-                except:
-                    commentText = f"Rolling {input}"
-                try:
-                    discFooter = re.search(r"#(.+)", ctx.message.content)
-                    discFooter = f"\n{discFooter.group(0).replace('#', '')}"
-                except Exception as e:
-                    print(e)
-                
-                embed = discord.Embed(
-                    title=f"Results for {ctx.message.author.display_name}",
-                    description=commentText,
-                    color=ctx.message.author.color,
-                )
-                if discFooter != None:
-                    embed.set_footer(text=discFooter)
-                else:
-                    pass
-
-                embed.add_field(name="Results", value=outResults)
-                embed.add_field(name="Total", value=Total)   
-                await ctx.send(embed=embed)
-                return int(Total)
-            except Exception as e:
-                if str(e).find("not enough values") != -1:
-                    await ctx.send("Not enough values.")
-                elif str(e).find("400 bad request"):
-                    await ctx.send(
-                        "Either your dice phrase was not formatted correctly or you are rolling too many dice. Please try again."
-                    )
-                    print(e)
-                return Total
-
+                        #traceback.print_stack()
+                        await ctx.send("Didn't work!")
+            else:
+                embed = self.diceroll(ctx, input)
+                await ctx.send(embed=embed)    
+            
+                        
     @d.command(pass_context=True)
-    async def save(self, ctx, Alias, Value):
+    async def save(self, ctx, Alias, *, Value):
         """
         Saves a dice expression as a variable.
 
