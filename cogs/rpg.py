@@ -175,6 +175,124 @@ class rpg(commands.Cog):
                     print(e)
                 return Total
 
+#    @commands.command(hidden=True)
+#    async def d2(self, ctx, input: str):
+#        if ctx.invoked_subcommand is None:
+#            
+#            if input.find('$') != -1:
+#                
+#                Guild = ctx.message.guild.id
+#                ID = ctx.message.author.id
+#
+#                try:
+#                    input, sep, extra = re.split(r"([+|-])", input, maxsplit=1)
+#                    label = input.replace("!", "", 1)
+#
+#                    input = self.lt_db.dice_get(ID, Guild, input.replace("!", ""))
+#                    inputDice = input
+#                    input = input + sep + str(extra)
+#                    commentText = f"Rolling {label} : {inputDice} + {str(extra)}"
+#
+#                except:
+#                    label = input.replace("!", "", 1)
+#                    input = self.lt_db.dice_get(ID, Guild, input.replace("!", ""))
+#                    commentText = f"Rolling {label} : {input}"
+#
+#            try:
+#                isMod = input.find(r'[+|-]')
+#
+#                outList = "placeHolder"
+#                outResults = []
+#                Total = 0
+#
+#                if isMod == -1:
+#                    try:
+#                        diceNum, diceVal = input.split('d')
+#
+#                    except ValueError as e:
+#                        await ctx.send("Make sure your dice are in a #d# format")
+#
+#                    if diceNum == "":
+#                        diceNum = "1"
+#                    try:
+#                        outList = dice.roll(input)
+#                    except:
+#                        traceback.print_stack()
+#                    
+#                    for i in outList:
+#                        Total += i
+#                        outResults.append(i)
+#                else:
+#                    expr = re.split("[+-]", input)[0]
+#
+#                    diceNum, diceVal = expr.split("d")
+#                    diceNum = 1 if diceNum == "" else diceNum
+#
+#                    outResults = dice.roll(expr)
+#                    
+#                    mod = 0
+#
+#                    bonus = re.findall(r"(\+\d+)(?:(?!d))", input)
+#                    bonusDice = re.findall(r"\+\dd\d+", input)
+#                    malus = re.findall(r"(\-\d+)(?:(?!d))", input)
+#                    malusDice = re.findall(r"\-\dd\d+", input)
+#                    
+#                    for i in bonus:
+#                        mod += int(i)
+#
+#                    for i in malus:
+#                        mod += int(i)
+#
+#                    for i in bonusDice:
+#                        idiceNum, idiceVal = i.split("d")
+#                        outResults.extend(dice.roll(i))
+#
+#                    for i in malusDice:
+#                        outResults.append(str(dice.roll(i)))
+#
+#                for i in outResults:
+#                    Total += int(i)
+#                try:
+#                    Total += mod
+#                except:
+#                    pass                        
+#
+#                try:
+#                    commentText
+#                except:
+#                    commentText = f"Rolling {input}"
+#                try:
+#                    discFooter = re.search(r"#(.+)", ctx.message.content)
+#                    discFooter = f"\n{discFooter.group(0).replace('#', '')}"
+#                except Exception as e:
+#                    print(e)
+#                
+#                embed = discord.Embed(
+#                    title=f"Results for {ctx.message.author.display_name}",
+#                    description=commentText,
+#                    color=ctx.message.author.color,
+#                )
+#                if discFooter != None:
+#                    embed.set_footer(text=discFooter)
+#                else:
+#                    pass
+#
+#                embed.add_field(name="Results", value=outResults)
+#                embed.add_field(name="Total", value=Total)   
+#                await ctx.send(embed=embed)
+#                return int(Total)
+#
+#            except Exception as e:
+#                if str(e).find("not enough values") != -1:
+#                    await ctx.send("Not enough values.")
+#                elif str(e).find("400 bad request"):
+#                    await ctx.send(
+#                        "Either your dice phrase was not formatted correctly or you are rolling too many dice. Please try again."
+#                    )
+#                    print(e)
+#                return Total
+
+
     @d.command(pass_context=True)
     async def save(self, ctx, Alias, Value):
         """
