@@ -64,7 +64,7 @@ class lt_db(object):
             print(1)
             macro['Value'].append(Value)
             print(2)
-            updoot = {"$set": {"user":User, "Alias": Alias.lower, "Value": macro}}
+            updoot = {"$set": macro}
             self.db.dice[str(Guild)].update_one(query, updoot, upsert=True)
             return f"The {Alias} macro has been updated."
         except Exception as e:
