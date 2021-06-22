@@ -66,10 +66,13 @@ class lt_db(object):
             print(2)
             updoot = {"$set": {"user":User, "Alias": Alias.lower, "Value": macro}}
             self.db.dice[str(Guild)].update_one(query, updoot, upsert=True)
+            return f"The {Alias} macro has been updated."
         except Exception as e:
             print(e)
             updoot = {"$set": {"user": User, "Alias": Alias.lower(), "Value": [Value]}}
             self.db.dice[str(Guild)].update_one(query, updoot, upsert=True)
+            return f"The {Alias} macro has been created."
+        
 
     def dice_get(self, User, Guild, Alias):
         self.db.dice[str(Guild)]
