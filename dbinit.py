@@ -64,7 +64,7 @@ class lt_db(object):
             print(1)
             macro['Value'].append(Value)
             print(2)
-            updoot = macro
+            updoot = {"$set": {"user":User, "Alias": Alias.lower, "Value": macro}}
             self.db.dice[str(Guild)].update_one(query, updoot, upsert=True)
         except Exception as e:
             print(e)
