@@ -111,16 +111,8 @@ class rpg(commands.Cog):
                     raise Exception(
                         "That's too many numbers. The limit to this value is 100d1000."
                     )
-            try:
-                commentText
-            except:
-                commentText = f"Rolling {input}"
-
-            #try:
-            #    discFooter = re.search(r"#(.+)", input)
-            #    discFooter = f"\n{discFooter.group(0).replace('#', '')}"
-            #except Exception as e:
-            #    print(e)
+            
+            commentText = f"Rolling {input}"
 
             embed = discord.Embed(
                 title=f"Results for {ctx.message.author.display_name}",
@@ -165,12 +157,12 @@ class rpg(commands.Cog):
                 macro = self.lt_db.dice_get(ID, Guild, label)
 
                 for input in macro:
-                    print(input)
+                    
                     try:
                         embed = self.diceroll(ctx, input)
                         await ctx.send(embed=embed)
                     except:
-                        #traceback.print_stack()
+                        traceback.print_stack()
                         await ctx.send("Didn't work!")
             else:
                 embed = self.diceroll(ctx, input)
@@ -178,7 +170,7 @@ class rpg(commands.Cog):
             
                         
     @d.command(pass_context=True)
-    async def save(self, ctx, Alias, *, Value):
+    async def save(self, ctx, Alias):
         """
         Saves a dice expression as a variable.
 
@@ -187,8 +179,11 @@ class rpg(commands.Cog):
         """
         Guild = ctx.message.guild.id
         User = ctx.message.author.id
-        output = self.lt_db.dice_add(User, Guild, Alias, Value)
-        await ctx.send(output)
+        for line in ctx.message.content.splitlines():
+            line = line.replace(f'.d save {Alias} ', '')
+            self.lt_db.dice_add(User, Guild, Alias, line)
+
+        await ctx.send(f'The {Alias} macro has been updated.')
 
     @d.command(pass_context=True)
     async def delete(self, ctx, Alias):
