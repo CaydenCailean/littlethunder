@@ -334,7 +334,7 @@ class rpg(commands.Cog):
             float(dieRoll)
             outcome = float(dieRoll)
         except:
-            outcome = await float(rpg.d(self, ctx, dieRoll))
+            outcome = float(await rpg.d(self, ctx, dieRoll))
         try:
             ID = ctx.message.mentions[0].id
         except:
