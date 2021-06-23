@@ -189,7 +189,7 @@ class lt_db(object):
         oldInit = self.db[str(Guild)][str(Category)].find_one({"Name": Name})["Init"]
         currentInit = self.db[str(Guild)][str(Category)].find_one_and_update(
             {"Name": Name},
-            {"$set": {"Init": int(newInit)}},
+            {"$set": {"Init": float(newInit)}},
             return_document=ReturnDocument.AFTER,
         )["Init"]
         initraw = self.db[str(Guild)][str(Category)].find({})
