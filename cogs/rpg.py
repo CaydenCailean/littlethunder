@@ -319,7 +319,7 @@ class rpg(commands.Cog):
         await ctx.send(f"Hey, <@{mentionMe}>, {char} is up.")
 
     @init.command(aliases=["add"])
-    async def new(self, ctx, name, dieRoll):
+    async def new(self, ctx, name, *, dieRoll):
         """
         Add a Combatant to the initiative table.
 
@@ -329,10 +329,10 @@ class rpg(commands.Cog):
 
         Category, Guild, ID = self.ctx_info(ctx)
         try:
-            float(dieRoll)
-            outcome = float(dieRoll)
+            dieRoll
+            outcome = dieRoll
         except:
-            outcome = float(await rpg.d(self, ctx, dieRoll))
+            outcome = await rpg.d(self, ctx, dieRoll)
         try:
             ID = ctx.message.mentions[0].id
         except:
