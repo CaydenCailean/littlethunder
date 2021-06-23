@@ -159,14 +159,16 @@ class rpg(commands.Cog):
                 for input in macro:
 
                     try:
-                        embed = self.diceroll(ctx, input)
+                        Total, embed = self.diceroll(ctx, input)
                         await ctx.send(embed=embed)
+                        return Total
                     except:
                         traceback.print_stack()
                         await ctx.send("Didn't work!")
             else:
-                _, embed = self.diceroll(ctx, input)
+                Total, embed = self.diceroll(ctx, input)
                 await ctx.send(embed=embed)
+                return Total
 
     @d.command(pass_context=True)
     async def save(self, ctx, Alias):
@@ -329,10 +331,10 @@ class rpg(commands.Cog):
 
         Category, Guild, ID = self.ctx_info(ctx)
         try:
-            dieRoll
-            outcome = dieRoll
+            float(dieRoll)
+            outcome = float(dieRoll)
         except:
-            outcome = await rpg.d(self, ctx, dieRoll)
+            outcome = await float(rpg.d(self, ctx, dieRoll))
         try:
             ID = ctx.message.mentions[0].id
         except:
