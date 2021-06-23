@@ -17,7 +17,7 @@ class mw(commands.Cog):
         """
         WIP. Not yet functional.
 
-        
+
         """
         print("This doesn't do anything yet.")
 

@@ -87,10 +87,10 @@ class rand(commands.Cog):
         Guild = ctx.message.guild.id
         image_ext = ["jpg", "png", "jpeg", "gif"]
         result = self.lt_db.rand_get(Guild, Table)
-        
+
         result["pairs"] = [tuple(x) for x in result["pairs"]]
         randout = self.weighted(result["pairs"])
-        
+
         if result["deckMode"] == "on":
             ID = ctx.message.author.id
             mid = result["_id"]

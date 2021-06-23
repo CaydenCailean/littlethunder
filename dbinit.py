@@ -61,7 +61,7 @@ class lt_db(object):
         query = {"user": User, "Alias": Alias.lower()}
         try:
             macro = self.db.dice[str(Guild)].find_one(query)
-            macro['Value'].append(Value)
+            macro["Value"].append(Value)
             updoot = {"$set": macro}
             self.db.dice[str(Guild)].update_one(query, updoot, upsert=True)
             return f"The {Alias} macro has been updated."
@@ -70,7 +70,6 @@ class lt_db(object):
             updoot = {"$set": {"user": User, "Alias": Alias.lower(), "Value": [Value]}}
             self.db.dice[str(Guild)].update_one(query, updoot, upsert=True)
             return f"The {Alias} macro has been created."
-        
 
     def dice_get(self, User, Guild, Alias):
         self.db.dice[str(Guild)]
@@ -171,7 +170,9 @@ class lt_db(object):
             return turnCheck["turn"]
         except:
             self.db[str(Guild)].find_one_and_update(
-                {"Category": Category}, {"$set": {"turn": 1}}, upsert=True,
+                {"Category": Category},
+                {"$set": {"turn": 1}},
+                upsert=True,
             )
             turnCheck = self.db[str(Guild)].find_one({"Category": Category})
             return turnCheck["turn"]
@@ -399,55 +400,53 @@ class lt_db(object):
         table = self.db.rand[str(Guild)].find_one(query)
 
         if ID == table["user"]:
-        
+
             if table["deckMode"] == "off":
                 updoot = {"$set": {"deckMode": "on"}}
                 output = f"Deckmode has been enabled for {Table.title()}."
             else:
                 updoot = {"$set": {"deckMode": "off"}}
                 output = f"Deckmode has been disabled for {Table.title()}."
-        
+
         self.db.rand[str(Guild)].update_one(query, updoot)
         return output
 
     def deck_shuffle(self, Guild, ID, Table):
-        query = {'table':Table.lower()}
+        query = {"table": Table.lower()}
         table = self.db.rand[str(Guild)].find_one(query)
         if ID == table["user"]:
-            while len(table['spentPairs']) > 0:
-                val = table['spentPairs'][0]
-                table['pairs'].append(val)
-                del table['spentPairs'][0]
 
+            while len(table["spentPairs"]) > 0:
+                val = table["spentPairs"][0]
+                table["pairs"].append(val)
+                del table["spentPairs"][0]
 
-            
-            
-            updoot = {'$set':{'pairs':table['pairs'], 'spentPairs':table['spentPairs']}}
+            updoot = {
+                "$set": {"pairs": table["pairs"], "spentPairs": table["spentPairs"]}
+            }
             self.db.rand[str(Guild)].update_one(query, updoot)
-        return f'{Table} has been shuffled.'
+        return f"{Table} has been shuffled."
 
     def deck_draw(self, Guild, ID, mid, Value):
         query = {"_id": mid}
         table = self.db.rand[str(Guild)].find_one(query)
-        if ID == table['user']:
+        if ID == table["user"]:
             for v, w in table["pairs"]:
 
                 if v == Value:
                     table["pairs"].remove([v, w])
                     try:
-                        table["spentPairs"].append([v,w])
+                        table["spentPairs"].append([v, w])
                     except:
                         table["spentPairs"] = []
-                        table["spentPairs"].append([v,w])
+                        table["spentPairs"].append([v, w])
 
                 else:
                     pass
-            
+
             try:
-                updoot = {"$set":{
-                    "pairs": table['pairs'],
-                    "spentPairs" : table["spentPairs"]
-                    }
+                updoot = {
+                    "$set": {"pairs": table["pairs"], "spentPairs": table["spentPairs"]}
                 }
             except:
                 pass

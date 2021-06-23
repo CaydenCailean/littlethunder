@@ -21,10 +21,10 @@ class rpg(commands.Cog):
         ID = ctx.message.author.id
         return Category, Guild, ID
 
-    # region Dice
+    # region Diceroll
     def diceroll(self, ctx, input):
         try:
-            input, discFooter = input.split('#', 1)
+            input, discFooter = input.split("#", 1)
         except:
             pass
         isPlus = input.find("+")
@@ -47,7 +47,7 @@ class rpg(commands.Cog):
                     outList = dice.roll(input)
                 except:
                     traceback.print_stack()
-                
+
                 for i in outList:
                     Total += i
                     outResults.append(i)
@@ -111,7 +111,7 @@ class rpg(commands.Cog):
                     raise Exception(
                         "That's too many numbers. The limit to this value is 100d1000."
                     )
-            
+
             commentText = f"Rolling {input}"
 
             embed = discord.Embed(
@@ -123,15 +123,15 @@ class rpg(commands.Cog):
                 embed.set_footer(text=discFooter)
             except:
                 pass
-            
-            embed.add_field(name="Results", value=outResults)
-            embed.add_field(name="Total", value=Total)   
 
-            return embed
+            embed.add_field(name="Results", value=outResults)
+            embed.add_field(name="Total", value=Total)
+
+            return Total, embed
         except Exception as e:
             print(e)
-            traceback.print_stack()            
-
+            traceback.print_stack()
+    #endregion
     @commands.group(
         case_insensitive=True,
         invoke_without_command=True,
@@ -141,23 +141,23 @@ class rpg(commands.Cog):
 
         """
         Rolls dice using #d# format, with a maximum of 100d1000.
-        
+
         You may add or subtract flat modifiers or dice by appending them to your initial #d# roll.
-        
+
         Comments may be added to a dice output by appending the command with #, followed by the content of the comment you wish to be shown.
         """
         if ctx.invoked_subcommand is None:
-            
-            #region Macro dice
+
+            # region Macro dice
             if input.find("!") != -1:
                 Guild = ctx.message.guild.id
                 ID = ctx.message.author.id
-                
+
                 label = input.replace("!", "", 1)
                 macro = self.lt_db.dice_get(ID, Guild, label)
 
                 for input in macro:
-                    
+
                     try:
                         embed = self.diceroll(ctx, input)
                         await ctx.send(embed=embed)
@@ -165,10 +165,9 @@ class rpg(commands.Cog):
                         traceback.print_stack()
                         await ctx.send("Didn't work!")
             else:
-                embed = self.diceroll(ctx, input)
-                await ctx.send(embed=embed)    
-            
-                        
+                _, embed = self.diceroll(ctx, input)
+                await ctx.send(embed=embed)
+
     @d.command(pass_context=True)
     async def save(self, ctx, Alias):
         """
@@ -180,16 +179,16 @@ class rpg(commands.Cog):
         Guild = ctx.message.guild.id
         User = ctx.message.author.id
         for line in ctx.message.content.splitlines():
-            line = line.replace(f'.d save {Alias} ', '')
+            line = line.replace(f".d save {Alias} ", "")
             self.lt_db.dice_add(User, Guild, Alias, line)
 
-        await ctx.send(f'The {Alias} macro has been updated.')
+        await ctx.send(f"The {Alias} macro has been updated.")
 
     @d.command(pass_context=True)
     async def delete(self, ctx, Alias):
         """
         Removes a dice variable.
-        
+
         Example:
         .d delete Attack_Longsword
         """
@@ -273,7 +272,7 @@ class rpg(commands.Cog):
     @commands.group(case_insensitive=True)
     async def init(self, ctx):
         """
-        The init command keeps track of initiative within a channel category. 
+        The init command keeps track of initiative within a channel category.
 
         Without a subcommand, this command will show the current initiative block.
         """

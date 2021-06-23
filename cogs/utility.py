@@ -15,15 +15,15 @@ class utility(commands.Cog):
     @commands.command(pass_context=True, no_pm=True, aliases=["clear", "p"])
     async def purge(self, ctx, number: int, members="everyone", *, txt=None):
         """
-    Purge last n messages. Without manage_messages, the members argument is ignored, though is still required to use keywords.
-    
-    Accepts a number (n), a user, and a keyword to search for and purge messages containing it, though only the number is required.
+        Purge last n messages. Without manage_messages, the members argument is ignored, though is still required to use keywords.
 
-    Examples:
+        Accepts a number (n), a user, and a keyword to search for and purge messages containing it, though only the number is required.
 
-    .purge 20 - Removes last 20 messages regardless of user.
-    .purge 20 @CaydenCailean - Remove any messages in the last 20 that were written by @CaydenCailean
-    .purge 20 everyone foo - Remove any messages in the last 20 which contain the keyword "foo".
+        Examples:
+
+        .purge 20 - Removes last 20 messages regardless of user.
+        .purge 20 @CaydenCailean - Remove any messages in the last 20 that were written by @CaydenCailean
+        .purge 20 everyone foo - Remove any messages in the last 20 which contain the keyword "foo".
         """
         await ctx.channel.purge(limit=1)
         if ctx.message.author.permissions_in(ctx.channel).manage_messages:
