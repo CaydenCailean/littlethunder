@@ -22,6 +22,19 @@ class rpg(commands.Cog):
         return Category, Guild, ID
 
     # region Diceroll
+
+    async def macro_list(self, ctx, input):
+        try:
+            Total, embed = self.diceroll(ctx, input)
+            await ctx.send(embed=embed)
+            
+            return Total
+        except:
+            traceback.print_stack()
+                
+            await ctx.send("Didn't work!")
+         
+
     def diceroll(self, ctx, input):
         try:
             input, discFooter = input.split("#", 1)
@@ -155,16 +168,9 @@ class rpg(commands.Cog):
 
                 label = input.replace("!", "", 1)
                 macro = self.lt_db.dice_get(ID, Guild, label)
-
-                for input in macro:
-
-                    try:
-                        Total, embed = self.diceroll(ctx, input)
-                        await ctx.send(embed=embed)
-                        return Total
-                    except:
-                        traceback.print_stack()
-                        await ctx.send("Didn't work!")
+                
+                [await self.macro_list(ctx, input) for input in macro]  
+            
             else:
                 Total, embed = self.diceroll(ctx, input)
                 await ctx.send(embed=embed)
