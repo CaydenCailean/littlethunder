@@ -150,7 +150,7 @@ class rpg(commands.Cog):
         invoke_without_command=True,
         aliases=["r", "roll", "dice"],
     )
-    async def d(self, ctx, input: str):
+    async def d(self, ctx, *, input: str):
 
         """
         Rolls dice using #d# format, with a maximum of 100d1000.
@@ -327,7 +327,7 @@ class rpg(commands.Cog):
         await ctx.send(f"Hey, <@{mentionMe}>, {char} is up.")
 
     @init.command(aliases=["add"])
-    async def new(self, ctx, name, dieRoll):
+    async def new(self, ctx, name, dieRoll, mention=None):
         """
         Add a Combatant to the initiative table.
 
@@ -335,18 +335,20 @@ class rpg(commands.Cog):
         .init add [name] [dice]
         """
 
-        Category, Guild, ID = self.ctx_info(ctx)
+        Category, Guild, _ = self.ctx_info(ctx)
         try:
             float(dieRoll)
             outcome = float(dieRoll)
         except:
-            outcome = float(await rpg.d(self, ctx, dieRoll))
-        try:
-            ID = ctx.message.mentions[0].id
-        except:
-            ID = ctx.message.author.id
+            Total, embed = self.diceroll(ctx, dieRoll)
+            outcome = float(Total)
+        if mention != None:
+            mention = mention.replace('<@!','').replace('>','')
+        else:
+            mention = ctx.message.author.id
+        await ctx.send(embed=embed)
         await ctx.send(f"{name} has been added to the initiative counter.")
-        self.lt_db.init_add(Guild, Category, name, ID, outcome)
+        self.lt_db.init_add(Guild, Category, name, mention, outcome)
 
     @init.command(pass_context=True, aliases=["remove"])
     async def kill(self, ctx, name):
