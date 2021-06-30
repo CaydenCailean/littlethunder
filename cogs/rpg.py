@@ -327,7 +327,7 @@ class rpg(commands.Cog):
         await ctx.send(f"Hey, <@{mentionMe}>, {char} is up.")
 
     @init.command(aliases=["add"])
-    async def new(self, ctx, name, *, dieRoll):
+    async def new(self, ctx, name, dieRoll):
         """
         Add a Combatant to the initiative table.
 
