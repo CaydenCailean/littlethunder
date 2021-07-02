@@ -622,6 +622,7 @@ class rpg(commands.Cog):
                     embed.set_image(url=vals[i])
                 elif keys[i] == "token":
                     embed.set_thumbnail(url=vals[i])
+                    print("thumbnail set")
                 else:
                     embed.add_field(name=str(keys[i]), value=str(vals[i]))
             if embed:
