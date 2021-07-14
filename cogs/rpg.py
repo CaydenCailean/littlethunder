@@ -25,13 +25,12 @@ class rpg(commands.Cog):
         try:
             Total, embed = self.diceroll(ctx, input)
             await ctx.send(embed=embed)
-            
+
             return Total
         except:
             traceback.print_stack()
-                
+
             await ctx.send("Didn't work!")
-         
 
     def diceroll(self, ctx, input):
         try:
@@ -165,9 +164,9 @@ class rpg(commands.Cog):
 
                 label = input.replace("!", "", 1)
                 macro = self.lt_db.dice_get(ID, Guild, label)
-                
-                [await self.macro_list(ctx, input) for input in macro]  
-            
+
+                [await self.macro_list(ctx, input) for input in macro]
+
             else:
                 Total, embed = self.diceroll(ctx, input)
                 await ctx.send(embed=embed)
@@ -332,10 +331,13 @@ class rpg(commands.Cog):
             Total, embed = self.diceroll(ctx, dieRoll)
             outcome = float(Total)
         if mention != None:
-            mention = mention.replace('<@!','').replace('>','')
+            mention = mention.replace("<@!", "").replace(">", "")
         else:
             mention = ctx.message.author.id
-        await ctx.send(embed=embed)
+        try:
+            await ctx.send(embed=embed)
+        except:
+            pass
         await ctx.send(f"{name} has been added to the initiative counter.")
         self.lt_db.init_add(Guild, Category, name, mention, outcome)
 
@@ -603,7 +605,7 @@ class rpg(commands.Cog):
                     embed.set_image(url=vals[i])
                 elif keys[i] == "token":
                     embed.set_thumbnail(url=vals[i])
-        
+
                 else:
                     embed.add_field(name=str(keys[i]), value=str(vals[i]))
             if embed:
@@ -619,6 +621,7 @@ class rpg(commands.Cog):
         await ctx.send(
             "The LT Web Editor can be found at https://webthunder.herokuapp.com/"
         )
+
 
 def setup(bot):
     bot.add_cog(rpg(bot))
