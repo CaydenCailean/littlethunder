@@ -7,7 +7,8 @@ class main(commands.Cog):
         self.bot = bot
         self.logger = lt_logger
         self.channel = channel
-
+    
+    #when bot is ready
     @commands.Cog.listener()
     async def on_ready(self):
         await self.bot.change_presence(activity=discord.Game(name="games and rolling dice!"))
