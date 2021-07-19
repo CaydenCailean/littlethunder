@@ -11,8 +11,7 @@ class main(commands.Cog):
     @commands.Cog.listener()
     async def on_ready(self):
         await self.bot.change_presence(activity=discord.Game(name="games and rolling dice!"))
-        await self.logger.info(self, f"{self.bot.user.name} is now online", "Main", "n/a")
-        print("Logged in as " + self.bot.user.name)
+        await self.logger.info(self, f"{self.bot.user.name} is now online", "Main", "Startup")
 
 def setup(bot):
     bot.add_cog(main(bot))
