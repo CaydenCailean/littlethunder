@@ -2,7 +2,8 @@ import discord
 import asyncio
 import sys
 from discord.ext import commands
-
+import sys
+import traceback
 
 class lt_logger(commands.Cog):
 
@@ -45,10 +46,15 @@ class lt_logger(commands.Cog):
     @commands.is_owner()
     async def debug_test(self, ctx):
         await lt_logger.debug(self, "This is a test", "logging", "debug_test")
+    
     @test.command(hidden=True)
     @commands.is_owner()
     async def error_test(self, ctx):
-        await lt_logger.error(self, "This is a test", "logging", "error_test")
+        try:
+            raise Exception("This is a test")
+        except:
+            message = str(traceback.format_exc())
+            await lt_logger.error(self, message, self.__class__.__name__, "error_test")
 
 def setup(bot):
     bot.add_cog(lt_logger(bot))

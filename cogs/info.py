@@ -1,11 +1,13 @@
 import discord
 from discord.ext import commands
-
+from .lt_logger import lt_logger
+import traceback
 
 class info(commands.Cog):
     def __init__(self, bot, channel):
         self.bot = bot
         self.channel = channel
+        self.logger = lt_logger
         
     @commands.command()
     async def info(self, ctx):
@@ -14,23 +16,27 @@ class info(commands.Cog):
 
         Prints a small snippet about the bot to the channel.
         """
-        embed = discord.Embed(
-            title="Little Thunder", description="The Goodest Boi", color=0xFF8822
-        )
-        embed.add_field(name="Author", value="Cayden Cailean")
-        embed.add_field(
-            name="Purpose",
-            value="I'm just a generally good boi. I like to roll dice, track initiative for you, and keep your characters organized.",
-        )
-        embed.add_field(
-            name="GitHub", value="https://github.com/caydencailean/littlethunder"
-        )
-        embed.add_field(
-            name="Donations",
-            value="Donations, while not required, are greatly appreciated!\nhttps://donorbox.org/little-thunder",
-        )
-        embed.set_thumbnail(url="https://i.imgur.com/lacm87y.png")
-        await ctx.send(embed=embed)
+        try:
+            embed = discord.Embed(
+                title="Little Thunder", description="The Goodest Boi", color=0xFF8822
+            )
+            embed.add_field(name="Author", value="Cayden Cailean")
+            embed.add_field(
+                name="Purpose",
+                value="I'm just a generally good boi. I like to roll dice, track initiative for you, and keep your characters organized.",
+            )
+            embed.add_field(
+                name="GitHub", value="https://github.com/caydencailean/littlethunder"
+            )
+            embed.add_field(
+                name="Donations",
+                value="Donations, while not required, are greatly appreciated!\nhttps://donorbox.org/little-thunder",
+            )
+            embed.set_thumbnail(url="https://i.imgur.com/lacm87y.png")
+            await ctx.send(embed=embed)
+        except Exception:
+            message = traceback.printstack()
+            await self.logger.error(self, message, self.__name__, "info")          
 
     @commands.command(aliases=["suggestion"])
     async def suggest(self, ctx, *, arg):

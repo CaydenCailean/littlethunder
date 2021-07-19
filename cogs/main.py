@@ -1,4 +1,5 @@
 import discord
+import traceback
 from discord.ext import commands
 from .lt_logger import lt_logger
 

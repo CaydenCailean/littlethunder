@@ -2,7 +2,8 @@ import discord
 import re
 import dice
 import asyncio
-import sys, traceback
+import sys
+import traceback
 from . import lt_logger
 from discord.ext import commands
 
