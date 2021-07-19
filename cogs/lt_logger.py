@@ -12,19 +12,19 @@ class lt_logger(commands.Cog):
         
 
     async def info(self, message, cog, command):
-        embed = discord.Embed(title=f"INFO: {cog} : {command}", description=message, color=0x00ff00)
+        embed = discord.Embed(title=f"INFO: {cog} [{command}]", description=message, color=0x00ff00)
         await self.bot.get_channel(id=int(self.channel)).send(embed=embed)
 
     async def debug(self, message, cog, command):
-        embed = discord.Embed(title=f"DEBUG: {cog} : {command}", description=message, color=0x00ff0ff)
+        embed = discord.Embed(title=f"DEBUG: {cog} [{command}]", description=message, color=0x00ff0ff)
         await self.bot.get_channel(id=int(self.channel)).send(embed=embed)
 
     async def error(self, message, cog, command):
-        embed = discord.Embed(title=f"ERROR: {cog} : {command}", description=message, color=0xff0000)
+        embed = discord.Embed(title=f"ERROR: {cog} [{command}]", description=message, color=0xff0000)
         await self.bot.get_channel(id=int(self.channel)).send(embed=embed)
 
     async def warning(self, message, cog, command):
-        embed = discord.Embed(title=f"WARNING: {cog} : {command}", description=message, color=0xffff00)
+        embed = discord.Embed(title=f"WARNING: {cog} [{command}]", description=message, color=0xffff00)
         await self.bot.get_channel(id=int(self.channel)).send(embed=embed)
 
     @commands.group(hidden=True)
