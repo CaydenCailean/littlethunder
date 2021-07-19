@@ -2,18 +2,20 @@ import discord
 import re
 import dice
 import asyncio
-from discord.ext import commands, tasks
 import sys, traceback
-from datetime import datetime
+from . import lt_logger
+from discord.ext import commands
 
 sys.path.append("..")
 from dbinit import lt_db
 
 
 class rpg(commands.Cog):
-    def __init__(self, bot, lt_db):
+    def __init__(self, bot, lt_db, channel):
         self.bot = bot
         self.lt_db = lt_db
+        self.channel = channel
+        self.logger = lt_logger
 
     def ctx_info(self, ctx):
         Category = ctx.channel.category.id
@@ -28,8 +30,8 @@ class rpg(commands.Cog):
             
             return Total
         except:
-            traceback.print_stack()
-                
+            message = traceback.print_stack()
+            self.logger.info(self, message, "rpg", "Macro")    
             await ctx.send("Didn't work!")
          
 

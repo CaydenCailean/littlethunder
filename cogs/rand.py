@@ -11,9 +11,10 @@ from dbinit import lt_db
 
 
 class rand(commands.Cog):
-    def __init__(self, bot, lt_db):
+    def __init__(self, bot, lt_db, channel):
         self.bot = bot
         self.lt_db = lt_db
+        self.channel = channel
 
     # region Utility
 
@@ -131,6 +132,7 @@ class rand(commands.Cog):
     async def return_one(self, ctx, Table, Value):
         Guild, ID = self.ctx_info(ctx)
         return
+
 
 
 # endregion

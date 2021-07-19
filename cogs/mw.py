@@ -8,8 +8,9 @@ from discord.ext import commands
 
 
 class mw(commands.Cog):
-    def __init__(self, bot):
+    def __init__(self, bot, channel):
         self.bot = bot
+        self.bot = channel
 
     # mythweavers command group and subcommands
     @commands.group(pass_context=True)

@@ -3,9 +3,10 @@ from discord.ext import commands
 
 
 class info(commands.Cog):
-    def __init__(self, bot):
+    def __init__(self, bot, channel):
         self.bot = bot
-
+        self.channel = channel
+        
     @commands.command()
     async def info(self, ctx):
         """

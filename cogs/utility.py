@@ -8,9 +8,10 @@ from dbinit import lt_db
 
 
 class utility(commands.Cog):
-    def __init__(self, bot, lt_db):
+    def __init__(self, bot, lt_db, channel):
         self.bot = bot
         self.lt_db = lt_db
+        self.channel = channel
 
     @commands.command(pass_context=True, no_pm=True, aliases=["clear", "p"])
     async def purge(self, ctx, number: int, members="everyone", *, txt=None):
