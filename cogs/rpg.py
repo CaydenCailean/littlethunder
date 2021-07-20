@@ -286,38 +286,44 @@ class rpg(commands.Cog):
         Without a subcommand, this command will show the current initiative block.
         """
         if ctx.invoked_subcommand is None:
-            Category, Guild, _ = self.ctx_info(ctx)
-            initraw = self.lt_db.init_get(Guild, Category)
-            turnNum = int(self.lt_db.turn_get(Guild, Category))
-
-            for i in range(turnNum - 1):
-                moveEntry = initraw[0]
-                del initraw[0]
-                initraw.append(moveEntry)
             try:
-                mentionMe = initraw[0].get("ID")
-                char = initraw[0].get("Name")
-            except:
-                pass
+                Category, Guild, _ = self.ctx_info(ctx)
+                initraw = self.lt_db.init_get(Guild, Category)
+                turnNum = int(self.lt_db.turn_get(Guild, Category))
 
-            output = ""
-            for i in initraw:
-                del i["ID"], i["_id"]
-                outstring = f"{list(i.values())[0]} : {list(i.values())[1]}"
-                output += outstring + "\n"
-            embed = discord.Embed(
-                Title=f"Initiative for {ctx.channel.category}", colour=0x00FF00
-            )
-            embed.add_field(name="Initiative", value=output)
+                for i in range(turnNum - 1):
+                    moveEntry = initraw[0]
+                    del initraw[0]
+                    initraw.append(moveEntry)
+                try:
+                    mentionMe = initraw[0].get("ID")
+                    char = initraw[0].get("Name")
+                except:
+                    pass
 
-            try:
-                await ctx.send(embed=embed)
-            except:
-                await ctx.send(
-                    "Before requesting an initiative table, make sure initiative has been added."
+                output = ""
+                for i in initraw:
+                    del i["ID"], i["_id"]
+                    outstring = f"{list(i.values())[0]} : {list(i.values())[1]}"
+                    output += outstring + "\n"
+                embed = discord.Embed(
+                    Title=f"Initiative for {ctx.channel.category}", colour=0x00FF00
                 )
+                embed.add_field(name="Initiative", value=output)
 
-            return mentionMe, char
+                try:
+                    await ctx.send(embed=embed)
+                except Exception as e:
+                    await ctx.send(
+                        "Before requesting an initiative table, make sure initiative has been added."
+                    )
+                    raise e
+                return mentionMe, char
+
+            except:
+                message = str(traceback.format_exc())
+                await self.logger.error(self, message, self.__class__.__name__, "Initiative")
+
 
     @init.command(pass_context=True, aliases=["display"])
     async def show(self, ctx):
@@ -338,25 +344,32 @@ class rpg(commands.Cog):
 
         Category, Guild, _ = self.ctx_info(ctx)
         try:
-            float(dieRoll)
-            outcome = float(dieRoll)
-        except:
             try:
-                Total, embed = self.diceroll(ctx, dieRoll)
-                outcome = float(Total)
+                float(dieRoll)
+                outcome = float(dieRoll)
             except:
-                message = str(traceback.format_exc())
-                await lt_logger.error(self, message, self.__class__.__name__, "Macro")
-        if mention != None:
-            mention = mention.replace("<@!", "").replace(">", "")
-        else:
-            mention = ctx.message.author.id
-        try:
-            await ctx.send(embed=embed)
+                try:
+                    Total, embed = self.diceroll(ctx, dieRoll)
+                    outcome = float(Total)
+                except:
+                    message = str(traceback.format_exc())
+                    await lt_logger.error(self, message, self.__class__.__name__, "Macro")
+            if mention != None:
+                mention = mention.replace("<@!", "").replace(">", "")
+            else:
+                mention = ctx.message.author.id
+            try:
+                await ctx.send(embed=embed)
+            except:
+                pass
+            try:
+                self.lt_db.init_add(Guild, Category, name, mention, outcome)
+                await ctx.send(f"{name} has been added to the initiative counter.")
+            except Exception as e:
+                raise e
         except:
-            pass
-        await ctx.send(f"{name} has been added to the initiative counter.")
-        self.lt_db.init_add(Guild, Category, name, mention, outcome)
+            message = str(traceback.format_exc())
+            await self.logger.error(self, message, self.__class__.__name__, "Add Initiative Entry")
 
     @init.command(pass_context=True, aliases=["remove"])
     async def kill(self, ctx, name):
@@ -366,16 +379,20 @@ class rpg(commands.Cog):
         Remove a combant from the initiative tracker.
         """
         Category, Guild, ID = self.ctx_info(ctx)
-        dmCheck = self.lt_db.owner_check(Guild, Category, ID)
-        initraw = self.lt_db.init_get(Guild, Category)
-        turnNum = int(self.lt_db.turn_get(Guild, Category))
+        try:
+            dmCheck = self.lt_db.owner_check(Guild, Category, ID)
+            initraw = self.lt_db.init_get(Guild, Category)
+            turnNum = int(self.lt_db.turn_get(Guild, Category))
 
-        if dmCheck == True:
-            self.lt_db.init_remove(Guild, Category, name)
-            if turnNum == len(initraw):
-                self.lt_db.turn_next(Guild, Category)
-            await ctx.send(f"{name} has been removed from the initiative count.")
-            await self.init(ctx)
+            if dmCheck == True:
+                self.lt_db.init_remove(Guild, Category, name)
+                if turnNum == len(initraw):
+                    self.lt_db.turn_next(Guild, Category)
+                await ctx.send(f"{name} has been removed from the initiative count.")
+                await self.init(ctx)
+        except:
+            message = str(traceback.format_exc())
+            await self.logger.error(self, message, self.__class__.__name__, "Remove Initiative Entry")
 
     @init.command()
     async def end(self, ctx):
@@ -385,16 +402,21 @@ class rpg(commands.Cog):
         Clears the initiative table altogether. This cannot be undone.
         """
         Category, Guild, ID = self.ctx_info(ctx)
-        check = self.lt_db.owner_check(Guild, Category, ID)
-        if check == True:
-            self.lt_db.init_clear(Guild, Category)
-            await ctx.send(
-                "Combat has ended, and the initiative table has been wiped clean!"
-            )
-        else:
-            await ctx.send(
-                "It doesn't look like you're the DM here, so you probably don't need to worry about this one."
-            )
+        try:
+            check = self.lt_db.owner_check(Guild, Category, ID)
+            if check == True:
+                self.lt_db.init_clear(Guild, Category)
+                await ctx.send(
+                    "Combat has ended, and the initiative table has been wiped clean!"
+                )
+            else:
+                await ctx.send(
+                    "It doesn't look like you're the DM here, so you probably don't need to worry about this one."
+                )
+
+        except:
+            message = str(traceback.format_exc())
+            await self.logger.error(self, message, self.__class__.__name__, "End Init")
 
     @init.command(aliases=["pass"])
     async def next(self, ctx):
@@ -459,7 +481,7 @@ class rpg(commands.Cog):
                         break
                 self.lt_db.turn_set(Guild, Category, newPos)
 
-            if type(newPos) == int and len(initraw) >= newPos:
+            if type(newPos) == float and len(initraw) >= newPos:
                 self.lt_db.turn_set(Guild, Category, newPos)
 
             await self.show(ctx)

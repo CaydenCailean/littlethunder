@@ -1,6 +1,6 @@
 from cogs.lt_logger import lt_logger
 import discord
-import sys
+import sys, traceback
 from discord.ext import commands
 from asyncio import sleep
 from .lt_logger import lt_logger
@@ -87,6 +87,16 @@ class utility(commands.Cog):
 
         except discord.Forbidden:
             await ctx.send("I do not have permissions to purge messages.")
+
+
+    @commands.Cog.listener()
+    async def on_guild_remove(self, guild):
+        try:
+            self.lt_db.drop_collection(guild.id)
+            await self.logger.warning(self, f"{guild.name} has been removed from the database.", self.__class__.__name__, "Event Listener: Removed from Guild")
+        except Exception as e:
+            message = str(traceback.format_exc())
+            await self.logger.error(self, message, self.__class__.__name__, "Event Listener: Removed from Guild")
 
     # @commands.has_guild_permissions(administrator=True)
     # @commands.command(pass_context=True, no_pm=True)
