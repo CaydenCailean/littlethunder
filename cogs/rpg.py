@@ -4,7 +4,7 @@ import dice
 import asyncio
 import sys
 import traceback
-from . import lt_logger
+from .lt_logger import lt_logger
 from discord.ext import commands
 
 sys.path.append("..")
@@ -32,7 +32,7 @@ class rpg(commands.Cog):
             return Total
         except:
             message = str(traceback.format_exc())
-            await lt_logger.error(self, message, self.__class__.__name__, "Macro")
+            await self.logger.error(self, message, self.__class__.__name__, "Macro")
             await ctx.send("Didn't work!")
 
     def diceroll(self, ctx, input):
