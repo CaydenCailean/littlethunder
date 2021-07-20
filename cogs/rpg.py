@@ -51,14 +51,19 @@ class rpg(commands.Cog):
             if isPlus == -1 and isMinus == -1:
                 try:
                     diceNum, diceVal = input.split("d")
-                except ValueError as e:
-                    raise Exception("Make sure your expression is in #d# format.")
+                    if diceNum == "":
+                        diceNum = "1"
+                    try:
+                        outList = dice.roll(input)
+                    except Exception as e:
+                        raise e
 
-                if diceNum == "":
-                    diceNum = "1"
+                except ValueError as e:
+                    raise e
+
                 try:
                     outList = dice.roll(input)
-                except:
+                except Exception as e:
                     raise Exception
                     
                 for i in outList:
@@ -142,7 +147,7 @@ class rpg(commands.Cog):
 
             return Total, embed
         except Exception as e:
-            raise Exception
+            raise e
 
     @commands.group(
         case_insensitive=True,
@@ -491,8 +496,11 @@ class rpg(commands.Cog):
         """
 
         if ctx.invoked_subcommand is None:
-            Name = ctx.message.content.lstrip(" ")
-            await self.display(ctx, Name)
+            try:
+                Name = ctx.message.content.lstrip(" ")
+                await self.display(ctx, Name)
+            except Exception as e:
+                await self.logger.error(self, e, self.__class__.__name__, "Character Profile")
 
     @char.command()
     async def add(self, ctx, *, Name):
