@@ -35,7 +35,7 @@ class rpg(commands.Cog):
             await lt_logger.error(self, message, self.__class__.__name__, "Macro")
             await ctx.send("Didn't work!")
 
-    async def diceroll(self, ctx, input):
+    def diceroll(self, ctx, input):
         try:
             input, discFooter = input.split("#", 1)
         except:
@@ -59,11 +59,8 @@ class rpg(commands.Cog):
                 try:
                     outList = dice.roll(input)
                 except:
-                    message = str(traceback.format_exc())
-                    await lt_logger.error(
-                        self, message, self.__class__.__name__, "DiceRoll"
-                    )
-
+                    raise Exception
+                    
                 for i in outList:
                     Total += i
                     outResults.append(i)
@@ -145,8 +142,7 @@ class rpg(commands.Cog):
 
             return Total, embed
         except Exception as e:
-            message = str(traceback.format_exc())
-            await lt_logger.error(self, message, self.__class__.__name__, "Macro")
+            raise Exception
 
     @commands.group(
         case_insensitive=True,
@@ -174,9 +170,13 @@ class rpg(commands.Cog):
                 [await self.macro_list(ctx, input) for input in macro]
 
             else:
-                Total, embed = self.diceroll(ctx, input)
-                await ctx.send(embed=embed)
-                return Total
+                try:
+                    Total, embed = self.diceroll(ctx, input)
+                    await ctx.send(embed=embed)
+                    return Total
+                except:
+                    message = str(traceback.format_exc())
+                    await lt_logger.error(self, message, self.__class__.__name__, "Macro")
 
     @d.command(pass_context=True)
     async def save(self, ctx, Alias):
@@ -334,8 +334,12 @@ class rpg(commands.Cog):
             float(dieRoll)
             outcome = float(dieRoll)
         except:
-            Total, embed = self.diceroll(ctx, dieRoll)
-            outcome = float(Total)
+            try:
+                Total, embed = self.diceroll(ctx, dieRoll)
+                outcome = float(Total)
+            except:
+                message = str(traceback.format_exc())
+                await lt_logger.error(self, message, self.__class__.__name__, "Macro")
         if mention != None:
             mention = mention.replace("<@!", "").replace(">", "")
         else:
