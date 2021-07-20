@@ -170,7 +170,9 @@ class lt_db(object):
             return turnCheck["turn"]
         except:
             self.db[str(Guild)].find_one_and_update(
-                {"Category": Category}, {"$set": {"turn": 1}}, upsert=True,
+                {"Category": Category},
+                {"$set": {"turn": 1}},
+                upsert=True,
             )
             turnCheck = self.db[str(Guild)].find_one({"Category": Category})
             return turnCheck["turn"]

@@ -87,7 +87,6 @@ class utility(commands.Cog):
 
         except discord.Forbidden:
             await ctx.send("I do not have permissions to purge messages.")
-            
 
     # @commands.has_guild_permissions(administrator=True)
     # @commands.command(pass_context=True, no_pm=True)

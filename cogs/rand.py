@@ -51,7 +51,9 @@ class rand(commands.Cog):
                 await self.get(ctx, Table)
             except:
                 message = str(traceback.format_exc())
-                await self.logger.error(self, message, self.__class__.__name__, "random")
+                await self.logger.error(
+                    self, message, self.__class__.__name__, "random"
+                )
 
     @random.command(case_insensitive=True)
     async def new(self, ctx, Table):
@@ -59,8 +61,12 @@ class rand(commands.Cog):
         Adds a new table to the random tables for the server it is called in. Multiple word table names - "Wild Magic" for instance, must be surrounded in quotation marks.
         """
         Guild, ID = self.ctx_info(ctx)
-        output = self.lt_db.rand_new(Guild, ID, Table)
-        await ctx.send(output)
+        try:
+            output = self.lt_db.rand_new(Guild, ID, Table)
+            await ctx.send(output)
+        except:
+            message = str(traceback.format_exc())
+            await self.logger.error(self, message, self.__class__.__name__, "New Table")
 
     @random.command(case_insensitive=True, aliases=["add"])
     async def add_entry(self, ctx, Table, Weight, *, Value):
@@ -68,8 +74,12 @@ class rand(commands.Cog):
         Adds a new weighted entry to the table. The table name requires quotation marks if it is longer than two words; the value does not.
         """
         Guild, ID = self.ctx_info(ctx)
-        output = self.lt_db.rand_add(Guild, ID, Table, Weight, Value)
-        await ctx.send(output)
+        try:
+            output = self.lt_db.rand_add(Guild, ID, Table, Weight, Value)
+            await ctx.send(output)
+        except:
+            message = str(traceback.format_exc())
+            await self.logger.error(self, message, self.__class__.__name__, "add_entry")
 
     @random.command(case_insensitive=True, aliases=["remove"])
     async def remove_entry(self, ctx, Table, *, Value):
@@ -91,10 +101,10 @@ class rand(commands.Cog):
 
     @random.command(case_insensitive=True, hidden=True)
     async def get(self, ctx, Table):
-        
+
         Guild = ctx.message.guild.id
         image_ext = ["jpg", "png", "jpeg", "gif"]
-        
+
         try:
             result = self.lt_db.rand_get(Guild, Table)
 
@@ -125,7 +135,6 @@ class rand(commands.Cog):
                 f'It looks like the "{Table}" doesn\'t exist yet, or your spelling is incorrect.'
             )
             raise Exception()
-            
 
     @random.command(aliases=["toggle"])
     async def toggle_deck(self, ctx, Table):
@@ -135,7 +144,9 @@ class rand(commands.Cog):
             await ctx.send(output)
         except:
             message = str(traceback.format_exc())
-            await self.logger.error(self, message, self.__class__.__name__, "Deck Toggle")
+            await self.logger.error(
+                self, message, self.__class__.__name__, "Deck Toggle"
+            )
 
     @random.command(aliases=["reset"])
     async def shuffle(self, ctx, Table):
@@ -145,7 +156,9 @@ class rand(commands.Cog):
             await ctx.send(output)
         except:
             message = str(traceback.format_exc())
-            await self.logger.error(self, message, self.__class__.__name__, "Deck Shuffle")
+            await self.logger.error(
+                self, message, self.__class__.__name__, "Deck Shuffle"
+            )
 
     @random.command(aliases=["return"])
     async def return_one(self, ctx, Table, Value):
@@ -154,7 +167,9 @@ class rand(commands.Cog):
             pass
         except:
             message = str(traceback.format_exc())
-            await self.logger.error(self, message, self.__class__.__name__, "Return One")
+            await self.logger.error(
+                self, message, self.__class__.__name__, "Return One"
+            )
 
 
 # endregion

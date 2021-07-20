@@ -65,7 +65,7 @@ class rpg(commands.Cog):
                     outList = dice.roll(input)
                 except Exception as e:
                     raise Exception
-                    
+
                 for i in outList:
                     Total += i
                     outResults.append(i)
@@ -181,7 +181,9 @@ class rpg(commands.Cog):
                     return Total
                 except:
                     message = str(traceback.format_exc())
-                    await lt_logger.error(self, message, self.__class__.__name__, "Macro")
+                    await lt_logger.error(
+                        self, message, self.__class__.__name__, "Macro"
+                    )
 
     @d.command(pass_context=True)
     async def save(self, ctx, Alias):
@@ -500,7 +502,9 @@ class rpg(commands.Cog):
                 Name = ctx.message.content.lstrip(" ")
                 await self.display(ctx, Name)
             except Exception as e:
-                await self.logger.error(self, e, self.__class__.__name__, "Character Profile")
+                await self.logger.error(
+                    self, e, self.__class__.__name__, "Character Profile"
+                )
 
     @char.command()
     async def add(self, ctx, *, Name):
