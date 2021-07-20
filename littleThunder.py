@@ -22,7 +22,7 @@ if "DBUSER" in os.environ:
         "port": os.environ["DBPORT"],
         "dbname": os.environ["DBNAME"],
         "discordtoken": os.environ["DISCTOKEN"],
-        "log_channel": os.environ["LOG_CHANNEL"]
+        "log_channel": os.environ["LOG_CHANNEL"],
     }
 else:
     cfg = configparser.ConfigParser()
@@ -42,6 +42,7 @@ intents.members = True
 bot = commands.Bot(command_prefix=".", case_insensitive=True, intents=intents)
 
 # startup confirmation
+
 
 def weighted(pairs):
     total = sum(pair[0] for pair in pairs)
@@ -65,7 +66,6 @@ async def pat(ctx):
     await ctx.send(weighted(responses))
 
 
-
 # connect to and initialize DB
 
 lt_db = lt_db(config)
@@ -74,11 +74,11 @@ lt_db.db_init()
 
 # add cogs before startup
 
-bot.add_cog(main(bot, config['log_channel']))
-bot.add_cog(info(bot, config['log_channel'] ))
-bot.add_cog(utility(bot, lt_db,  config['log_channel']))
-bot.add_cog(rpg(bot, lt_db,  config['log_channel']))
-bot.add_cog(rand(bot, lt_db,  config['log_channel']))
-bot.add_cog(mw(bot,  config['log_channel']))
-bot.add_cog(lt_logger(bot, config['log_channel']))
+bot.add_cog(main(bot, config["log_channel"]))
+bot.add_cog(info(bot, config["log_channel"]))
+bot.add_cog(utility(bot, lt_db, config["log_channel"]))
+bot.add_cog(rpg(bot, lt_db, config["log_channel"]))
+bot.add_cog(rand(bot, lt_db, config["log_channel"]))
+bot.add_cog(mw(bot, config["log_channel"]))
+bot.add_cog(lt_logger(bot, config["log_channel"]))
 bot.run(discToken)

@@ -31,11 +31,11 @@ class rpg(commands.Cog):
 
             return Total
         except:
-            traceback.print_stack()
-
+            message = str(traceback.format_exc())
+            await lt_logger.error(self, message, self.__class__.__name__, "Macro")
             await ctx.send("Didn't work!")
 
-    def diceroll(self, ctx, input):
+    async def diceroll(self, ctx, input):
         try:
             input, discFooter = input.split("#", 1)
         except:
@@ -59,7 +59,10 @@ class rpg(commands.Cog):
                 try:
                     outList = dice.roll(input)
                 except:
-                    traceback.print_stack()
+                    message = str(traceback.format_exc())
+                    await lt_logger.error(
+                        self, message, self.__class__.__name__, "DiceRoll"
+                    )
 
                 for i in outList:
                     Total += i
@@ -142,8 +145,8 @@ class rpg(commands.Cog):
 
             return Total, embed
         except Exception as e:
-            print(e)
-            traceback.print_stack()
+            message = str(traceback.format_exc())
+            await lt_logger.error(self, message, self.__class__.__name__, "Macro")
 
     @commands.group(
         case_insensitive=True,

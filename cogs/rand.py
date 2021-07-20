@@ -134,7 +134,6 @@ class rand(commands.Cog):
         return
 
 
-
 # endregion
 
 

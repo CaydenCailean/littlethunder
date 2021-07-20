@@ -3,12 +3,13 @@ from discord.ext import commands
 from .lt_logger import lt_logger
 import traceback
 
+
 class info(commands.Cog):
     def __init__(self, bot, channel):
         self.bot = bot
         self.channel = channel
         self.logger = lt_logger
-        
+
     @commands.command()
     async def info(self, ctx):
         """
@@ -36,7 +37,7 @@ class info(commands.Cog):
             await ctx.send(embed=embed)
         except Exception:
             message = traceback.printstack()
-            await self.logger.error(self, message, self.__name__, "info")          
+            await self.logger.error(self, message, self.__name__, "info")
 
     @commands.command(aliases=["suggestion"])
     async def suggest(self, ctx, *, arg):
