@@ -546,7 +546,6 @@ class rpg(commands.Cog):
         """
         Name = Name.lower()
         _, Guild, ID = self.ctx_info(ctx)
-        field = field.lower()
         ownerCheck = ""
         try:
             ownerCheck = self.lt_db.char_owner(Guild, ID, Name)
@@ -573,19 +572,21 @@ class rpg(commands.Cog):
         """
         Name = Name.lower()
         _, Guild, ID = self.ctx_info(ctx)
-        field = field.lower()
         ownerCheck = ""
 
         try:
             ownerCheck = self.lt_db.char_owner(Guild, ID, Name)
         except:
             pass
-        if ownerCheck == True:
-            if field == "owner" or field == "name":
-                await ctx.send("Sorry, I can't let you do that.")
-            else:
-                self.lt_db.unset_field(Guild, ID, Name, field)
-                await ctx.send(f"{field} has been removed from {Name.title()}!")
+        try:
+            if ownerCheck == True:
+                if field == "owner" or field == "name":
+                    await ctx.send("Sorry, I can't let you do that.")
+                else:
+                    self.lt_db.unset_field(Guild, ID, Name, field)
+                    await ctx.send(f"{field} has been removed from {Name.title()}!")
+        except Exception as e:
+            await self.logger.error(self, e, self.__class__.__name__, "Remove Field")
 
     @char.command(hidden=True)
     async def display(self, ctx, Name):
@@ -626,10 +627,14 @@ class rpg(commands.Cog):
 
                 else:
                     embed.add_field(name=str(keys[i]), value=str(vals[i]))
-            if embed:
-                await ctx.send(embed=embed)
-            else:
-                await ctx.send(f"It looks like {Name} doesn't exist!")
+
+            try:
+                if embed:
+                    await ctx.send(embed=embed)
+                else:
+                    await ctx.send(f"It looks like {Name} doesn't exist!")
+            except Exception as e:
+                self.logger.error(self, e, self.__class__.__name__, "Display")
 
     @char.command()
     async def webedit(self, ctx):

@@ -1,7 +1,9 @@
+from cogs.lt_logger import lt_logger
 import discord
 import sys
 from discord.ext import commands
 from asyncio import sleep
+from .lt_logger import lt_logger
 
 sys.path.append("..")
 from dbinit import lt_db
@@ -12,6 +14,7 @@ class utility(commands.Cog):
         self.bot = bot
         self.lt_db = lt_db
         self.channel = channel
+        self.logger = lt_logger
 
     @commands.command(pass_context=True, no_pm=True, aliases=["clear", "p"])
     async def purge(self, ctx, number: int, members="everyone", *, txt=None):
@@ -27,59 +30,64 @@ class utility(commands.Cog):
         .purge 20 everyone foo - Remove any messages in the last 20 which contain the keyword "foo".
         """
         await ctx.channel.purge(limit=1)
-        if ctx.message.author.permissions_in(ctx.channel).manage_messages:
-            member_object_list = []
-            if members != "everyone":
-                member_list = [x.strip() for x in members.split(" , ")]
-                for member in member_list:
-                    if "@" in member:
-                        member = int(member[3:-1])
-                        member_object = ctx.guild.get_member(member)
-                    else:
-                        member_object = ctx.guild.get_member_named(member)
+        try:
+            if ctx.message.author.permissions_in(ctx.channel).manage_messages:
+                member_object_list = []
+                if members != "everyone":
+                    member_list = [x.strip() for x in members.split(" , ")]
+                    for member in member_list:
+                        if "@" in member:
+                            member = int(member[3:-1])
+                            member_object = ctx.guild.get_member(member)
+                        else:
+                            member_object = ctx.guild.get_member_named(member)
 
-                    if not member_object:
-                        return await ctx.send("Invalid user.")
-                    else:
-                        member_object_list.append(member_object)
+                        if not member_object:
+                            return await ctx.send("Invalid user.")
+                        else:
+                            member_object_list.append(member_object)
 
-            if number < 501:
-                async for message in ctx.message.channel.history(limit=number):
-                    try:
-                        if txt:
-                            if not txt.lower() in message.content.lower():
-                                continue
-                        if member_object_list:
-                            if not message.author in member_object_list:
-                                continue
+                if number < 501:
+                    async for message in ctx.message.channel.history(limit=number):
+                        try:
+                            if txt:
+                                if not txt.lower() in message.content.lower():
+                                    continue
+                            if member_object_list:
+                                if not message.author in member_object_list:
+                                    continue
 
-                        await message.delete()
-                    except discord.Forbidden:
-                        await ctx.send(
-                            "You do not have permissions to delete other user's messages."
-                        )
+                            await message.delete()
+                        except discord.Forbidden:
+                            await ctx.send(
+                                "You do not have permissions to delete other user's messages."
+                            )
 
+                else:
+                    await ctx.send(
+                        "Too many messages. Enter a number less than or equal to 500."
+                    )
             else:
-                await ctx.send(
-                    "Too many messages. Enter a number less than or equal to 500."
-                )
-        else:
 
-            if number < 501:
-                async for message in ctx.message.channel.history(limit=number):
-                    try:
-                        if txt:
-                            if not txt.lower() in message.content.lower():
+                if number < 501:
+                    async for message in ctx.message.channel.history(limit=number):
+                        try:
+                            if txt:
+                                if not txt.lower() in message.content.lower():
+                                    continue
+                            if message.author != ctx.message.author:
                                 continue
-                        if message.author != ctx.message.author:
-                            continue
-                        await message.delete()
-                    except Exception as e:
-                        await ctx.send(e)
-            else:
-                await ctx.send(
-                    "Too many messages. Enter a number less than or equal to 500."
-                )
+                            await message.delete()
+                        except Exception as e:
+                            await ctx.send(e)
+                else:
+                    await ctx.send(
+                        "Too many messages. Enter a number less than or equal to 500."
+                    )
+
+        except discord.Forbidden:
+            await ctx.send("I do not have permissions to purge messages.")
+            
 
     # @commands.has_guild_permissions(administrator=True)
     # @commands.command(pass_context=True, no_pm=True)

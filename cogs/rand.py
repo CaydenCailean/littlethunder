@@ -2,8 +2,9 @@ import discord
 import re
 import asyncio
 from discord.ext import commands
-import sys
+import sys, traceback
 from random import randint
+from .lt_logger import lt_logger
 
 sys.path.append("..")
 
@@ -15,6 +16,7 @@ class rand(commands.Cog):
         self.bot = bot
         self.lt_db = lt_db
         self.channel = channel
+        self.logger = lt_logger
 
     # region Utility
 
@@ -45,7 +47,11 @@ class rand(commands.Cog):
         """
         if ctx.invoked_subcommand is None:
             Table = ctx.message.content.split(" ")[1]
-            await self.get(ctx, Table)
+            try:
+                await self.get(ctx, Table)
+            except:
+                message = str(traceback.format_exc())
+                await self.logger.error(self, message, self.__class__.__name__, "random")
 
     @random.command(case_insensitive=True)
     async def new(self, ctx, Table):
@@ -85,19 +91,22 @@ class rand(commands.Cog):
 
     @random.command(case_insensitive=True, hidden=True)
     async def get(self, ctx, Table):
+        
         Guild = ctx.message.guild.id
         image_ext = ["jpg", "png", "jpeg", "gif"]
-        result = self.lt_db.rand_get(Guild, Table)
-
-        result["pairs"] = [tuple(x) for x in result["pairs"]]
-        randout = self.weighted(result["pairs"])
-
-        if result["deckMode"] == "on":
-            ID = ctx.message.author.id
-            mid = result["_id"]
-            output = self.lt_db.deck_draw(Guild, ID, mid, randout)
-            print(output)
+        
         try:
+            result = self.lt_db.rand_get(Guild, Table)
+
+            result["pairs"] = [tuple(x) for x in result["pairs"]]
+            randout = self.weighted(result["pairs"])
+
+            if result["deckMode"] == "on":
+                ID = ctx.message.author.id
+                mid = result["_id"]
+                output = self.lt_db.deck_draw(Guild, ID, mid, randout)
+                print(output)
+
             embed = discord.Embed(
                 title="__" + result["table"].title() + "__",
                 description=f"{ctx.message.author.display_name} rolled on the {Table.title()} random table!",
@@ -113,25 +122,39 @@ class rand(commands.Cog):
 
         except:
             await ctx.send(
-                f"It looks like {Table.title()} doesn't exist yet, or your spelling is incorrect."
+                f'It looks like the "{Table}" doesn\'t exist yet, or your spelling is incorrect.'
             )
+            raise Exception()
+            
 
     @random.command(aliases=["toggle"])
     async def toggle_deck(self, ctx, Table):
         Guild, ID = self.ctx_info(ctx)
-        output = self.lt_db.deck_toggle(Guild, ID, Table)
-        await ctx.send(output)
+        try:
+            output = self.lt_db.deck_toggle(Guild, ID, Table)
+            await ctx.send(output)
+        except:
+            message = str(traceback.format_exc())
+            await self.logger.error(self, message, self.__class__.__name__, "Deck Toggle")
 
     @random.command(aliases=["reset"])
     async def shuffle(self, ctx, Table):
         Guild, ID = self.ctx_info(ctx)
-        output = self.lt_db.deck_shuffle(Guild, ID, Table)
-        await ctx.send(output)
+        try:
+            output = self.lt_db.deck_shuffle(Guild, ID, Table)
+            await ctx.send(output)
+        except:
+            message = str(traceback.format_exc())
+            await self.logger.error(self, message, self.__class__.__name__, "Deck Shuffle")
 
     @random.command(aliases=["return"])
     async def return_one(self, ctx, Table, Value):
         Guild, ID = self.ctx_info(ctx)
-        return
+        try:
+            pass
+        except:
+            message = str(traceback.format_exc())
+            await self.logger.error(self, message, self.__class__.__name__, "Return One")
 
 
 # endregion
