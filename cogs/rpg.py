@@ -1,6 +1,7 @@
 import discord
 import re
 import dice
+import asyncio
 import sys
 import traceback
 from .lt_logger import lt_logger
@@ -511,20 +512,22 @@ class rpg(commands.Cog):
         await ctx.send(output)
 
     @commands.group(case_insensitive=True)
-    async def char(self, ctx, *, Name = None):
+    async def char(self, ctx):
         """
         Use to display a character's profile, if one exists. Subcommands cover the creation and alteration of character profiles.
 
         All characters are saved on a per-guild basis.
         """
 
-        try:
-            #Name = ctx.message.content.lstrip(" ")
-            await self.display(ctx, Name)
-        except Exception as e:
-            await self.logger.error(
-                self, e, self.__class__.__name__, "Character Profile"
-            )
+        if ctx.invoked_subcommand is None:
+            try:
+                Name = ctx.message.content.lstrip(" ")
+                await self.display(ctx, Name)
+            except:
+                message = str(traceback.format_exc())
+                await self.logger.error(
+                    self, message, self.__class__.__name__, "Character Profile"
+                )
 
     @char.command()
     async def add(self, ctx, *, Name):
@@ -609,8 +612,9 @@ class rpg(commands.Cog):
                 else:
                     self.lt_db.unset_field(Guild, ID, Name, field)
                     await ctx.send(f"{field} has been removed from {Name.title()}!")
-        except Exception as e:
-            await self.logger.error(self, e, self.__class__.__name__, "Remove Field")
+        except:
+            message = str(traceback.format_exc())
+            await self.logger.error(self, message, self.__class__.__name__, "Remove Field")
 
     @char.command(hidden=True)
     async def display(self, ctx, Name):
@@ -657,9 +661,9 @@ class rpg(commands.Cog):
                     await ctx.send(embed=embed)
                 else:
                     await ctx.send(f"It looks like {Name} doesn't exist!")
-            except Exception as e:
+            except:
                 message = str(traceback.format_exc())
-                await self.logger.error(self, message, self.__class__.__name__, "Display")
+                self.logger.error(self, message, self.__class__.__name__, "Display")
 
     @char.command()
     async def webedit(self, ctx):
