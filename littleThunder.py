@@ -44,7 +44,7 @@ bot = commands.Bot(command_prefix=".", case_insensitive=True, intents=intents)
 
 # startup confirmation
 
-@bot.command(pass_context="true")
+@bot.command(pass_context="true", hidden="true")
 async def list_guilds(ctx):
     """Lists all the guilds the bot is in."""
     guilds = [s.name for s in bot.guilds]
