@@ -1,7 +1,6 @@
 import discord
 import re
 import dice
-import asyncio
 import sys
 import traceback
 from .lt_logger import lt_logger
@@ -512,21 +511,20 @@ class rpg(commands.Cog):
         await ctx.send(output)
 
     @commands.group(case_insensitive=True)
-    async def char(self, ctx):
+    async def char(self, ctx, *, Name = None):
         """
         Use to display a character's profile, if one exists. Subcommands cover the creation and alteration of character profiles.
 
         All characters are saved on a per-guild basis.
         """
 
-        if ctx.invoked_subcommand is None:
-            try:
-                Name = ctx.message.content.lstrip(" ")
-                await self.display(ctx, Name)
-            except Exception as e:
-                await self.logger.error(
-                    self, e, self.__class__.__name__, "Character Profile"
-                )
+        try:
+            #Name = ctx.message.content.lstrip(" ")
+            await self.display(ctx, Name)
+        except Exception as e:
+            await self.logger.error(
+                self, e, self.__class__.__name__, "Character Profile"
+            )
 
     @char.command()
     async def add(self, ctx, *, Name):
@@ -660,7 +658,8 @@ class rpg(commands.Cog):
                 else:
                     await ctx.send(f"It looks like {Name} doesn't exist!")
             except Exception as e:
-                self.logger.error(self, e, self.__class__.__name__, "Display")
+                message = str(traceback.format_exc())
+                await self.logger.error(self, message, self.__class__.__name__, "Display")
 
     @char.command()
     async def webedit(self, ctx):

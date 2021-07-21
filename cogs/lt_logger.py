@@ -1,8 +1,5 @@
 import discord
-import asyncio
-import sys
 from discord.ext import commands
-import sys
 import traceback
 
 # custom logger using discord as a backend
