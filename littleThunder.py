@@ -44,6 +44,12 @@ bot = commands.Bot(command_prefix=".", case_insensitive=True, intents=intents)
 
 # startup confirmation
 
+@bot.command(pass_context="true")
+async def list_guilds(ctx):
+    """Lists all the guilds the bot is in."""
+    guilds = [s.name for s in bot.guilds]
+    guildids = [s.id for s in bot.guilds]
+    await ctx.send(f"I am in {len(guilds)} guilds: {', '.join(guilds)}.\n Their IDs are: {guildids}")
 
 def weighted(pairs):
     total = sum(pair[0] for pair in pairs)
