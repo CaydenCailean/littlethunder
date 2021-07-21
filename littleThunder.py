@@ -47,8 +47,8 @@ bot = commands.Bot(command_prefix=".", case_insensitive=True, intents=intents)
 @bot.command(pass_context="true", hidden="true")
 async def list_guilds(ctx):
     """Lists all the guilds the bot is in."""
-    guilds = [s.name for s in bot.guilds]
-    guildids = [s.id for s in bot.guilds]
+    guilds = [g.name for g in bot.guilds]
+    guildids = [g.id for g in bot.guilds]
     await ctx.send(f"I am in {len(guilds)} guilds: {', '.join(guilds)}.\n Their IDs are: {guildids}")
 
 def weighted(pairs):
