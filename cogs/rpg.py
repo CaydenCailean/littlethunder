@@ -20,7 +20,7 @@ class rpg(commands.Cog):
 
     def ctx_info(self, ctx):
         Category = ctx.channel.category.id
-        Guild = ctx.message.guild.id
+        Guild = ctx.guild.id
         ID = ctx.message.author.id
         return Category, Guild, ID
 
@@ -166,9 +166,8 @@ class rpg(commands.Cog):
         if ctx.invoked_subcommand is None:
 
             if input.find("!") != -1:
-                Guild = ctx.message.guild.id
-                ID = ctx.message.author.id
-
+                _,Guild,ID = self.ctx_info(ctx)
+                
                 label = input.replace("!", "", 1)
                 macro = self.lt_db.dice_get(ID, Guild, label)
 
@@ -193,8 +192,8 @@ class rpg(commands.Cog):
         Example:
         .d save Attack_Longsword 1d20+8
         """
-        Guild = ctx.message.guild.id
-        User = ctx.message.author.id
+        _, Guild, User = self.ctx_info(ctx)
+        
         for line in ctx.message.content.splitlines():
             line = line.replace(f".d save {Alias} ", "")
             self.lt_db.dice_add(User, Guild, Alias, line)
@@ -209,8 +208,7 @@ class rpg(commands.Cog):
         Example:
         .d delete Attack_Longsword
         """
-        Guild = ctx.message.guild.id
-        User = ctx.message.author.id
+        _, Guild, User = self.ctx_info(ctx)
         outMessage = self.lt_db.dice_delete(User, Guild, Alias)
         await ctx.send(outMessage)
 
@@ -231,7 +229,7 @@ class rpg(commands.Cog):
         """
         pattern = r"(#\d|\D*)$"
 
-        Guild = ctx.message.guild.id
+        _, Guild, _ = self.ctx_info(ctx)
         trigger = self.lt_db.ready_trigger(Guild, Alias.lower())
         User = self.bot.get_user(trigger["User"])
 
@@ -534,7 +532,7 @@ class rpg(commands.Cog):
         """
         Register a user's character.
         """
-        _, Guild, ID = self.ctx_info(ctx)
+        _, Guild, _ = self.ctx_info(ctx)
 
         try:
             ID = ctx.message.mentions[0].id
@@ -622,7 +620,10 @@ class rpg(commands.Cog):
         Display information regarding a stored character, including all stored fields.
         """
         Name = Name.lower()
-        Guild = ctx.message.guild.id
+        try:
+            _, Guild, _ = self.ctx_info(ctx)
+        except:
+            await ctx.send("This command doesn't work in DMs!")
         results = self.lt_db.get_char(Guild, Name)
 
         for output in results:

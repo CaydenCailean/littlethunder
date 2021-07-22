@@ -11,6 +11,7 @@ from cogs.rpg import rpg
 from cogs.mw import mw
 from cogs.rand import rand
 from cogs.lt_logger import lt_logger
+#from cogs.economy import economy
 from random import randint
 
 # Read config and connect to db
@@ -81,7 +82,9 @@ lt_db.db_init()
 
 # add cogs before startup
 
+
 bot.add_cog(main(bot, config["log_channel"]))
+#bot.add_cog(economy(bot, lt_db, config["log_channel"]))
 bot.add_cog(info(bot, config["log_channel"]))
 bot.add_cog(utility(bot, lt_db, config["log_channel"]))
 bot.add_cog(rpg(bot, lt_db, config["log_channel"]))
