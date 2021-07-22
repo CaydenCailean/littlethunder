@@ -624,6 +624,7 @@ class rpg(commands.Cog):
             _, Guild, _ = self.ctx_info(ctx)
         except:
             await ctx.send("This command doesn't work in DMs!")
+            return
         results = self.lt_db.get_char(Guild, Name)
 
         for output in results:
