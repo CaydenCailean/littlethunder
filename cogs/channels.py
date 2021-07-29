@@ -114,7 +114,6 @@ class channels(commands.Cog):
             message = str(traceback.format_exc())
             await self.logger.error(self, message, self.__class__.__name__, "DM Set Currency")
 
-    @commands.has_permissions(manage_webhooks=True)
     @commands.command(case_insensitive=True)
     async def ic(self, ctx, character, *, message):
         """
@@ -122,9 +121,10 @@ class channels(commands.Cog):
 
         This message can be deleted by the user who sent it by reacting to it with a :x: emoji.
         """
+
         try:
             Category, Guild, ID = self.ctx_info(ctx)
-            
+            character = character.lower()
             ownerCheck = self.db.char_owner(Guild, ID, character)
             ic, url = self.db.get_ic(Guild, Category)
             
