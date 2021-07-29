@@ -538,9 +538,11 @@ class rpg(commands.Cog):
         usd = ["USD", "dollars", "$"]
 
         if format in dnd:
+            print(dnd)
             format = "dnd"
 
         elif format in usd:
+            print(usd)
             format = "usd"
 
         else:

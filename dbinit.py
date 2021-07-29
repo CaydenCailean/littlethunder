@@ -283,6 +283,7 @@ class lt_db(object):
             self.db[str(Guild)].find_one_and_update(
                 {"Category": Category}, {"$set": {"currency": Currency}}
             )
+        return True
 
     # endregion
 
