@@ -538,12 +538,10 @@ class rpg(commands.Cog):
         usd = ["USD", "dollars", "$"]
 
         if format in dnd:
-            print(dnd)
-            format = "dnd"
+            format = "DND"
 
         elif format in usd:
-            print(usd)
-            format = "usd"
+            format = "USD"
 
         else:
             await ctx.send("Format not recognized.")
