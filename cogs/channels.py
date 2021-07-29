@@ -43,7 +43,7 @@ class channels(commands.Cog):
         output = self.db.remove_owner(Guild, Category, ID, override)
         await ctx.send(output)
 
-    @commands.has_permissions(manage_webhooks=True)
+    @commands.bot_has_permissions(manage_webhooks=True)
     @dm.command()
     async def set_ic(self, ctx, Channel: Optional[discord.TextChannel]):
         """Set mentioned channel as in-character chat for this channel category. Only usable by DM."""
@@ -114,6 +114,7 @@ class channels(commands.Cog):
             message = str(traceback.format_exc())
             await self.logger.error(self, message, self.__class__.__name__, "DM Set Currency")
 
+    @commands.bot_has_permissions(manage_webhooks=True)
     @commands.command(case_insensitive=True)
     async def ic(self, ctx, character, *, message):
         """
