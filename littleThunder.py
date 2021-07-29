@@ -1,7 +1,6 @@
 import discord
 import os
 import configparser
-import datetime
 from discord.ext import commands
 from dbinit import lt_db
 from cogs.main import main
@@ -11,6 +10,7 @@ from cogs.rpg import rpg
 from cogs.mw import mw
 from cogs.rand import rand
 from cogs.lt_logger import lt_logger
+from cogs.channels import channels
 #from cogs.economy import economy
 from random import randint
 
@@ -73,7 +73,6 @@ async def pat(ctx):
     ]
     await ctx.send(weighted(responses))
 
-
 # connect to and initialize DB
 
 lt_db = lt_db(config)
@@ -85,6 +84,7 @@ lt_db.db_init()
 
 bot.add_cog(main(bot, config["log_channel"]))
 #bot.add_cog(economy(bot, lt_db, config["log_channel"]))
+bot.add_cog(channels(bot, lt_db, config["log_channel"]))
 bot.add_cog(info(bot, config["log_channel"]))
 bot.add_cog(utility(bot, lt_db, config["log_channel"]))
 bot.add_cog(rpg(bot, lt_db, config["log_channel"]))

@@ -1,8 +1,6 @@
 import discord
-import sys, traceback
+import traceback
 from discord.ext import commands
-from .rpg import rpg
-from dbinit import lt_db
 from .lt_logger import lt_logger
 
 class economy(commands.Cog):
@@ -39,3 +37,6 @@ class economy(commands.Cog):
             
 
             self.lt_db.money_set(Guild, Category, char, money)
+
+def setup(bot):
+    bot.add_cog(economy(bot))

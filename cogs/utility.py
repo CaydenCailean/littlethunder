@@ -1,18 +1,14 @@
-from cogs.lt_logger import lt_logger
 import discord
-import sys, traceback
+import traceback
 from discord.ext import commands
-from asyncio import sleep
 from .lt_logger import lt_logger
 
-sys.path.append("..")
-from dbinit import lt_db
 
 
 class utility(commands.Cog):
     def __init__(self, bot, lt_db, channel):
         self.bot = bot
-        self.lt_db = lt_db
+        self.db = lt_db
         self.channel = channel
         self.logger = lt_logger
 

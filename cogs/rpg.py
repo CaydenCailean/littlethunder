@@ -1,30 +1,23 @@
 import discord
 import re
 import dice
-import asyncio
 import sys
 import traceback
 from .lt_logger import lt_logger
 from discord.ext import commands
-from typing import Optional
 
-sys.path.append("..")
-from dbinit import lt_db
 
 
 class rpg(commands.Cog):
     def __init__(self, bot, lt_db, channel):
         self.bot = bot
-        self.lt_db = lt_db
+        self.db = lt_db
         self.channel = channel
         self.logger = lt_logger
 
     def ctx_info(self, ctx):
-        Category = ctx.channel.category.id
-        Guild = ctx.guild.id
-        ID = ctx.message.author.id
-        return Category, Guild, ID
-
+        return ctx.channel.category.id, ctx.guild.id, ctx.message.author.id
+        
     async def macro_list(self, ctx, input):
         try:
             Total, embed = self.diceroll(ctx, input)
@@ -170,7 +163,7 @@ class rpg(commands.Cog):
                 _,Guild,ID = self.ctx_info(ctx)
                 
                 label = input.replace("!", "", 1)
-                macro = self.lt_db.dice_get(ID, Guild, label)
+                macro = self.db.dice_get(ID, Guild, label)
 
                 [await self.macro_list(ctx, input) for input in macro]
 
@@ -197,7 +190,7 @@ class rpg(commands.Cog):
         
         for line in ctx.message.content.splitlines():
             line = line.replace(f".d save {Alias} ", "")
-            self.lt_db.dice_add(User, Guild, Alias, line)
+            self.db.dice_add(User, Guild, Alias, line)
 
         await ctx.send(f"The {Alias} macro has been updated.")
 
@@ -210,7 +203,7 @@ class rpg(commands.Cog):
         .d delete Attack_Longsword
         """
         _, Guild, User = self.ctx_info(ctx)
-        outMessage = self.lt_db.dice_delete(User, Guild, Alias)
+        outMessage = self.db.dice_delete(User, Guild, Alias)
         await ctx.send(outMessage)
 
     @commands.command(pass_context=True)
@@ -220,7 +213,7 @@ class rpg(commands.Cog):
         """
         if ctx.invoked_subcommand == None:
             _, Guild, ID = self.ctx_info(ctx)
-            outMessage = self.lt_db.ready_set(ID, Guild, Alias, Value)
+            outMessage = self.db.ready_set(ID, Guild, Alias, Value)
             await ctx.send(outMessage)
 
     @commands.command(pass_context=True)
@@ -231,7 +224,7 @@ class rpg(commands.Cog):
         pattern = r"(#\d|\D*)$"
 
         _, Guild, _ = self.ctx_info(ctx)
-        trigger = self.lt_db.ready_trigger(Guild, Alias.lower())
+        trigger = self.db.ready_trigger(Guild, Alias.lower())
         User = self.bot.get_user(trigger["User"])
 
         check = re.search(pattern, trigger["Value"])
@@ -269,10 +262,10 @@ class rpg(commands.Cog):
         WIP. Do not use.
         """
         Category, Guild, ID = self.ctx_info(ctx)
-        dmCheck = self.lt_db.owner_check(Guild, Category, ID)
-        playerCheck = self.lt_db.ready_get(ID, Guild, Alias.lower())
+        dmCheck = self.db.owner_check(Guild, Category, ID)
+        playerCheck = self.db.ready_get(ID, Guild, Alias.lower())
         if dmCheck == True or playerCheck == True:
-            outMessage = self.lt_db.ready_remove(Guild, Alias.lower())
+            outMessage = self.db.ready_remove(Guild, Alias.lower())
             await ctx.send(outMessage)
         else:
             await ctx.send("Looks like either that doesn't exist, or you don't own it.")
@@ -287,8 +280,8 @@ class rpg(commands.Cog):
         if ctx.invoked_subcommand is None:
             try:
                 Category, Guild, _ = self.ctx_info(ctx)
-                initraw = self.lt_db.init_get(Guild, Category)
-                turnNum = int(self.lt_db.turn_get(Guild, Category))
+                initraw = self.db.init_get(Guild, Category)
+                turnNum = int(self.db.turn_get(Guild, Category))
 
                 for i in range(turnNum - 1):
                     moveEntry = initraw[0]
@@ -362,7 +355,7 @@ class rpg(commands.Cog):
             except:
                 pass
             try:
-                self.lt_db.init_add(Guild, Category, name, mention, outcome)
+                self.db.init_add(Guild, Category, name, mention, outcome)
                 await ctx.send(f"{name} has been added to the initiative counter.")
             except Exception as e:
                 raise e
@@ -379,14 +372,14 @@ class rpg(commands.Cog):
         """
         Category, Guild, ID = self.ctx_info(ctx)
         try:
-            dmCheck = self.lt_db.owner_check(Guild, Category, ID)
-            initraw = self.lt_db.init_get(Guild, Category)
-            turnNum = int(self.lt_db.turn_get(Guild, Category))
+            dmCheck = self.db.owner_check(Guild, Category, ID)
+            initraw = self.db.init_get(Guild, Category)
+            turnNum = int(self.db.turn_get(Guild, Category))
 
             if dmCheck == True:
-                self.lt_db.init_remove(Guild, Category, name)
+                self.db.init_remove(Guild, Category, name)
                 if turnNum == len(initraw):
-                    self.lt_db.turn_next(Guild, Category)
+                    self.db.turn_next(Guild, Category)
                 await ctx.send(f"{name} has been removed from the initiative count.")
                 await self.init(ctx)
         except:
@@ -402,9 +395,9 @@ class rpg(commands.Cog):
         """
         Category, Guild, ID = self.ctx_info(ctx)
         try:
-            check = self.lt_db.owner_check(Guild, Category, ID)
+            check = self.db.owner_check(Guild, Category, ID)
             if check == True:
-                self.lt_db.init_clear(Guild, Category)
+                self.db.init_clear(Guild, Category)
                 await ctx.send(
                     "Combat has ended, and the initiative table has been wiped clean!"
                 )
@@ -424,16 +417,16 @@ class rpg(commands.Cog):
         """
 
         Category, Guild, ID = self.ctx_info(ctx)
-        initraw = self.lt_db.init_get(Guild, Category)
-        turnNum = self.lt_db.turn_get(Guild, Category)
+        initraw = self.db.init_get(Guild, Category)
+        turnNum = self.db.turn_get(Guild, Category)
         current = initraw[turnNum - 1]["ID"]
         dmCheck = ""
         try:
-            dmCheck = self.lt_db.owner_check(Guild, Category, ID)
+            dmCheck = self.db.owner_check(Guild, Category, ID)
         except:
             pass
         if int(ID) == int(current) or dmCheck == True:
-            self.lt_db.turn_next(Guild, Category)
+            self.db.turn_next(Guild, Category)
             await self.show(ctx)
 
         else:
@@ -445,13 +438,13 @@ class rpg(commands.Cog):
         Moves an existing combatant to a new initiative total.
         """
         Category, Guild, ID = self.ctx_info(ctx)
-        initraw = self.lt_db.init_get(Guild, Category)
-        turnNum = self.lt_db.turn_get(Guild, Category)
+        initraw = self.db.init_get(Guild, Category)
+        turnNum = self.db.turn_get(Guild, Category)
         current = initraw[turnNum - 1]["ID"]
         Name = initraw[turnNum - 1]["Name"]
-        dmCheck = self.lt_db.owner_check(Guild, Category, ID)
+        dmCheck = self.db.owner_check(Guild, Category, ID)
         if int(ID) == int(current) or dmCheck == True:
-            self.lt_db.init_delay(Guild, Category, Name, newInit)
+            self.db.init_delay(Guild, Category, Name, newInit)
 
         else:
             await ctx.send("I don't think it's your turn yet!")
@@ -465,8 +458,8 @@ class rpg(commands.Cog):
         Sets the current turn to an existing combatant, either by iniative total or combatant name.
         """
         Category, Guild, ID = self.ctx_info(ctx)
-        initraw = self.lt_db.init_get(Guild, Category)
-        dmCheck = self.lt_db.owner_check(Guild, Category, ID)
+        initraw = self.db.init_get(Guild, Category)
+        dmCheck = self.db.owner_check(Guild, Category, ID)
         if dmCheck == True:
             try:
                 newPos = int(newPos)
@@ -478,91 +471,14 @@ class rpg(commands.Cog):
                     if x["Name"] == newPos:
                         newPos = int(initraw.index(x)) + 1
                         break
-                self.lt_db.turn_set(Guild, Category, newPos)
+                self.db.turn_set(Guild, Category, newPos)
 
             if type(newPos) == float and len(initraw) >= newPos:
-                self.lt_db.turn_set(Guild, Category, newPos)
+                self.db.turn_set(Guild, Category, newPos)
 
             await self.show(ctx)
         else:
             await ctx.send("It looks like you have no power here.")
-
-    @commands.group(case_insensitive=True)
-    async def dm(self, ctx):
-        """
-        Select a subcommand to use with this command.
-        """
-
-    @dm.command()
-    async def claim(self, ctx):
-        """
-        Claim the role of dungeon master within current channel category. Only one user can be the dungeon master for a given category.
-        """
-        Category, Guild, ID = self.ctx_info(ctx)
-        output = self.lt_db.add_owner(Guild, Category, ID)
-        await ctx.send(output)
-
-    @dm.command()
-    async def unclaim(self, ctx):
-        """Unclaim current dm for category. Administrators and the Current DM are the only users able to perform this action."""
-        Category, Guild, ID = self.ctx_info(ctx)
-        override = ctx.message.author.permissions_in(ctx.channel).administrator
-        output = self.lt_db.remove_owner(Guild, Category, ID, override)
-        await ctx.send(output)
-
-    @dm.command()
-    async def set_ic(self, ctx, Channel: Optional[discord.TextChannel]):
-        """Set mentioned channel as in-character chat for this channel category. Only usable by DM."""
-        try:
-            Category, Guild, ID = self.ctx_info(ctx)
-            dmCheck = self.lt_db.owner_check(Guild, Category, ID)
-            Channel = Channel.id
-            if dmCheck == True:
-                output = self.lt_db.set_ic(Guild, Category, ID, Channel)
-                if output == True:
-                    await ctx.send(f"{ctx.message.channel_mentions[0].mention} has been added as the IC channel for the \"{ctx.channel.category}\" category.")
-            else:
-                await ctx.send(f"It looks like you're not the owner of the \"{ctx.channel.category}\" category.")
-        except KeyError as e:
-            await ctx.send(f"It looks like you're not the owner of the \"{ctx.channel.category}\" category.")
-
-        except:
-            message = str(traceback.format_exc())
-            await self.logger.error(self, message, self.__class__.__name__, "DM Set IC")
-
-    @dm.command()
-    async def set_currency(self, ctx, format):
-        """Set the currency for this channel category. Only usable by DM."""
-        
-        dnd = ["gp", "gold pieces", "coins", "pp", "cp"]
-        usd = ["USD", "dollars", "$"]
-
-        if format in dnd:
-            format = "DND"
-
-        elif format in usd:
-            format = "USD"
-
-        else:
-            await ctx.send("Format not recognized.")
-            return
-
-        try:
-            Category, Guild, ID = self.ctx_info(ctx)
-            dmCheck = self.lt_db.owner_check(Guild, Category, ID)
-            if dmCheck == True:
-                output = self.lt_db.set_currency(Guild, Category, ID, format)
-                if output == True:
-                    await ctx.send(f"The currency format has been set to {format}.")
-            else:
-                await ctx.send(f"It looks like you're not the owner of the \"{ctx.channel.category}\" category.")
-        except KeyError as e:
-            await ctx.send(f"It looks like you're not the owner of the \"{ctx.channel.category}\" category.")
-
-        except:
-            message = str(traceback.format_exc())
-            await self.logger.error(self, message, self.__class__.__name__, "DM Set Currency")
-
 
     @commands.group(case_insensitive=True)
     async def char(self, ctx):
@@ -596,7 +512,7 @@ class rpg(commands.Cog):
 
         Name = Name.lower()
 
-        output = self.lt_db.add_char(Guild, ID, Name)
+        output = self.db.add_char(Guild, ID, Name)
         await ctx.send(output)
 
     @char.command()
@@ -610,11 +526,11 @@ class rpg(commands.Cog):
 
         ownerCheck = ""
         try:
-            ownerCheck = self.lt_db.char_owner(Guild, ID, Name)
+            ownerCheck = self.db.char_owner(Guild, ID, Name)
         except:
             pass
         if ownerCheck == True:
-            output = self.lt_db.remove_char(Guild, ID, Name)
+            output = self.db.remove_char(Guild, ID, Name)
             await ctx.send(output)
         else:
             await ctx.send(f"{Name.title()} doesn't belong to you, or doesn't exist.")
@@ -628,21 +544,21 @@ class rpg(commands.Cog):
         _, Guild, ID = self.ctx_info(ctx)
         ownerCheck = ""
         try:
-            ownerCheck = self.lt_db.char_owner(Guild, ID, Name)
+            ownerCheck = self.db.char_owner(Guild, ID, Name)
         except:
             await ctx.send(f"I don't think {Name.title()} belongs to you!")
         if ownerCheck == True:
 
             if field == "color":
 
-                self.lt_db.set_field(Guild, ID, Name, field, value)
+                self.db.set_field(Guild, ID, Name, field, value)
                 await ctx.send(f"{Name.title()}'s {field} value has been updated!")
             elif field in {"owner", "category", "public", "name"}:
                 await ctx.send(
                     f"This value, {field.capitalize()}, is used for behind-the-scenes things, and cannot be modified. Sorry for the inconvenience!"
                 )
             else:
-                self.lt_db.set_field(Guild, ID, Name, field, value)
+                self.db.set_field(Guild, ID, Name, field, value)
                 await ctx.send(f"{Name.title()}'s {field} value has been updated!")
 
     @char.command(aliases=["unset"])
@@ -655,7 +571,7 @@ class rpg(commands.Cog):
         ownerCheck = ""
 
         try:
-            ownerCheck = self.lt_db.char_owner(Guild, ID, Name)
+            ownerCheck = self.db.char_owner(Guild, ID, Name)
         except:
             pass
         try:
@@ -663,7 +579,7 @@ class rpg(commands.Cog):
                 if field == "owner" or field == "name":
                     await ctx.send("Sorry, I can't let you do that.")
                 else:
-                    self.lt_db.unset_field(Guild, ID, Name, field)
+                    self.db.unset_field(Guild, ID, Name, field)
                     await ctx.send(f"{field} has been removed from {Name.title()}!")
         except:
             message = str(traceback.format_exc())
@@ -680,7 +596,7 @@ class rpg(commands.Cog):
         except:
             await ctx.send("This command doesn't work in DMs!")
             return
-        results = self.lt_db.get_char(Guild, Name)
+        results = self.db.get_char(Guild, Name)
 
         for output in results:
 

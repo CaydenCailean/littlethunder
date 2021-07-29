@@ -1,20 +1,15 @@
 import discord
-import re
-import asyncio
 from discord.ext import commands
-import sys, traceback
+import traceback
 from random import randint
 from .lt_logger import lt_logger
 
-sys.path.append("..")
-
-from dbinit import lt_db
 
 
 class rand(commands.Cog):
     def __init__(self, bot, lt_db, channel):
         self.bot = bot
-        self.lt_db = lt_db
+        self.db = lt_db
         self.channel = channel
         self.logger = lt_logger
 
@@ -62,7 +57,7 @@ class rand(commands.Cog):
         """
         Guild, ID = self.ctx_info(ctx)
         try:
-            output = self.lt_db.rand_new(Guild, ID, Table)
+            output = self.db.rand_new(Guild, ID, Table)
             await ctx.send(output)
         except:
             message = str(traceback.format_exc())
@@ -75,7 +70,7 @@ class rand(commands.Cog):
         """
         Guild, ID = self.ctx_info(ctx)
         try:
-            output = self.lt_db.rand_add(Guild, ID, Table, Weight, Value)
+            output = self.db.rand_add(Guild, ID, Table, Weight, Value)
             await ctx.send(output)
         except:
             message = str(traceback.format_exc())
@@ -87,7 +82,7 @@ class rand(commands.Cog):
         Removes a weighted entry from the table. The table name requires quotation marks if it is longer than two words; the value does not.
         """
         Guild, ID = self.ctx_info(ctx)
-        output = self.lt_db.rand_remove(Guild, ID, Table, Value)
+        output = self.db.rand_remove(Guild, ID, Table, Value)
         await ctx.send(output)
 
     @random.command(case_insensitive=True)
@@ -96,7 +91,7 @@ class rand(commands.Cog):
         Deletes the specified table from the database. This is not reversible.
         """
         Guild, ID = self.ctx_info(ctx)
-        output = self.lt_db.rand_delete(Guild, ID, Table)
+        output = self.db.rand_delete(Guild, ID, Table)
         await ctx.send(output)
 
     @random.command(case_insensitive=True, hidden=True)
@@ -106,7 +101,7 @@ class rand(commands.Cog):
         image_ext = ["jpg", "png", "jpeg", "gif"]
 
         try:
-            result = self.lt_db.rand_get(Guild, Table)
+            result = self.db.rand_get(Guild, Table)
 
             result["pairs"] = [tuple(x) for x in result["pairs"]]
             randout = self.weighted(result["pairs"])
@@ -114,7 +109,7 @@ class rand(commands.Cog):
             if result["deckMode"] == "on":
                 ID = ctx.message.author.id
                 mid = result["_id"]
-                output = self.lt_db.deck_draw(Guild, ID, mid, randout)
+                output = self.db.deck_draw(Guild, ID, mid, randout)
                 print(output)
 
             embed = discord.Embed(
@@ -140,7 +135,7 @@ class rand(commands.Cog):
     async def toggle_deck(self, ctx, Table):
         Guild, ID = self.ctx_info(ctx)
         try:
-            output = self.lt_db.deck_toggle(Guild, ID, Table)
+            output = self.db.deck_toggle(Guild, ID, Table)
             await ctx.send(output)
         except:
             message = str(traceback.format_exc())
@@ -152,7 +147,7 @@ class rand(commands.Cog):
     async def shuffle(self, ctx, Table):
         Guild, ID = self.ctx_info(ctx)
         try:
-            output = self.lt_db.deck_shuffle(Guild, ID, Table)
+            output = self.db.deck_shuffle(Guild, ID, Table)
             await ctx.send(output)
         except:
             message = str(traceback.format_exc())

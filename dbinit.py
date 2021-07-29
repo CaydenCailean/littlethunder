@@ -1,7 +1,4 @@
-import json
 from pymongo import MongoClient, ReturnDocument, ASCENDING
-import datetime
-import configparser
 import os
 import re
 
@@ -271,12 +268,19 @@ class lt_db(object):
         else:
             return False
 
-    def set_ic(self, Guild, Category, ID, Channel: int):
+    def set_ic(self, Guild, Category, ID, Channel: int, URL):
         if self.db[str(Guild)].find_one({"Category": Category})["owner"] == ID:
             self.db[str(Guild)].find_one_and_update(
-                {"Category": Category}, {"$set": {"IC": Channel}}
+                {"Category": Category}, {"$set": {"IC": Channel, "webhook_url": URL}}
             )
             return True
+
+    def get_ic(self, Guild, Category):
+        try:
+            category = self.db[str(Guild)].find_one({"Category": Category})
+            return category["IC"], category["webhook_url"]
+        except:
+            return None, None
 
     def set_currency(self, Guild, Category, ID, Currency: str):
         if self.db[str(Guild)].find_one({"Category": Category})["owner"] == ID:
@@ -328,6 +332,12 @@ class lt_db(object):
         query = {"$text": {"$search": Name}}
 
         output = self.db[str(Guild)].find(query)
+
+        return output
+
+    def get_one_char(self, Guild, Name):
+        query = {"name": Name}
+        output = self.db[str(Guild)].find_one(query)
 
         return output
 
