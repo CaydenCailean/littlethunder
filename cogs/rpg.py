@@ -523,6 +523,8 @@ class rpg(commands.Cog):
                     await ctx.send(f"{ctx.message.channel_mentions[0].mention} has been added as the IC channel for the \"{ctx.channel.category}\" category.")
             else:
                 await ctx.send(f"It looks like you're not the owner of the \"{ctx.channel.category}\" category.")
+        except KeyError as e:
+            await ctx.send(f"It looks like you're not the owner of the \"{ctx.channel.category}\" category.")
 
         except:
             message = str(traceback.format_exc())
