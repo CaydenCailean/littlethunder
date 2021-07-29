@@ -136,6 +136,7 @@ class channels(commands.Cog):
                     async with ClientSession() as session:
                         webhook = discord.Webhook.from_url(url, adapter=discord.AsyncWebhookAdapter(session))
                         await webhook.send(content=message, username=char["name"], avatar_url=avatar)
+                        await ctx.message.delete()
                 except:
                     await ctx.send("It looks like something's gone wrong...")
                     raise Exception
