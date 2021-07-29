@@ -62,7 +62,7 @@ class channels(commands.Cog):
                         for webhook in webhooks:
                             if webhook.url == url:
                                 await webhook.delete()
-                    webhook = await ctx.channel.create_webhook(name=f"IC-{ctx.channel.name}")
+                    webhook = await Channel.create_webhook(name=f"IC-{ctx.channel.name}")
                     output = self.db.set_ic(Guild, Category, ID, Channel, webhook.url)
                 except:
                     raise Exception
