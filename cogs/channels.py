@@ -42,7 +42,7 @@ class channels(commands.Cog):
         override = ctx.message.author.permissions_in(ctx.channel).administrator
         output = self.db.remove_owner(Guild, Category, ID, override)
         await ctx.send(output)
-    
+
     @commands.has_permissions(manage_webhooks=True)
     @dm.command()
     async def set_ic(self, ctx, Channel: Optional[discord.TextChannel]):
@@ -143,6 +143,25 @@ class channels(commands.Cog):
         except:
              message = str(traceback.format_exc())
              await self.logger.error(self, message, self.__class__.__name__, "IC Message Send")
+
+    @commands.Cog.listener()
+    async def on_reaction_add(self, reaction, user):
+        """
+        Wait for a reaction to be added, then remove the message if it fits certain criteria.
+        """
+        Guild = reaction.message.guild.id
+    
+        try:
+            if reaction.message.author.bot and reaction.message.author != self.bot.user and reaction.emoji == '❌':
+                
+                character = reaction.message.author.display_name.lower()
+                ownerCheck = self.db.char_owner(Guild, int(user.id), character)
+                if ownerCheck == True:
+                    await reaction.message.delete()
+           
+        except:
+            message = str(traceback.format_exc())
+            await self.logger.error(self, message, self.__class__.__name__, "DM Reactions")
 
 def setup(bot):
     bot.add_cog(channels(bot))

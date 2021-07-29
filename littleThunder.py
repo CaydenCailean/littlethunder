@@ -37,6 +37,7 @@ discToken = {"discToken": config["discordtoken"]}["discToken"]
 intents = discord.Intents.default()
 intents.members = True
 intents.guilds = True
+intents.reactions = True
 
 
 # bot command prefix
