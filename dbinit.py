@@ -129,10 +129,14 @@ class lt_db(object):
         self.db[str(Guild)][str(Category)].insert_one(Entry).inserted_id
         turnCheck = self.db[str(Guild)].find_one({"Category": Category})
         initlist = list(self.db[str(Guild)][str(Category)].find({}))
-        if turnCheck["turn"] != 1 and initlist[turnCheck["turn"]]["Init"] < Init:
-            self.db[str(Guild)].update_one(
-                {"Category": Category}, {"$inc": {"turn": 1}}
-            )
+        try:
+            if turnCheck["turn"] != 1 and initlist[turnCheck["turn"]]["Init"] < Init:
+                self.db[str(Guild)].update_one(
+                    {"Category": Category}, {"$inc": {"turn": 1}}
+                )
+        except:
+            pass
+
 
     def init_clear(self, Guild, Category):
 
@@ -266,6 +270,13 @@ class lt_db(object):
             return True
         else:
             return False
+
+    def set_ic(self, Guild, Category, ID, Channel: int):
+        if self.db[str(Guild)].find_one({"Category": Category})["owner"] == ID:
+            self.db[str(Guild)].find_one_and_update(
+                {"Category": Category}, {"$set": {"IC": Channel}}
+            )
+            return True
 
     # endregion
 

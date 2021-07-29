@@ -6,6 +6,7 @@ import sys
 import traceback
 from .lt_logger import lt_logger
 from discord.ext import commands
+from typing import Optional
 
 sys.path.append("..")
 from dbinit import lt_db
@@ -508,6 +509,45 @@ class rpg(commands.Cog):
         override = ctx.message.author.permissions_in(ctx.channel).administrator
         output = self.lt_db.remove_owner(Guild, Category, ID, override)
         await ctx.send(output)
+
+    @dm.command()
+    async def set_ic(self, ctx, Channel: Optional[discord.TextChannel]):
+        """Set mentioned channel as in-character chat for this channel category. Only usable by DM."""
+        try:
+            Category, Guild, ID = self.ctx_info(ctx)
+            dmCheck = self.lt_db.owner_check(Guild, Category, ID)
+            Channel = Channel.id
+            if dmCheck == True:
+                output = self.lt_db.set_ic(Guild, Category, ID, Channel)
+                if output == True:
+                    await ctx.send(f"{ctx.message.channel_mentions[0].mention} has been added as the IC channel for the \"{ctx.channel.category}\" category.")
+            else:
+                await ctx.send(f"It looks like you're not the owner of the \"{ctx.channel.category}\" category.")
+
+        except:
+            message = str(traceback.format_exc())
+            await self.logger.error(self, message, self.__class__.__name__, "DM Set IC")
+
+    @dm.command()
+    async def get_ic(self, ctx):
+        """Get the current in-character chat for this channel category."""
+        Category, Guild, ID = self.ctx_info(ctx)
+        output = self.lt_db.get_ic(Guild, Category, ID)
+        await ctx.send(output)
+
+    @dm.command()
+    async def set_ic_channel(self, ctx):
+        """Set the in-character chat channel for this channel category. Only usable by DM."""
+        Category, Guild, ID = self.ctx_info(ctx)
+        dmCheck = self.lt_db.owner_check(Guild, Category, ID)
+        Channel = ctx.channel_
+        if dmCheck == True:
+            output = self.lt_db.set_ic(Guild, Category, ID, int(Channel))
+            await ctx.send(output)
+        else:
+            await ctx.send(f"It looks like you're not the owner of {Category.name}")
+
+
 
     @commands.group(case_insensitive=True)
     async def char(self, ctx):
