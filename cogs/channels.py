@@ -119,6 +119,8 @@ class channels(commands.Cog):
     async def ic(self, ctx, character, *, message):
         """
         Send an in-character message to the current IC channel. Only usable by DM.
+
+        This message can be deleted by the user who sent it by reacting to it with a :x: emoji.
         """
         try:
             Category, Guild, ID = self.ctx_info(ctx)
