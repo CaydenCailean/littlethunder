@@ -18,7 +18,7 @@ class economy(commands.Cog):
         Guild = ctx.message.guild.id
         ID = ctx.message.author.id
         return Category, Guild, ID
-
+    
     # allows DM of current channel to give a user money
     @commands.command(aliases=['give'])
     async def givemoney(self, ctx, amount: str, *, char: str):

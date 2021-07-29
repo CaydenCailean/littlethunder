@@ -531,24 +531,37 @@ class rpg(commands.Cog):
             await self.logger.error(self, message, self.__class__.__name__, "DM Set IC")
 
     @dm.command()
-    async def get_ic(self, ctx):
-        """Get the current in-character chat for this channel category."""
-        Category, Guild, ID = self.ctx_info(ctx)
-        output = self.lt_db.get_ic(Guild, Category, ID)
-        await ctx.send(output)
+    async def set_currency(self, ctx, format):
+        """Set the currency for this channel category. Only usable by DM."""
+        
+        dnd = ["gp", "gold pieces", "coins", "pp", "cp"]
+        usd = ["USD", "dollars", "$"]
 
-    @dm.command()
-    async def set_ic_channel(self, ctx):
-        """Set the in-character chat channel for this channel category. Only usable by DM."""
-        Category, Guild, ID = self.ctx_info(ctx)
-        dmCheck = self.lt_db.owner_check(Guild, Category, ID)
-        Channel = ctx.channel_
-        if dmCheck == True:
-            output = self.lt_db.set_ic(Guild, Category, ID, int(Channel))
-            await ctx.send(output)
+        if format in dnd:
+            format = "dnd"
+
+        elif format in usd:
+            format = "usd"
+
         else:
-            await ctx.send(f"It looks like you're not the owner of {Category.name}")
+            await ctx.send("Format not recognized.")
+            return
 
+        try:
+            Category, Guild, ID = self.ctx_info(ctx)
+            dmCheck = self.lt_db.owner_check(Guild, Category, ID)
+            if dmCheck == True:
+                output = self.lt_db.set_currency(Guild, Category, ID, format)
+                if output == True:
+                    await ctx.send(f"The currency format has been set to {format}.")
+            else:
+                await ctx.send(f"It looks like you're not the owner of the \"{ctx.channel.category}\" category.")
+        except KeyError as e:
+            await ctx.send(f"It looks like you're not the owner of the \"{ctx.channel.category}\" category.")
+
+        except:
+            message = str(traceback.format_exc())
+            await self.logger.error(self, message, self.__class__.__name__, "DM Set Currency")
 
 
     @commands.group(case_insensitive=True)

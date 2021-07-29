@@ -278,6 +278,12 @@ class lt_db(object):
             )
             return True
 
+    def set_currency(self, Guild, Category, ID, Currency: str):
+        if self.db[str(Guild)].find_one({"Category": Category})["owner"] == ID:
+            self.db[str(Guild)].find_one_and_update(
+                {"Category": Category}, {"$set": {"currency": Currency}}
+            )
+
     # endregion
 
     # region Character Profiles
