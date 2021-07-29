@@ -148,19 +148,21 @@ class channels(commands.Cog):
              await self.logger.error(self, message, self.__class__.__name__, "IC Message Send")
 
     @commands.Cog.listener()
-    async def on_reaction_add(self, reaction, user):
+    async def on_raw_reaction_add(self, payload):
         """
         Wait for a reaction to be added, then remove the message if it fits certain criteria.
         """
-        Guild = reaction.message.guild.id
-    
+        Guild = payload.guild_id
+        user = payload.user_id
+
+        message = await self.bot.get_guild(Guild).get_channel(payload.channel_id).fetch_message(payload.message_id)
+        
         try:
-            if reaction.message.author.bot and reaction.message.author != self.bot.user and reaction.emoji == '❌':
-                
-                character = reaction.message.author.display_name.lower()
-                ownerCheck = self.db.char_owner(Guild, int(user.id), character)
+            if message.author.bot and message.author != self.bot.user and payload.emoji.name == '❌':
+                character = message.author.display_name.lower()
+                ownerCheck = self.db.char_owner(Guild, int(user), character)
                 if ownerCheck == True:
-                    await reaction.message.delete()
+                    await message.delete()
            
         except:
             message = str(traceback.format_exc())
