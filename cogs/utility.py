@@ -91,7 +91,7 @@ class utility(commands.Cog):
             await self.bot.change_presence(
             activity=discord.Game(name=f"games in {len(self.bot.guilds)} servers!")
         )
-            self.lt_db.drop_collection(guild.id)
+            self.db.drop_collection(guild.id)
             await self.logger.warning(self, f"{guild.name} has been removed from the database.", self.__class__.__name__, "Event Listener: Removed from Guild")
         except Exception as e:
             message = str(traceback.format_exc())
