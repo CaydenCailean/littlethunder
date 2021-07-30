@@ -100,7 +100,7 @@ class channels(commands.Cog):
 
         try:
             Category, Guild, ID = self.ctx_info(ctx)
-            dmCheck = self.lt_db.owner_check(Guild, Category, ID)
+            dmCheck = self.ldb.owner_check(Guild, Category, ID)
             if dmCheck == True:
                 output = self.db.set_currency(Guild, Category, ID, format)
                 if output == True:

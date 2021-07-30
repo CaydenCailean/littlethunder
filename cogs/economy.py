@@ -21,10 +21,10 @@ class economy(commands.Cog):
     @commands.command(aliases=['give'])
     async def givemoney(self, ctx, amount: str, *, char: str):
         Category, Guild, ID = self.ctx_info(ctx)
-        dmCheck = self.lt_db.owner_check(Guild, Category, ID)
+        dmCheck = self.db.owner_check(Guild, Category, ID)
         if dmCheck:
             # get user's existing money, add [amount] to it, and save to db
-            money = self.lt_db.money_get(Guild, Category, char)
+            money = self.db.money_get(Guild, Category, char)
             try:
                 int(amount)
                 money['gp'] += int(amount)
@@ -36,7 +36,7 @@ class economy(commands.Cog):
                     await self.logger.error(self, str(traceback.format_exc()), self.__class__.__name__, "Give Money")
             
 
-            self.lt_db.money_set(Guild, Category, char, money)
+            self.db.money_set(Guild, Category, char, money)
 
 def setup(bot):
     bot.add_cog(economy(bot))
