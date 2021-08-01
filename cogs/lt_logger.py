@@ -4,6 +4,7 @@ import traceback
 
 # custom logger using discord as a backend
 
+
 class lt_logger(commands.Cog):
     def __init__(self, bot, channel):
         self.bot = bot

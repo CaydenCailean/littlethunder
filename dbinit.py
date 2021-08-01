@@ -134,7 +134,6 @@ class lt_db(object):
         except:
             pass
 
-
     def init_clear(self, Guild, Category):
 
         self.db[str(Guild)][str(Category)].drop()
@@ -335,8 +334,8 @@ class lt_db(object):
 
         return output
 
-    def get_one_char(self, Guild, Name):
-        query = {"name": Name}
+    def get_one_char(self, Guild, Name, ID):
+        query = {"name": Name, "owner": ID}
         output = self.db[str(Guild)].find_one(query)
 
         return output

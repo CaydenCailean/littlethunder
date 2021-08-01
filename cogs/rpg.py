@@ -7,7 +7,6 @@ from .lt_logger import lt_logger
 from discord.ext import commands
 
 
-
 class rpg(commands.Cog):
     def __init__(self, bot, lt_db, channel):
         self.bot = bot
@@ -17,7 +16,7 @@ class rpg(commands.Cog):
 
     def ctx_info(self, ctx):
         return ctx.channel.category.id, ctx.guild.id, ctx.message.author.id
-        
+
     async def macro_list(self, ctx, input):
         try:
             Total, embed = self.diceroll(ctx, input)
@@ -160,8 +159,8 @@ class rpg(commands.Cog):
         if ctx.invoked_subcommand is None:
 
             if input.find("!") != -1:
-                _,Guild,ID = self.ctx_info(ctx)
-                
+                _, Guild, ID = self.ctx_info(ctx)
+
                 label = input.replace("!", "", 1)
                 macro = self.db.dice_get(ID, Guild, label)
 
@@ -187,7 +186,7 @@ class rpg(commands.Cog):
         .d save Attack_Longsword 1d20+8
         """
         _, Guild, User = self.ctx_info(ctx)
-        
+
         for line in ctx.message.content.splitlines():
             line = line.replace(f".d save {Alias} ", "")
             self.db.dice_add(User, Guild, Alias, line)
@@ -314,8 +313,9 @@ class rpg(commands.Cog):
 
             except:
                 message = str(traceback.format_exc())
-                await self.logger.error(self, message, self.__class__.__name__, "Initiative")
-
+                await self.logger.error(
+                    self, message, self.__class__.__name__, "Initiative"
+                )
 
     @init.command(pass_context=True, aliases=["display"])
     async def show(self, ctx):
@@ -345,7 +345,9 @@ class rpg(commands.Cog):
                     outcome = float(Total)
                 except:
                     message = str(traceback.format_exc())
-                    await lt_logger.error(self, message, self.__class__.__name__, "Macro")
+                    await lt_logger.error(
+                        self, message, self.__class__.__name__, "Macro"
+                    )
             if mention != None:
                 mention = mention.replace("<@!", "").replace(">", "")
             else:
@@ -361,7 +363,9 @@ class rpg(commands.Cog):
                 raise e
         except:
             message = str(traceback.format_exc())
-            await self.logger.error(self, message, self.__class__.__name__, "Add Initiative Entry")
+            await self.logger.error(
+                self, message, self.__class__.__name__, "Add Initiative Entry"
+            )
 
     @init.command(pass_context=True, aliases=["remove"])
     async def kill(self, ctx, name):
@@ -384,7 +388,9 @@ class rpg(commands.Cog):
                 await self.init(ctx)
         except:
             message = str(traceback.format_exc())
-            await self.logger.error(self, message, self.__class__.__name__, "Remove Initiative Entry")
+            await self.logger.error(
+                self, message, self.__class__.__name__, "Remove Initiative Entry"
+            )
 
     @init.command()
     async def end(self, ctx):
@@ -583,7 +589,9 @@ class rpg(commands.Cog):
                     await ctx.send(f"{field} has been removed from {Name.title()}!")
         except:
             message = str(traceback.format_exc())
-            await self.logger.error(self, message, self.__class__.__name__, "Remove Field")
+            await self.logger.error(
+                self, message, self.__class__.__name__, "Remove Field"
+            )
 
     @char.command(hidden=True)
     async def display(self, ctx, Name):

@@ -11,7 +11,8 @@ from cogs.mw import mw
 from cogs.rand import rand
 from cogs.lt_logger import lt_logger
 from cogs.channels import channels
-#from cogs.economy import economy
+
+# from cogs.economy import economy
 from random import randint
 
 # Read config and connect to db
@@ -46,12 +47,16 @@ bot = commands.Bot(command_prefix=".", case_insensitive=True, intents=intents)
 
 # startup confirmation
 
+
 @bot.command(pass_context="true", hidden="true")
 async def list_guilds(ctx):
     """Lists all the guilds the bot is in."""
     guilds = [g.name for g in bot.guilds]
     guildids = [g.id for g in bot.guilds]
-    await ctx.send(f"I am in {len(guilds)} guilds: {', '.join(guilds)}.\n Their IDs are: {guildids}")
+    await ctx.send(
+        f"I am in {len(guilds)} guilds: {', '.join(guilds)}.\n Their IDs are: {guildids}"
+    )
+
 
 def weighted(pairs):
     total = sum(pair[0] for pair in pairs)
@@ -74,6 +79,7 @@ async def pat(ctx):
     ]
     await ctx.send(weighted(responses))
 
+
 # connect to and initialize DB
 
 lt_db = lt_db(config)
@@ -84,7 +90,7 @@ lt_db.db_init()
 
 
 bot.add_cog(main(bot, config["log_channel"]))
-#bot.add_cog(economy(bot, lt_db, config["log_channel"]))
+# bot.add_cog(economy(bot, lt_db, config["log_channel"]))
 bot.add_cog(channels(bot, lt_db, config["log_channel"]))
 bot.add_cog(info(bot, config["log_channel"]))
 bot.add_cog(utility(bot, lt_db, config["log_channel"]))

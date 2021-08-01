@@ -4,7 +4,6 @@ from discord.ext import commands
 from .lt_logger import lt_logger
 
 
-
 class utility(commands.Cog):
     def __init__(self, bot, lt_db, channel):
         self.bot = bot
@@ -84,29 +83,46 @@ class utility(commands.Cog):
         except discord.Forbidden:
             await ctx.send("I do not have permissions to purge messages.")
 
-
     @commands.Cog.listener()
     async def on_guild_remove(self, guild):
         try:
             await self.bot.change_presence(
-            activity=discord.Game(name=f"games in {len(self.bot.guilds)} servers!")
-        )
+                activity=discord.Game(name=f"games in {len(self.bot.guilds)} servers!")
+            )
             self.db.drop_collection(guild.id)
-            await self.logger.warning(self, f"{guild.name} has been removed from the database.", self.__class__.__name__, "Event Listener: Removed from Guild")
+            await self.logger.warning(
+                self,
+                f"{guild.name} has been removed from the database.",
+                self.__class__.__name__,
+                "Event Listener: Removed from Guild",
+            )
         except Exception as e:
             message = str(traceback.format_exc())
-            await self.logger.error(self, message, self.__class__.__name__, "Event Listener: Removed from Guild")
+            await self.logger.error(
+                self,
+                message,
+                self.__class__.__name__,
+                "Event Listener: Removed from Guild",
+            )
 
     @commands.Cog.listener()
     async def on_guild_join(self, guild):
         try:
             await self.bot.change_presence(
-            activity=discord.Game(name=f"games in {len(self.bot.guilds)} servers!")
-        )
-            await self.logger.info(self, f"{self.bot.__name__} has joined {guild.name}.", self.__class__.__name__, "Event Listener: Joined Guild")
+                activity=discord.Game(name=f"games in {len(self.bot.guilds)} servers!")
+            )
+            await self.logger.info(
+                self,
+                f"{self.bot.__name__} has joined {guild.name}.",
+                self.__class__.__name__,
+                "Event Listener: Joined Guild",
+            )
         except:
             message = str(traceback.format_exc())
-            await self.logger.error(self, message, self.__class__.__name__, "Event Listener: Joined Guild")
+            await self.logger.error(
+                self, message, self.__class__.__name__, "Event Listener: Joined Guild"
+            )
+
 
 def setup(bot):
     bot.add_cog(utility(bot))

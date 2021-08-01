@@ -5,7 +5,6 @@ from random import randint
 from .lt_logger import lt_logger
 
 
-
 class rand(commands.Cog):
     def __init__(self, bot, lt_db, channel):
         self.bot = bot

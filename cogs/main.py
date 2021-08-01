@@ -26,11 +26,19 @@ class main(commands.Cog):
                 f"Missing required argument: {error.param.name}", delete_after=5
             )
 
-            await self.logger.warning(self, f"Missing required argument: {error.param.name}", f"{ctx.cog.__class__.__name__}", f"{ctx.message.content.split(' ')[0]}")
+            await self.logger.warning(
+                self,
+                f"Missing required argument: {error.param.name}",
+                f"{ctx.cog.__class__.__name__}",
+                f"{ctx.message.content.split(' ')[0]}",
+            )
         elif isinstance(error, commands.CommandNotFound):
             pass
         elif isinstance(error, commands.CheckFailure):
-            await ctx.send(f"You don't have permission to use this command", delete_after=5)
+            await ctx.send(
+                f"You don't have permission to use this command", delete_after=5
+            )
+
 
 def setup(bot):
     bot.add_cog(main(bot))
