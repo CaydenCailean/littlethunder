@@ -234,7 +234,7 @@ class lt_db(object):
 
         except TypeError:
             self.db[str(Guild)].find_one_and_update(
-                {"Category": Category}, {"$set": {"owner": ID}}, upsert=True
+                {"Category": Category}, {"$set": {"owner": ID, "turn": 1}}, upsert=True
             )
             output = f"<@{ID}> has been added as the DM for this channel category."
             return output
@@ -329,6 +329,14 @@ class lt_db(object):
     def get_char(self, Guild, Name):
 
         query = {"$text": {"$search": Name}}
+
+        output = self.db[str(Guild)].find(query)
+
+        return output
+
+    def get_char_by_owner(self, Guild, User):
+
+        query = {"owner":User}
 
         output = self.db[str(Guild)].find(query)
 

@@ -496,8 +496,18 @@ class rpg(commands.Cog):
 
         if ctx.invoked_subcommand is None:
             try:
-                Name = ctx.message.content.lstrip(" ")
-                await self.display(ctx, Name)
+                try: 
+                    ctx.message.mentions[0]
+                    await self.display(ctx)
+
+                except:
+                    
+                    if ctx.message.content.lower() == '.char':
+                        await self.display(ctx)
+                    else:
+                        Name = ctx.message.content.lstrip(" ")
+                        await self.display(ctx, Name)
+            
             except:
                 message = str(traceback.format_exc())
                 await self.logger.error(
@@ -594,20 +604,43 @@ class rpg(commands.Cog):
             )
 
     @char.command(hidden=True)
-    async def display(self, ctx, Name):
+    async def display(self, ctx, Name=None):
         """
         Display information regarding a stored character, including all stored fields.
         """
-        Name = Name.lower()
+        
         try:
             _, Guild, _ = self.ctx_info(ctx)
         except:
             await ctx.send("This command doesn't work in DMs!")
-            return
-        results = self.db.get_char(Guild, Name)
 
+        try:
+            user = ctx.message.mentions[0].id
+            results = self.db.get_char_by_owner(Guild, user)
+        except:
+            if Name == None:
+                try:
+                 
+                    user = ctx.message.author.id
+                    results = self.db.get_char_by_owner(Guild, user)
+                  
+                except:
+                    message = str(traceback.format_exc())
+                    await self.logger.error(self, message, self.__class__.__name__, "char") 
+            else:
+                Name = Name.lower()
+                results = self.db.get_char(Guild, Name)
+        
         for output in results:
-
+            if output['turn']:
+                continue
+            try:
+                output['name']
+            except:
+                message = str(traceback.format_exc())
+                await self.logger.error(self, message, self.__class__.__name__, "char")
+                continue
+            
             embed = discord.Embed(
                 title="__" + output["name"].title() + "__",
                 description=output["description"],
