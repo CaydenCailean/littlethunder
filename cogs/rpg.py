@@ -513,6 +513,7 @@ class rpg(commands.Cog):
                 await self.logger.error(
                     self, message, self.__class__.__name__, "Character Profile"
                 )
+                
 
     @char.command()
     async def add(self, ctx, *, Name):
@@ -620,10 +621,9 @@ class rpg(commands.Cog):
         except:
             if Name == None:
                 try:
-                 
                     user = ctx.message.author.id
                     results = self.db.get_char_by_owner(Guild, user)
-                  
+
                 except:
                     message = str(traceback.format_exc())
                     await self.logger.error(self, message, self.__class__.__name__, "char") 
@@ -632,13 +632,10 @@ class rpg(commands.Cog):
                 results = self.db.get_char(Guild, Name)
         
         for output in results:
-            if output['turn']:
-                continue
+
             try:
                 output['name']
             except:
-                message = str(traceback.format_exc())
-                await self.logger.error(self, message, self.__class__.__name__, "char")
                 continue
             
             embed = discord.Embed(
@@ -678,6 +675,7 @@ class rpg(commands.Cog):
             except:
                 message = str(traceback.format_exc())
                 self.logger.error(self, message, self.__class__.__name__, "Display")
+                
 
     @char.command()
     async def webedit(self, ctx):
