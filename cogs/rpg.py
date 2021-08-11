@@ -1,11 +1,10 @@
 import discord
 import re
 import dice
-import sys
 import traceback
 from .lt_logger import lt_logger
 from discord.ext import commands
-
+import asyncio
 
 class rpg(commands.Cog):
     def __init__(self, bot, lt_db, channel):
@@ -13,6 +12,8 @@ class rpg(commands.Cog):
         self.db = lt_db
         self.channel = channel
         self.logger = lt_logger
+
+    
 
     def ctx_info(self, ctx):
         return ctx.channel.category.id, ctx.guild.id, ctx.message.author.id
@@ -610,6 +611,13 @@ class rpg(commands.Cog):
         Display information regarding a stored character, including all stored fields.
         """
         
+        def check(reaction, user):
+            return reaction.message.id == msg.id and user == ctx.author 
+
+        async def reaction_reset(reaction, user):
+            if reaction.message.id == msg.id and user == ctx.author:
+                await msg.remove_reaction(reaction, user)
+
         try:
             _, Guild, _ = self.ctx_info(ctx)
         except:
@@ -630,7 +638,8 @@ class rpg(commands.Cog):
             else:
                 Name = Name.lower()
                 results = self.db.get_char(Guild, Name)
-        
+
+        embeds = []
         for output in results:
 
             try:
@@ -669,14 +678,38 @@ class rpg(commands.Cog):
 
             try:
                 if embed:
-                    await ctx.send(embed=embed)
+                    embeds.append(embed)
                 else:
                     await ctx.send(f"It looks like {Name} doesn't exist!")
             except:
                 message = str(traceback.format_exc())
                 self.logger.error(self, message, self.__class__.__name__, "Display")
-                
+        
+        page = 0
 
+        msg = await ctx.send(embed=embeds[page])
+
+        await msg.add_reaction("⬅️")
+        await msg.add_reaction("➡️")
+
+        while True: #can be changed to a variable to let it work a certain amount of times.
+            try:
+                reaction, _ = await self.bot.wait_for('reaction_add', timeout= 60.0, check=check)
+                if reaction.emoji == '⬅️' and page > 0:
+                    page -= 1
+                    embed = embeds[page]
+                    await msg.edit(embed=embed)
+                    await reaction_reset(reaction, ctx.author)
+                if reaction.emoji == '➡️' and page < len(embeds) -1:
+                    page += 1
+                    embed = embeds[page]
+                    await msg.edit(embed=embed)
+                    await reaction_reset(reaction, ctx.author)
+            except asyncio.TimeoutError:
+                message = str(traceback.format_exc())
+                await self.logger.error(self, message, self.__class__.__name__, "Display")
+        
+        
     @char.command()
     async def webedit(self, ctx):
         """
