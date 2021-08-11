@@ -695,9 +695,9 @@ class rpg(commands.Cog):
 
             await msg.add_reaction("⏪")
             await msg.add_reaction("⬅️")
+            await msg.add_reaction("🟥")
             await msg.add_reaction("➡️")
             await msg.add_reaction("⏩")
-
             timeout = time.time() + 3600
 
             while True: 
@@ -725,6 +725,9 @@ class rpg(commands.Cog):
                         embed = embeds[page]
                         await msg.edit(embed=embed)
                         await reaction_reset(reaction, ctx.author)
+                    elif reaction.emoji == '🟥':
+                        await msg.clear_reactions()
+                        break
                     else:
                         await reaction_reset(reaction, ctx.author)
                 except:
