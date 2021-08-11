@@ -4,7 +4,7 @@ import dice
 import traceback
 from .lt_logger import lt_logger
 from discord.ext import commands
-import asyncio
+import time
 
 class rpg(commands.Cog):
     def __init__(self, bot, lt_db, channel):
@@ -698,7 +698,11 @@ class rpg(commands.Cog):
             await msg.add_reaction("➡️")
             await msg.add_reaction("⏩")
 
-            while True: #can be changed to a variable to let it work a certain amount of times.
+            timeout = time.time() + 3600
+
+            while True: 
+                if time.time() > timeout:
+                    break
                 try:
                     reaction, _ = await self.bot.wait_for('reaction_add', timeout= 60.0, check=check)
                     if reaction.emoji == '⬅️' and page > 0:
@@ -723,7 +727,7 @@ class rpg(commands.Cog):
                         await reaction_reset(reaction, ctx.author)
                     else:
                         await reaction_reset(reaction, ctx.author)
-                except asyncio.TimeoutError:
+                except:
                     pass
         
         
