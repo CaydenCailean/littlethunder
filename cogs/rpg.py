@@ -702,6 +702,7 @@ class rpg(commands.Cog):
 
             while True: 
                 if time.time() > timeout:
+                    await msg.clear_reactions()
                     break
                 try:
                     reaction, _ = await self.bot.wait_for('reaction_add', timeout= 60.0, check=check)
