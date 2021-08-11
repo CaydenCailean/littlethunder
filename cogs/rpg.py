@@ -693,8 +693,10 @@ class rpg(commands.Cog):
 
             msg = await ctx.send(embed=embeds[page])
 
+            await msg.add_reaction("⏪")
             await msg.add_reaction("⬅️")
             await msg.add_reaction("➡️")
+            await msg.add_reaction("⏩")
 
             while True: #can be changed to a variable to let it work a certain amount of times.
                 try:
@@ -704,12 +706,23 @@ class rpg(commands.Cog):
                         embed = embeds[page]
                         await msg.edit(embed=embed)
                         await reaction_reset(reaction, ctx.author)
-                    if reaction.emoji == '➡️' and page < len(embeds) -1:
+                    elif reaction.emoji == '➡️' and page < len(embeds) -1:
                         page += 1
                         embed = embeds[page]
                         await msg.edit(embed=embed)
                         await reaction_reset(reaction, ctx.author)
-                    await reaction_reset(reaction, ctx.author)
+                    elif reaction.emoji == '⏪' and page > 0:
+                        page = 0
+                        embed = embeds[page]
+                        await msg.edit(embed=embed)
+                        await reaction_reset(reaction, ctx.author)
+                    elif reaction.emoji == '⏩' and page < len(embeds) -1:
+                        page = len(embeds) -1
+                        embed = embeds[page]
+                        await msg.edit(embed=embed)
+                        await reaction_reset(reaction, ctx.author)
+                    else:
+                        await reaction_reset(reaction, ctx.author)
                 except asyncio.TimeoutError:
                     pass
         
