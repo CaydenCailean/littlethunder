@@ -490,9 +490,9 @@ class rpg(commands.Cog):
     @commands.group(case_insensitive=True)
     async def char(self, ctx):
         """
-        Use to display a character's profile, if one exists. Subcommands cover the creation and alteration of character profiles.
+        Use to display a character's profile, if one exists. All characters are saved on a per-guild basis.
 
-        All characters are saved on a per-guild basis.
+        Can also be used to list a user's characters, either your own by using .char without a name, or someone else's by using .char @user.
         """
 
         if ctx.invoked_subcommand is None:
@@ -698,7 +698,7 @@ class rpg(commands.Cog):
             await msg.add_reaction("🟥")
             await msg.add_reaction("➡️")
             await msg.add_reaction("⏩")
-            timeout = time.time() + 3600
+            timeout = time.time() + 600
 
             while True: 
                 if time.time() > timeout:
