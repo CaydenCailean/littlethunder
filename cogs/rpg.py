@@ -710,8 +710,7 @@ class rpg(commands.Cog):
                         await msg.edit(embed=embed)
                         await reaction_reset(reaction, ctx.author)
                 except asyncio.TimeoutError:
-                    message = str(traceback.format_exc())
-                    await self.logger.error(self, message, self.__class__.__name__, "Display")
+                    pass
         
         
     @char.command()
