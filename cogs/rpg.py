@@ -709,6 +709,7 @@ class rpg(commands.Cog):
                         embed = embeds[page]
                         await msg.edit(embed=embed)
                         await reaction_reset(reaction, ctx.author)
+                    await reaction_reset(reaction, ctx.author)
                 except asyncio.TimeoutError:
                     pass
         
