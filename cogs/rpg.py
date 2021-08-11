@@ -685,29 +685,33 @@ class rpg(commands.Cog):
                 message = str(traceback.format_exc())
                 self.logger.error(self, message, self.__class__.__name__, "Display")
         
-        page = 0
+        if len(embeds) == 1:
+            await ctx.send(embed=embeds[0])
 
-        msg = await ctx.send(embed=embeds[page])
+        else:
+            page = 0
 
-        await msg.add_reaction("⬅️")
-        await msg.add_reaction("➡️")
+            msg = await ctx.send(embed=embeds[page])
 
-        while True: #can be changed to a variable to let it work a certain amount of times.
-            try:
-                reaction, _ = await self.bot.wait_for('reaction_add', timeout= 60.0, check=check)
-                if reaction.emoji == '⬅️' and page > 0:
-                    page -= 1
-                    embed = embeds[page]
-                    await msg.edit(embed=embed)
-                    await reaction_reset(reaction, ctx.author)
-                if reaction.emoji == '➡️' and page < len(embeds) -1:
-                    page += 1
-                    embed = embeds[page]
-                    await msg.edit(embed=embed)
-                    await reaction_reset(reaction, ctx.author)
-            except asyncio.TimeoutError:
-                message = str(traceback.format_exc())
-                await self.logger.error(self, message, self.__class__.__name__, "Display")
+            await msg.add_reaction("⬅️")
+            await msg.add_reaction("➡️")
+
+            while True: #can be changed to a variable to let it work a certain amount of times.
+                try:
+                    reaction, _ = await self.bot.wait_for('reaction_add', timeout= 60.0, check=check)
+                    if reaction.emoji == '⬅️' and page > 0:
+                        page -= 1
+                        embed = embeds[page]
+                        await msg.edit(embed=embed)
+                        await reaction_reset(reaction, ctx.author)
+                    if reaction.emoji == '➡️' and page < len(embeds) -1:
+                        page += 1
+                        embed = embeds[page]
+                        await msg.edit(embed=embed)
+                        await reaction_reset(reaction, ctx.author)
+                except asyncio.TimeoutError:
+                    message = str(traceback.format_exc())
+                    await self.logger.error(self, message, self.__class__.__name__, "Display")
         
         
     @char.command()
