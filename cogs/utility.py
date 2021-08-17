@@ -113,7 +113,7 @@ class utility(commands.Cog):
             )
             await self.logger.info(
                 self,
-                f"{self.bot.__name__} has joined {guild.name}.",
+                f"{self.bot.user.name} has joined {guild.name}.",
                 self.__class__.__name__,
                 "Event Listener: Joined Guild",
             )
