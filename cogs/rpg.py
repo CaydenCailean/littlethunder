@@ -2,7 +2,9 @@ import discord
 import re
 import dice
 import traceback
+from discord import Webhook, AsyncWebhookAdapter
 from .lt_logger import lt_logger
+from aiohttp import ClientSession
 from discord.ext import commands
 import time
 
@@ -734,7 +736,25 @@ class rpg(commands.Cog):
                 except:
                     pass
         
+    @commands.Cog.listener()
+    async def on_message(self, message):
+
+        if message.author.id != self.bot.user.id and message.reference != None:
+            Category, Guild, channel = message.channel.category.id , message.guild.id , message.channel
+            
+            ref_msg = await channel.fetch_message(message.reference.message_id)
+            ref_auth = ref_msg.author
+            character = ref_msg.author.display_name.lower()
+            ownerCheck = self.db.char_owner(Guild, message.author.id, character)
         
+        async with ClientSession() as session:
+            _, url = self.db.get_ic(Guild, Category) 
+            webhook = Webhook.from_url(url, adapter=AsyncWebhookAdapter(session))
+            if ref_auth.id == webhook.id and ownerCheck:
+                await webhook.edit_message(message_id = message.reference.message_id, content=message.content, username=character.title(), avatar_url=ref_auth.avatar_url)
+                await message.delete()               
+
+
     @char.command()
     async def webedit(self, ctx):
         """
