@@ -336,7 +336,7 @@ class lt_db(object):
 
     def get_char_by_owner(self, Guild, User):
 
-        query = {"owner":User}
+        query = {"owner": User}
 
         output = self.db[str(Guild)].find(query)
 

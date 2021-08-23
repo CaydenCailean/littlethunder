@@ -8,14 +8,13 @@ from aiohttp import ClientSession
 from discord.ext import commands
 import time
 
+
 class rpg(commands.Cog):
     def __init__(self, bot, lt_db, channel):
         self.bot = bot
         self.db = lt_db
         self.channel = channel
         self.logger = lt_logger
-
-    
 
     def ctx_info(self, ctx):
         return ctx.channel.category.id, ctx.guild.id, ctx.message.author.id
@@ -499,24 +498,23 @@ class rpg(commands.Cog):
 
         if ctx.invoked_subcommand is None:
             try:
-                try: 
+                try:
                     ctx.message.mentions[0]
                     await self.display(ctx)
 
                 except:
-                    
-                    if ctx.message.content.lower() == '.char':
+
+                    if ctx.message.content.lower() == ".char":
                         await self.display(ctx)
                     else:
                         Name = ctx.message.content.lstrip(" ")
                         await self.display(ctx, Name)
-            
+
             except:
                 message = str(traceback.format_exc())
                 await self.logger.error(
                     self, message, self.__class__.__name__, "Character Profile"
                 )
-                
 
     @char.command()
     async def add(self, ctx, *, Name):
@@ -612,9 +610,9 @@ class rpg(commands.Cog):
         """
         Display information regarding a stored character, including all stored fields.
         """
-        
+
         def check(reaction, user):
-            return reaction.message.id == msg.id and user == ctx.author 
+            return reaction.message.id == msg.id and user == ctx.author
 
         async def reaction_reset(reaction, user):
             if reaction.message.id == msg.id and user == ctx.author:
@@ -636,7 +634,9 @@ class rpg(commands.Cog):
 
                 except:
                     message = str(traceback.format_exc())
-                    await self.logger.error(self, message, self.__class__.__name__, "char") 
+                    await self.logger.error(
+                        self, message, self.__class__.__name__, "char"
+                    )
             else:
                 Name = Name.lower()
                 results = self.db.get_char(Guild, Name)
@@ -645,10 +645,10 @@ class rpg(commands.Cog):
         for output in results:
 
             try:
-                output['name']
+                output["name"]
             except:
                 continue
-            
+
             embed = discord.Embed(
                 title="__" + output["name"].title() + "__",
                 description=output["description"],
@@ -686,7 +686,7 @@ class rpg(commands.Cog):
             except:
                 message = str(traceback.format_exc())
                 self.logger.error(self, message, self.__class__.__name__, "Display")
-        
+
         if len(embeds) == 1:
             await ctx.send(embed=embeds[0])
 
@@ -702,58 +702,68 @@ class rpg(commands.Cog):
             await msg.add_reaction("⏩")
             timeout = time.time() + 600
 
-            while True: 
+            while True:
                 if time.time() > timeout:
                     await msg.clear_reactions()
                     break
                 try:
-                    reaction, _ = await self.bot.wait_for('reaction_add', timeout= 60.0, check=check)
-                    if reaction.emoji == '⬅️' and page > 0:
+                    reaction, _ = await self.bot.wait_for(
+                        "reaction_add", timeout=60.0, check=check
+                    )
+                    if reaction.emoji == "⬅️" and page > 0:
                         page -= 1
                         embed = embeds[page]
                         await msg.edit(embed=embed)
                         await reaction_reset(reaction, ctx.author)
-                    elif reaction.emoji == '➡️' and page < len(embeds) -1:
+                    elif reaction.emoji == "➡️" and page < len(embeds) - 1:
                         page += 1
                         embed = embeds[page]
                         await msg.edit(embed=embed)
                         await reaction_reset(reaction, ctx.author)
-                    elif reaction.emoji == '⏪' and page > 0:
+                    elif reaction.emoji == "⏪" and page > 0:
                         page = 0
                         embed = embeds[page]
                         await msg.edit(embed=embed)
                         await reaction_reset(reaction, ctx.author)
-                    elif reaction.emoji == '⏩' and page < len(embeds) -1:
-                        page = len(embeds) -1
+                    elif reaction.emoji == "⏩" and page < len(embeds) - 1:
+                        page = len(embeds) - 1
                         embed = embeds[page]
                         await msg.edit(embed=embed)
                         await reaction_reset(reaction, ctx.author)
-                    elif reaction.emoji == '🟥':
+                    elif reaction.emoji == "🟥":
                         await msg.clear_reactions()
                         break
                     else:
                         await reaction_reset(reaction, ctx.author)
                 except:
                     pass
-        
+
     @commands.Cog.listener()
     async def on_message(self, message):
 
         if message.author.id != self.bot.user.id and message.reference != None:
-            Category, Guild, channel = message.channel.category.id , message.guild.id , message.channel
-            
+            Category, Guild, channel = (
+                message.channel.category.id,
+                message.guild.id,
+                message.channel,
+            )
+
             ref_msg = await channel.fetch_message(message.reference.message_id)
             ref_auth = ref_msg.author
             character = ref_msg.author.display_name.lower()
             ownerCheck = self.db.char_owner(Guild, message.author.id, character)
-        
+
         async with ClientSession() as session:
-            _, url = self.db.get_ic(Guild, Category) 
+            _, url = self.db.get_ic(Guild, Category)
             webhook = Webhook.from_url(url, adapter=AsyncWebhookAdapter(session))
             if ref_auth.id == webhook.id and ownerCheck:
-                await webhook.edit_message(message_id = message.reference.message_id, content=message.content, username=character.title(), avatar_url=ref_auth.avatar_url)
-                await message.delete()               
-
+                await webhook.edit_message(
+                    message_id=message.reference.message_id,
+                    content=message.content,
+                    username=character.title(),
+                    avatar_url=ref_auth.avatar_url,
+                )
+                await message.delete()
 
     @char.command()
     async def webedit(self, ctx):
