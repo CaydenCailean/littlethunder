@@ -1,8 +1,7 @@
 import discord
 import os
 import configparser
-from discord.ext import commands
-from dbinit import lt_db
+
 from cogs.main import main
 from cogs.info import info
 from cogs.utility import utility
@@ -11,6 +10,8 @@ from cogs.mw import mw
 from cogs.rand import rand
 from cogs.lt_logger import lt_logger
 from cogs.channels import channels
+from discord.ext import commands
+from dbinit import lt_db
 
 # from cogs.economy import economy
 from random import randint

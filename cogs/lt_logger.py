@@ -1,6 +1,7 @@
 import discord
-from discord.ext import commands
 import traceback
+
+from discord.ext import commands
 
 # custom logger using discord as a backend
 

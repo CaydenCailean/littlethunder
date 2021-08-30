@@ -1,9 +1,10 @@
-import requests
+import ast
+import collections
 import discord
 import json
 import re
-import ast
-import collections
+import requests
+
 from discord.ext import commands
 
 

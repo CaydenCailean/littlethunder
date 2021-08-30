@@ -1,11 +1,11 @@
-import re
 import discord
 import traceback
-import sys
-from aiohttp import ClientSession
-from discord.ext import commands
+
 from .lt_logger import lt_logger
 from .rpg import rpg
+from aiohttp import ClientSession
+from discord import Webhook, AsyncWebhookAdapter
+from discord.ext import commands
 from typing import Optional
 
 
@@ -85,59 +85,6 @@ class channels(commands.Cog):
             message = str(traceback.format_exc())
             await self.logger.error(self, message, self.__class__.__name__, "DM Set IC")
 
-    @dm.command()
-    async def set_currency(self, ctx, format):
-        """Set the currency for this channel category. Only usable by DM."""
-
-        dnd = ["gp", "gold pieces", "coins", "pp"]
-        usd = ["usd", "dollars", "$", "us", "dollar"]
-        moth = [
-            "moth",
-            "mothcoin",
-            "moffcoin",
-            "moth coin",
-            "moff coin",
-            "mothcoins",
-            "moffcoins",
-            "mothcoins",
-            "moffcoins",
-        ]
-
-        if format.lower() in dnd:
-            format = "DND"
-
-        elif format.lower() in usd:
-            format = "USD"
-
-        elif format.lower() in moth:
-            format = "MOTH"
-
-        else:
-            await ctx.send("Format not recognized.")
-            return
-
-        try:
-            Category, Guild, ID = self.ctx_info(ctx)
-            dmCheck = self.ldb.owner_check(Guild, Category, ID)
-            if dmCheck == True:
-                output = self.db.set_currency(Guild, Category, ID, format)
-                if output == True:
-                    await ctx.send(f"The currency format has been set to {format}.")
-            else:
-                await ctx.send(
-                    f'It looks like you\'re not the owner of the "{ctx.channel.category}" category.'
-                )
-        except KeyError as e:
-            await ctx.send(
-                f'It looks like you\'re not the owner of the "{ctx.channel.category}" category.'
-            )
-
-        except:
-            message = str(traceback.format_exc())
-            await self.logger.error(
-                self, message, self.__class__.__name__, "DM Set Currency"
-            )
-
     @commands.bot_has_permissions(manage_webhooks=True)
     @commands.command(case_insensitive=True)
     async def ic(self, ctx, character, *, message):
@@ -145,6 +92,8 @@ class channels(commands.Cog):
         Send an in-character message to the current IC channel.
 
         This message can be deleted by the user who sent it by reacting to it with a ❌ emoji.
+
+        This message can be edited by the user who sent it by replying to it. The entirety of the message sent in the reply will replace the original message.
         """
 
         try:
@@ -208,6 +157,33 @@ class channels(commands.Cog):
             await self.logger.error(
                 self, message, self.__class__.__name__, "DM Reactions"
             )
+
+    @commands.Cog.listener()
+    async def on_message(self, message):
+
+        if message.author.id != self.bot.user.id and message.reference != None:
+            Category, Guild, channel = (
+                message.channel.category.id,
+                message.guild.id,
+                message.channel,
+            )
+
+            ref_msg = await channel.fetch_message(message.reference.message_id)
+            ref_auth = ref_msg.author
+            character = ref_msg.author.display_name.lower()
+            ownerCheck = self.db.char_owner(Guild, message.author.id, character)
+
+        async with ClientSession() as session:
+            _, url = self.db.get_ic(Guild, Category)
+            webhook = Webhook.from_url(url, adapter=AsyncWebhookAdapter(session))
+            if ref_auth.id == webhook.id and ownerCheck:
+                await webhook.edit_message(
+                    message_id=message.reference.message_id,
+                    content=message.content,
+                    username=character.title(),
+                    avatar_url=ref_auth.avatar_url,
+                )
+                await message.delete()
 
 
 def setup(bot):
