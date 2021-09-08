@@ -34,6 +34,10 @@ class info(commands.Cog):
                 name="Donations",
                 value="Donations, while not required, are greatly appreciated!\nhttps://donorbox.org/little-thunder",
             )
+            embed.add_field(
+                name="Paizo Community Use Disclosure",
+                value="LittleThunder uses trademarks and/or copyrights owned by Paizo Inc., used under Paizo's Community Use Policy (https://paizo.com/communityuse). We are expressly prohibited from charging you to use or access this content. LittleThunder is not published, endorsed, or specifically approved by Paizo. For more information about Paizo Inc. and Paizo products, visit paizo.com."
+            )
             embed.set_thumbnail(url="https://i.imgur.com/lacm87y.png")
             await ctx.send(embed=embed)
         except Exception:
