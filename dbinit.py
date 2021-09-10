@@ -39,6 +39,10 @@ class lt_db(object):
         self.db = self.client.brertdtw29riga7
         return True
 
+    def create_collections(self, Guild):
+         self.db.dice[str(Guild)]
+         self.db[str(Guild)].create_index([("name", "text")])
+
     def drop_collection(self, Guild):
         collections = self.db.list_collection_names()
         dropped = 0
@@ -54,7 +58,7 @@ class lt_db(object):
     # region Dice
 
     def dice_add(self, User, Guild, Alias, Value):
-        self.db.dice[str(Guild)]
+        
         query = {"user": User, "Alias": Alias.lower()}
         try:
             macro = self.db.dice[str(Guild)].find_one(query)
@@ -69,13 +73,13 @@ class lt_db(object):
             return f"The {Alias} macro has been created."
 
     def dice_get(self, User, Guild, Alias):
-        self.db.dice[str(Guild)]
+        
         query = {"user": User, "Alias": Alias.lower()}
         dice = self.db.dice[str(Guild)].find_one(query)
         return dice["Value"]
 
     def dice_delete(self, User, Guild, Alias):
-        self.db.dice[str(Guild)]
+        
         query = {"user": User, "Alias": Alias.lower()}
         check = self.db.dice[str(Guild)].find_one_and_delete(query)
         if check != None:

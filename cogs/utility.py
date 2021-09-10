@@ -109,6 +109,7 @@ class utility(commands.Cog):
     @commands.Cog.listener()
     async def on_guild_join(self, guild):
         try:
+            self.db.create_collections(guild.id)
             await self.bot.change_presence(
                 activity=discord.Game(name=f"games in {len(self.bot.guilds)} servers!")
             )
