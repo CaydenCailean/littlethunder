@@ -649,10 +649,16 @@ class rpg(commands.Cog):
                 output["name"]
             except:
                 continue
-
+            try:
+                if output["description"] != '':
+                    description = output["description"]
+                else:
+                    description = ' '
+            except:
+                description = ' ' 
             embed = discord.Embed(
                 title="__" + output["name"].title() + "__",
-                description=output["description"],
+                description=description,
                 color=int(str(output["color"]), 16),
             )
 
@@ -660,7 +666,6 @@ class rpg(commands.Cog):
                 output["_id"],
                 output["owner"],
                 output["name"],
-                output["description"],
                 output["color"],
                 output["public"],
             )
@@ -675,6 +680,9 @@ class rpg(commands.Cog):
                     embed.set_image(url=vals[i])
                 elif keys[i] == "token":
                     embed.set_thumbnail(url=vals[i])
+
+                elif keys[i] == "description":
+                    pass
 
                 else:
                     embed.add_field(name=str(keys[i]), value=str(vals[i]))
