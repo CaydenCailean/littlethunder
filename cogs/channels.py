@@ -48,13 +48,14 @@ class channels(commands.Cog):
         """
         Broadcast a message to all IC Channels in a server which you are the DM for.
         """
+        print("getting channels")
         Category, Guild, ID = self.ctx_info(ctx)
         channels = self.db.get_all_ic(Guild, Category, ID)
         
         if channels != None:
             
             for channel in channels: 
-            
+                print(channel)
                 await channel.send(f'[[{ctx.author.display_name.upper()} BROADCAST]] : {message}') 
         
 
