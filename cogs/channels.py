@@ -43,21 +43,22 @@ class channels(commands.Cog):
         output = self.db.remove_owner(Guild, Category, ID, override)
         await ctx.send(output)
 
-    @dm.command(hidden=True)
+    @dm.command()
     async def broadcast(self, ctx, *, message):
         """
         Broadcast a message to all IC Channels in a server which you are the DM for.
         """
         print("getting channels")
-        Category, Guild, ID = self.ctx_info(ctx)
-        channels = self.db.get_all_ic(Guild, Category, ID)
+        _, Guild, ID = self.ctx_info(ctx)
+        channels = self.db.get_all_ic(Guild, ID)
         
         if channels != None:
-            
+            await ctx.message.delete()
             for channel in channels: 
-                print(channel)
-                await channel.send(f'[[{ctx.author.display_name.upper()} BROADCAST]] : {message}') 
-        
+                
+                await self.bot.get_guild(Guild).get_channel(channel).send(f'[[{ctx.author.display_name.upper()} BROADCAST]] : {message}') 
+        else:
+            await ctx.send("You are not the DM for any IC Channels in this server.")
 
     @commands.bot_has_permissions(manage_webhooks=True)
     @dm.command()

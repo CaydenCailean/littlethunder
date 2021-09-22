@@ -1,4 +1,6 @@
 from pymongo import MongoClient, ReturnDocument, ASCENDING
+from cogs.lt_logger import lt_logger
+import traceback
 import os
 import re
 
@@ -9,7 +11,7 @@ def init_order(self):
 
 class lt_db(object):
     def __init__(self, config):
-
+        self.logger = lt_logger
         # connection information for DB
         try:
             self.user = os.environ("DBUSER")
@@ -284,6 +286,35 @@ class lt_db(object):
             return category["IC"], category["webhook_url"]
         except:
             return None, None
+
+    def get_all_ic(self, Guild, ID):
+        try:
+            
+            categories = self.db[str(Guild)].find({"owner":ID, "IC" : {"$exists": True}})
+            
+            channels = []
+            for category in categories.sort("owner", ASCENDING):
+                
+                channels.append(category["IC"])
+            return channels
+        except:
+            message = str(traceback.format_exc())
+            print(
+                f"An error has occured while trying to get all ICs for {ID} in {Guild}.\n{message}"
+            )
+#    def get_all_webhooks(self, Guild, ID):
+#        try:
+#            categories = self.db[str(Guild)].find({"owner":ID}, "webhook_url": {"$exists": True})
+#            channels = []
+#            for category in categories:
+#                channels.append(category["webhook_url"])
+#            return channels
+#        except:
+#            return None
+
+    # endregion
+
+    # region Category Settings
 
     def set_currency(self, Guild, Category, ID, Currency: str):
         if self.db[str(Guild)].find_one({"Category": Category})["owner"] == ID:

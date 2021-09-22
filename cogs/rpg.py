@@ -762,17 +762,17 @@ class rpg(commands.Cog):
             character = ref_msg.author.display_name.lower()
             ownerCheck = self.db.char_owner(Guild, message.author.id, character)
 
-        async with ClientSession() as session:
-            _, url = self.db.get_ic(Guild, Category)
-            webhook = Webhook.from_url(url, adapter=AsyncWebhookAdapter(session))
-            if ref_auth.id == webhook.id and ownerCheck:
-                await webhook.edit_message(
-                    message_id=message.reference.message_id,
-                    content=message.content,
-                    username=character.title(),
-                    avatar_url=ref_auth.avatar_url,
-                )
-                await message.delete()
+            async with ClientSession() as session:
+                _, url = self.db.get_ic(Guild, Category)
+                webhook = Webhook.from_url(url, adapter=AsyncWebhookAdapter(session))
+                if ref_auth.id == webhook.id and ownerCheck:
+                    await webhook.edit_message(
+                        message_id=message.reference.message_id,
+                        content=message.content,
+                        username=character.title(),
+                        avatar_url=ref_auth.avatar_url,
+                    )
+                    await message.delete()
 
     @char.command()
     async def webedit(self, ctx):
