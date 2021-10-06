@@ -709,6 +709,7 @@ class rpg(commands.Cog):
             await msg.add_reaction("🟥")
             await msg.add_reaction("➡️")
             await msg.add_reaction("⏩")
+            await msg.add_reaction("❌")
             timeout = time.time() + 600
 
             while True:
@@ -741,6 +742,9 @@ class rpg(commands.Cog):
                         await reaction_reset(reaction, ctx.author)
                     elif reaction.emoji == "🟥":
                         await msg.clear_reactions()
+                        break
+                    elif reaction.emoji == "❌":
+                        await msg.delete()
                         break
                     else:
                         await reaction_reset(reaction, ctx.author)
