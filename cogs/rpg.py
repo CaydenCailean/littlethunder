@@ -697,7 +697,26 @@ class rpg(commands.Cog):
                 self.logger.error(self, message, self.__class__.__name__, "Display")
 
         if len(embeds) == 1:
-            await ctx.send(embed=embeds[0])
+            msg = await ctx.send(embed=embeds[0])
+
+            await msg.add_reaction("❌")
+            timeout = time.time() + 600
+
+            while True:
+                if time.time() > timeout:
+                    await msg.clear_reactions()
+                    break
+                try:
+                    reaction, _ = await self.bot.wait_for(
+                        "reaction_add", timeout=600.0, check=check
+                    )
+                    if reaction.emoji == "❌":
+                        await msg.delete()
+                        break
+                    else:
+                        await reaction_reset(reaction, user)
+                except:
+                    pass
 
         else:
             page = 0
@@ -718,27 +737,23 @@ class rpg(commands.Cog):
                     break
                 try:
                     reaction, _ = await self.bot.wait_for(
-                        "reaction_add", timeout=60.0, check=check
+                        "reaction_add", timeout=600.0, check=check
                     )
                     if reaction.emoji == "⬅️" and page > 0:
                         page -= 1
-                        embed = embeds[page]
-                        await msg.edit(embed=embed)
+                        await msg.edit(embed=embeds[page])
                         await reaction_reset(reaction, ctx.author)
                     elif reaction.emoji == "➡️" and page < len(embeds) - 1:
                         page += 1
-                        embed = embeds[page]
-                        await msg.edit(embed=embed)
+                        await msg.edit(embed=embeds[page])
                         await reaction_reset(reaction, ctx.author)
                     elif reaction.emoji == "⏪" and page > 0:
                         page = 0
-                        embed = embeds[page]
-                        await msg.edit(embed=embed)
+                        await msg.edit(embed=embeds[page])
                         await reaction_reset(reaction, ctx.author)
                     elif reaction.emoji == "⏩" and page < len(embeds) - 1:
                         page = len(embeds) - 1
-                        embed = embeds[page]
-                        await msg.edit(embed=embed)
+                        await msg.edit(embed=embeds[page])
                         await reaction_reset(reaction, ctx.author)
                     elif reaction.emoji == "🟥":
                         await msg.clear_reactions()
