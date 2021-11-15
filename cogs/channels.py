@@ -48,7 +48,6 @@ class channels(commands.Cog):
         """
         Broadcast a message to all IC Channels in a server which you are the DM for.
         """
-        print("getting channels")
         _, Guild, ID = self.ctx_info(ctx)
         channels = self.db.get_all_ic(Guild, ID)
         
