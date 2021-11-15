@@ -66,8 +66,3 @@ class lt_logger(commands.Cog):
 
 def setup(bot):
     bot.add_cog(lt_logger(bot))
-
-
-# split string after every nth character
-def split_string(string, n):
-    return [string[k : k + n] for k in range(0, len(string), n)]

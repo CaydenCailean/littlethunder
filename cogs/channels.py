@@ -50,12 +50,14 @@ class channels(commands.Cog):
         """
         _, Guild, ID = self.ctx_info(ctx)
         channels = self.db.get_all_ic(Guild, ID)
-        
+
         if channels != None:
             await ctx.message.delete()
-            for channel in channels: 
-                
-                await self.bot.get_guild(Guild).get_channel(channel).send(f'[[{ctx.author.display_name.upper()} BROADCAST]] : {message}') 
+            for channel in channels:
+
+                await self.bot.get_guild(Guild).get_channel(channel).send(
+                    f"[[{ctx.author.display_name.upper()} BROADCAST]] : {message}"
+                )
         else:
             await ctx.send("You are not the DM for any IC Channels in this server.")
 

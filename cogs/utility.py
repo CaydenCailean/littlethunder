@@ -90,7 +90,7 @@ class utility(commands.Cog):
             await self.bot.change_presence(
                 activity=discord.Game(name=f"games in {len(self.bot.guilds)} servers!")
             )
-            #self.db.drop_collection(guild.id)
+            # self.db.drop_collection(guild.id)
             await self.logger.warning(
                 self,
                 f"LittleThunder has been removed from {guild.name}, ID: {guild.id} ",

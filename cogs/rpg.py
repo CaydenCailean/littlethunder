@@ -650,12 +650,12 @@ class rpg(commands.Cog):
             except:
                 continue
             try:
-                if output["description"] != '':
+                if output["description"] != "":
                     description = output["description"]
                 else:
-                    description = ' '
+                    description = " "
             except:
-                description = ' ' 
+                description = " "
             embed = discord.Embed(
                 title="__" + output["name"].title() + "__",
                 description=description,
