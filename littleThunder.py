@@ -54,8 +54,16 @@ async def list_guilds(ctx):
     """Lists all the guilds the bot is in."""
     guilds = [g.name for g in bot.guilds]
     guildids = [g.id for g in bot.guilds]
+    
+    glist = [x for x in zip(guilds, guildids)]
+    m = '\n'
+    for x in glist:
+        m += str(x).replace('\',',':').replace('(\'','').replace(')','')
+        m += '\n'
+    
+    print(m)
     await ctx.send(
-        f"I am in {len(guilds)} guilds: {', '.join(guilds)}.\n Their IDs are: {guildids}"
+        f"I am in {len(guilds)} guilds:{m}"
     )
 
 
