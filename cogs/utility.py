@@ -93,7 +93,7 @@ class utility(commands.Cog):
             #self.db.drop_collection(guild.id)
             await self.logger.warning(
                 self,
-                f"{guild.name} has been removed from the database.",
+                f"LittleThunder has been removed from {guild.name}, ID: {guild.id} ",
                 self.__class__.__name__,
                 "Event Listener: Removed from Guild",
             )
