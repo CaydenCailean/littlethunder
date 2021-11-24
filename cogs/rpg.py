@@ -662,6 +662,8 @@ class rpg(commands.Cog):
                 color=int(str(output["color"]), 16),
             )
 
+            embed.set_footer(text=f"Owned by: { await self.bot.fetch_user(output['owner'])}")
+
             del (
                 output["_id"],
                 output["owner"],
