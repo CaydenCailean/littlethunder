@@ -28,7 +28,7 @@ class rpg(commands.Cog):
             return Total
         except:
             message = str(traceback.format_exc())
-            await self.logger.error(self, message, self.__class__.__name__, "Macro")
+            await self.logger.error(self, message, self.__class__.__name__, "Macro", ctx.message.author.name)
             await ctx.send("Didn't work!")
 
     def diceroll(self, ctx, input):
@@ -177,7 +177,7 @@ class rpg(commands.Cog):
                 except:
                     message = str(traceback.format_exc())
                     await lt_logger.error(
-                        self, message, self.__class__.__name__, "Macro"
+                        self, message, self.__class__.__name__, "Macro", ctx.message.author.name
                     )
 
     @d.command(pass_context=True)
@@ -317,7 +317,7 @@ class rpg(commands.Cog):
             except:
                 message = str(traceback.format_exc())
                 await self.logger.error(
-                    self, message, self.__class__.__name__, "Initiative"
+                    self, message, self.__class__.__name__, "Initiative", ctx.message.author.name
                 )
 
     @init.command(pass_context=True, aliases=["display"])
@@ -349,7 +349,7 @@ class rpg(commands.Cog):
                 except:
                     message = str(traceback.format_exc())
                     await lt_logger.error(
-                        self, message, self.__class__.__name__, "Macro"
+                        self, message, self.__class__.__name__, "Macro", ctx.message.author.name
                     )
             if mention != None:
                 mention = mention.replace("<@!", "").replace(">", "")
@@ -367,7 +367,7 @@ class rpg(commands.Cog):
         except:
             message = str(traceback.format_exc())
             await self.logger.error(
-                self, message, self.__class__.__name__, "Add Initiative Entry"
+                self, message, self.__class__.__name__, "Add Initiative Entry", ctx.message.author.name
             )
 
     @init.command(pass_context=True, aliases=["remove"])
@@ -392,7 +392,7 @@ class rpg(commands.Cog):
         except:
             message = str(traceback.format_exc())
             await self.logger.error(
-                self, message, self.__class__.__name__, "Remove Initiative Entry"
+                self, message, self.__class__.__name__, "Remove Initiative Entry", ctx.message.author.name
             )
 
     @init.command()
@@ -417,7 +417,7 @@ class rpg(commands.Cog):
 
         except:
             message = str(traceback.format_exc())
-            await self.logger.error(self, message, self.__class__.__name__, "End Init")
+            await self.logger.error(self, message, self.__class__.__name__, "End Init", ctx.message.author.name)
 
     @init.command(aliases=["pass"])
     async def next(self, ctx):
@@ -514,7 +514,7 @@ class rpg(commands.Cog):
             except:
                 message = str(traceback.format_exc())
                 await self.logger.error(
-                    self, message, self.__class__.__name__, "Character Profile"
+                    self, message, self.__class__.__name__, "Character Profile", ctx.message.author.name
                 )
 
     @char.command()
@@ -603,7 +603,7 @@ class rpg(commands.Cog):
         except:
             message = str(traceback.format_exc())
             await self.logger.error(
-                self, message, self.__class__.__name__, "Remove Field"
+                self, message, self.__class__.__name__, "Remove Field", ctx.message.author.name
             )
 
     @char.command(hidden=True)
@@ -636,7 +636,7 @@ class rpg(commands.Cog):
                 except:
                     message = str(traceback.format_exc())
                     await self.logger.error(
-                        self, message, self.__class__.__name__, "char"
+                        self, message, self.__class__.__name__, "char", ctx.message.author.name
                     )
             else:
                 Name = Name.lower()
@@ -696,7 +696,7 @@ class rpg(commands.Cog):
                     await ctx.send(f"It looks like {Name} doesn't exist!")
             except:
                 message = str(traceback.format_exc())
-                self.logger.error(self, message, self.__class__.__name__, "Display")
+                self.logger.error(self, message, self.__class__.__name__, "Display", ctx.message.author.name)
 
         if len(embeds) == 1:
             msg = await ctx.send(embed=embeds[0])

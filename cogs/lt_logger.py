@@ -23,10 +23,11 @@ class lt_logger(commands.Cog):
         )
         await self.bot.get_channel(id=int(self.channel)).send(embed=embed)
 
-    async def error(self, message, cog, command):
+    async def error(self, message, cog, command, author):
         embed = discord.Embed(
             title=f"ERROR: {cog} [{command}]", description=message, color=0xFF0000
         )
+        embed.set_footer(f"Run by {author}")
         await self.bot.get_channel(id=int(self.channel)).send(embed=embed)
 
     async def warning(self, message, cog, command):
