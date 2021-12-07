@@ -731,7 +731,7 @@ class rpg(commands.Cog):
             await msg.add_reaction("➡️")
             await msg.add_reaction("⏩")
             await msg.add_reaction("❌")
-            timeout = time.time() + 600
+            timeout = time.time() + 3600
 
             while True:
                 if time.time() > timeout:
