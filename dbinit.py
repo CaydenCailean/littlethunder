@@ -373,18 +373,19 @@ class lt_db(object):
         return output
 
     def get_char_by_owner(self, Guild, User):
-
         query = {"owner": User}
-
         output = self.db[str(Guild)].find(query)
 
         return output
 
     def get_one_char(self, Guild, Name, ID):
         query = {"name": Name, "owner": ID}
-        output = self.db[str(Guild)].find_one(query)
 
-        return output
+        return self.db[str(Guild)].find_one(query)
+
+    def get_all_char(self, Guild):
+        query = {"name": {"$exists": True}}
+        return self.db[str(Guild)].find(query)
 
     def char_owner(self, Guild, ID, Name):
         query = {"name": Name}
