@@ -804,6 +804,17 @@ class rpg(commands.Cog):
             "The LT Web Editor can be found at https://webthunder.herokuapp.com/"
         )
 
+    @char.command()
+    async def directory(self, ctx):
+        print(1)
+        Guild = ctx.guild
+        
+        members = await Guild.fetch_members()
+        await ctx.send(text=members)
+        print(members)
+        print(2)
+        print(Guild)
+
 
 def setup(bot):
     bot.add_cog(rpg(bot))
