@@ -20,6 +20,8 @@ class rpg(commands.Cog):
     def ctx_info(self, ctx):
         return ctx.channel.category.id, ctx.guild.id, ctx.message.author.id
 
+
+
     async def macro_list(self, ctx, input):
         try:
             Total, embed = self.diceroll(ctx, input)
@@ -702,7 +704,7 @@ class rpg(commands.Cog):
             msg = await ctx.send(embed=embeds[0])
 
             await msg.add_reaction("❌")
-            timeout = time.time() + 600
+            timeout = time.time() + 3600
 
             while True:
                 if time.time() > timeout:
@@ -710,7 +712,7 @@ class rpg(commands.Cog):
                     break
                 try:
                     reaction, _ = await self.bot.wait_for(
-                        "reaction_add", timeout=600.0, check=check
+                        "reaction_add", timeout=3600.0, check=check
                     )
                     if reaction.emoji == "❌":
                         await msg.delete()
@@ -739,7 +741,7 @@ class rpg(commands.Cog):
                     break
                 try:
                     reaction, _ = await self.bot.wait_for(
-                        "reaction_add", timeout=600.0, check=check
+                        "reaction_add", timeout=3600.0, check=check
                     )
                     if reaction.emoji == "⬅️" and page > 0:
                         page -= 1
@@ -806,15 +808,116 @@ class rpg(commands.Cog):
 
     @char.command()
     async def directory(self, ctx):
-        print(1)
-        Guild = ctx.guild
-        
-        members = await Guild.fetch_members()
-        await ctx.send(text=members)
-        print(members)
-        print(2)
-        print(Guild)
+        try:
+            Guild = await self.bot.fetch_guild(ctx.guild.id)
+            user = ctx.message.author.id
+            members = await Guild.fetch_members(limit=None).flatten()
+            embeds = []
 
+
+            def check(reaction, user):
+                return reaction.message.id == msg.id and user == ctx.author
+
+            async def reaction_reset(reaction, user):
+                if reaction.message.id == msg.id and user == ctx.author:
+                    await msg.remove_reaction(reaction, user)
+             
+            for member in members:
+                characters = self.db.get_char_by_owner(Guild.id, member.id)
+
+                if characters != None:
+
+                    charList = ''
+                    for character in characters:
+                        print(character)
+                        try:
+                            character["name"]
+                        except:
+                            continue
+
+                        charList += (str(character["name"]).title() + '\n')
+                        print(charList)
+                    if charList != '':    
+                        embed = discord.Embed(description=charList, title=member.display_name, color=member.color)
+                        embeds.append(embed)
+
+            if len(embeds) == 1:
+                msg = await ctx.send(embed=embeds[0])
+
+                await msg.add_reaction("❌")
+
+                timeout = time.time() + 3600
+
+                while True:
+                    if time.time() > timeout:
+                        await msg.clear_reactions()
+                        break
+                    try:
+                        reaction, _ = await self.bot.wait_for(
+                            "reaction_add", timeout=3600.0, check=check
+                        )
+                        if reaction.emoji == "❌":
+                            await msg.delete()
+                            break
+                        else:
+                            await reaction_reset(reaction, user)
+                    except:
+                        pass
+
+            else:
+                page = 0
+
+                msg = await ctx.send(embed=embeds[page])
+
+                await msg.add_reaction("⏪")
+                await msg.add_reaction("⬅️")
+                await msg.add_reaction("🟥")
+                await msg.add_reaction("➡️")
+                await msg.add_reaction("⏩")
+                await msg.add_reaction("❌")
+                timeout = time.time() + 3600
+
+                while True:
+                    if time.time() > timeout:
+                        await msg.clear_reactions()
+                        break
+                    try:
+                        reaction, _ = await self.bot.wait_for(
+                            "reaction_add", timeout=3600.0, check=check
+                        )
+                        if reaction.emoji == "⬅️" and page > 0:
+                            page -= 1
+                            await msg.edit(embed=embeds[page])
+                            await reaction_reset(reaction, ctx.author)
+                        elif reaction.emoji == "➡️" and page < len(embeds) - 1:
+                            page += 1
+                            await msg.edit(embed=embeds[page])
+                            await reaction_reset(reaction, ctx.author)
+                        elif reaction.emoji == "⏪" and page > 0:
+                            page = 0
+                            await msg.edit(embed=embeds[page])
+                            await reaction_reset(reaction, ctx.author)
+                        elif reaction.emoji == "⏩" and page < len(embeds) - 1:
+                            page = len(embeds) - 1
+                            await msg.edit(embed=embeds[page])
+                            await reaction_reset(reaction, ctx.author)
+                        elif reaction.emoji == "🟥":
+                            await msg.clear_reactions()
+                            break
+                        elif reaction.emoji == "❌":
+                            await msg.delete()
+                            break
+                        else:
+                            await reaction_reset(reaction, ctx.author)
+                    except:
+                        pass
+
+
+
+        except Exception as e:
+            message = str(traceback.format_exc())
+            await self.logger.error(self, message, self.__class__.__name__, "Macro", ctx.message.author.name)
+            
 
 def setup(bot):
     bot.add_cog(rpg(bot))

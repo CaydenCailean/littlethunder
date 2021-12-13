@@ -173,7 +173,7 @@ class channels(commands.Cog):
         except:
             message = str(traceback.format_exc())
             await self.logger.error(
-                self, message, self.__class__.__name__, "DM Reactions"
+                self, message, self.__class__.__name__, "DM Reactions", payload.user_id
             )
 
     @commands.Cog.listener()
