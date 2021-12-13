@@ -829,16 +829,17 @@ class rpg(commands.Cog):
 
                     charList = ''
                     for character in characters:
-                        print(character)
+                        
                         try:
                             character["name"]
                         except:
                             continue
 
                         charList += (str(character["name"]).title() + '\n')
-                        print(charList)
+                        
                     if charList != '':    
                         embed = discord.Embed(description=charList, title=member.display_name, color=member.color)
+                        embed.set_thumbnail(url=member.avatar_url)
                         embeds.append(embed)
 
             if len(embeds) == 1:
