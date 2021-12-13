@@ -859,7 +859,7 @@ class rpg(commands.Cog):
                         
                     if charList != '':  
                         try: 
-                            member = await Guild.fetch_member(owner) 
+                            member = await self.bot.fetch_user(owner) 
                             embed = discord.Embed(description=charList, title=member.display_name, color=member.color)
                             embed.set_thumbnail(url=member.avatar_url)
                             embeds.append(embed)
