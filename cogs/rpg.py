@@ -811,7 +811,7 @@ class rpg(commands.Cog):
         try:
             Guild = await self.bot.fetch_guild(ctx.guild.id)
             user = ctx.message.author.id
-            members = await Guild.fetch_members(limit=None).flatten()
+            #members = await Guild.fetch_members(limit=None).flatten()
             embeds = []
 
             def check(reaction, user):
@@ -851,16 +851,20 @@ class rpg(commands.Cog):
                         
                         try:
                             character["name"]
+                            
                         except:
                             continue
 
                         charList += (str(character["name"]).title() + '\n')
                         
-                    if charList != '':   
-                        member = await Guild.fetch_member(owner) 
-                        embed = discord.Embed(description=charList, title=member.display_name, color=member.color)
-                        embed.set_thumbnail(url=member.avatar_url)
-                        embeds.append(embed)
+                    if charList != '':  
+                        try: 
+                            member = await Guild.fetch_member(owner) 
+                            embed = discord.Embed(description=charList, title=member.display_name, color=member.color)
+                            embed.set_thumbnail(url=member.avatar_url)
+                            embeds.append(embed)
+                        except:
+                            continue
 
             else:
                 for character in characters:
