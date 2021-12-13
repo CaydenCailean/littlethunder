@@ -820,107 +820,105 @@ class rpg(commands.Cog):
             async def reaction_reset(reaction, user):
                 if reaction.message.id == msg.id and user == ctx.author:
                     await msg.remove_reaction(reaction, user)
-             
-
-
-            characters = list(self.db.get_all_char(Guild.id))
-            characters = (sorted(characters, key = lambda i: i['owner']))
-
-            owners = [character['owner'] for character in characters]
-            ownerList = []
-            for owner in owners:
-                if owner not in ownerList:
-                    ownerList.append(owner)
-
-            for owner in ownerList:
-                charList = self.db.get_char_by_owner(Guild.id, owner)
-                
-
-            if detailLevel.lower() != "verbose":
+            async with ctx.typing():
+                characters = list(self.db.get_all_char(Guild.id))
+                characters = (sorted(characters, key = lambda i: i['owner']))
 
                 owners = [character['owner'] for character in characters]
+                ownerList = []
                 for owner in owners:
                     if owner not in ownerList:
                         ownerList.append(owner)
 
                 for owner in ownerList:
-                    characterList = self.db.get_char_by_owner(Guild.id, owner)
+                    charList = self.db.get_char_by_owner(Guild.id, owner)
 
-                    charList = ''
-                    for character in characterList:
-                        
+
+                if detailLevel.lower() != "verbose":
+
+                    owners = [character['owner'] for character in characters]
+                    for owner in owners:
+                        if owner not in ownerList:
+                            ownerList.append(owner)
+
+                    for owner in ownerList:
+                        characterList = self.db.get_char_by_owner(Guild.id, owner)
+
+                        charList = ''
+                        for character in characterList:
+
+                            try:
+                                character["name"]
+
+                            except:
+                                continue
+
+                            charList += (str(character["name"]).title() + '\n')
+
+                        if charList != '':  
+                            try: 
+                                member = await self.bot.fetch_user(owner) 
+                                embed = discord.Embed(description=charList, title=member.display_name, color=member.color)
+                                embed.set_thumbnail(url=member.avatar_url)
+                                embeds.append(embed)
+                            except:
+                                continue
+
+                else:
+                    for character in characters:
+
                         try:
                             character["name"]
-                            
                         except:
                             continue
-
-                        charList += (str(character["name"]).title() + '\n')
-                        
-                    if charList != '':  
-                        try: 
-                            member = await self.bot.fetch_user(owner) 
-                            embed = discord.Embed(description=charList, title=member.display_name, color=member.color)
-                            embed.set_thumbnail(url=member.avatar_url)
-                            embeds.append(embed)
+                        try:
+                            if character["description"] != "":
+                                description = character["description"]
+                            else:
+                                description = " "
                         except:
-                            continue
-
-            else:
-                for character in characters:
-
-                    try:
-                        character["name"]
-                    except:
-                        continue
-                    try:
-                        if character["description"] != "":
-                            description = character["description"]
-                        else:
                             description = " "
-                    except:
-                        description = " "
-                    embed = discord.Embed(
-                        title="__" + character["name"].title() + "__",
-                        description=description,
-                        color=int(str(character["color"]), 16),
-                    )
+                        embed = discord.Embed(
+                            title="__" + character["name"].title() + "__",
+                            description=description,
+                            color=int(str(character["color"]), 16),
+                        )
 
-                    embed.set_footer(text=f"Owned by: { await self.bot.fetch_user(character['owner'])}")
+                        embed.set_footer(text=f"Owned by: { await self.bot.fetch_user(character['owner'])}")
 
-                    del (
-                        character["_id"],
-                        character["owner"],
-                        character["name"],
-                        character["color"],
-                        character["public"],
-                    )
-                    keys = []
-                    vals = []
+                        del (
+                            character["_id"],
+                            character["owner"],
+                            character["name"],
+                            character["color"],
+                            character["public"],
+                        )
+                        keys = []
+                        vals = []
 
-                    for i in character.items():
-                        keys.append(i[0]), vals.append(i[1])
+                        for i in character.items():
+                            keys.append(i[0]), vals.append(i[1])
 
-                    for i in range(len(character)):
-                        if keys[i] == "image":
-                            embed.set_image(url=vals[i])
-                        elif keys[i] == "token":
-                            embed.set_thumbnail(url=vals[i])
+                        for i in range(len(character)):
+                            if keys[i] == "image":
+                                embed.set_image(url=vals[i])
+                            elif keys[i] == "token":
+                                embed.set_thumbnail(url=vals[i])
 
-                        elif keys[i] == "description":
-                            pass
-                        
-                        else:
-                            embed.add_field(name=str(keys[i]), value=str(vals[i]))
+                            elif keys[i] == "description":
+                                pass
+                            
+                            else:
+                                embed.add_field(name=str(keys[i]), value=str(vals[i]))
 
-                    try:
-                        if embed:
-                            embeds.append(embed)
-                        else:
-                            pass
-                    except:
-                        message = str(traceback.format_exc())
-                        self.logger.error(self, message, self.__class__.__name__, "Display", ctx.message.author.name)
+                        try:
+                            if embed:
+                                embeds.append(embed)
+                            else:
+                                pass
+                        except:
+                            message = str(traceback.format_exc())
+                            self.logger.error(self, message, self.__class__.__name__, "Display", ctx.message.author.name)
 
 
 
