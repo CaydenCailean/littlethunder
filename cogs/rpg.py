@@ -856,6 +856,7 @@ class rpg(commands.Cog):
                                 member = await self.bot.fetch_user(owner) 
                                 embed = discord.Embed(description=charList, title=member.name, color=member.color)
                                 embed.set_thumbnail(url=member.avatar_url)
+                                embed.set_footer(text="User may no longer be in this server.")
                                 embeds.append(embed)
 
                 else:
