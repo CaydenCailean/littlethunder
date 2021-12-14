@@ -830,16 +830,7 @@ class rpg(commands.Cog):
                     if owner not in ownerList:
                         ownerList.append(owner)
 
-                for owner in ownerList:
-                    charList = self.db.get_char_by_owner(Guild.id, owner)
-
-
                 if detailLevel.lower() != "verbose":
-
-                    owners = [character['owner'] for character in characters]
-                    for owner in owners:
-                        if owner not in ownerList:
-                            ownerList.append(owner)
 
                     for owner in ownerList:
                         characterList = self.db.get_char_by_owner(Guild.id, owner)
@@ -857,12 +848,15 @@ class rpg(commands.Cog):
 
                         if charList != '':  
                             try: 
-                                member = await self.bot.fetch_user(owner) 
+                                member = await Guild.fetch_member(owner) 
                                 embed = discord.Embed(description=charList, title=member.display_name, color=member.color)
                                 embed.set_thumbnail(url=member.avatar_url)
                                 embeds.append(embed)
                             except:
-                                continue
+                                member = await self.bot.fetch_user(owner) 
+                                embed = discord.Embed(description=charList, title=member.name, color=member.color)
+                                embed.set_thumbnail(url=member.avatar_url)
+                                embeds.append(embed)
 
                 else:
                     for character in characters:
