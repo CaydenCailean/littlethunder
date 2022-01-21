@@ -65,12 +65,12 @@ class rand(commands.Cog):
     
         for x in range(1, num):
             try:
-            await self.get(ctx, Table)
-        except:
-            message = str(traceback.format_exc())
-            await self.logger.error(
-                self, message, self.__class__.__name__, "random", self.ctx.author
-            )
+                await self.get(ctx, Table)
+            except:
+                message = str(traceback.format_exc())
+                await self.logger.error(
+                    self, message, self.__class__.__name__, "random", self.ctx.author
+                )
 
     @random.command(case_insensitive=True)
     async def new(self, ctx, Table):
