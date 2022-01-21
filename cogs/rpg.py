@@ -20,8 +20,6 @@ class rpg(commands.Cog):
     def ctx_info(self, ctx):
         return ctx.channel.category.id, ctx.guild.id, ctx.message.author.id
 
-
-
     async def macro_list(self, ctx, input):
         try:
             Total, embed = self.diceroll(ctx, input)
@@ -30,7 +28,9 @@ class rpg(commands.Cog):
             return Total
         except:
             message = str(traceback.format_exc())
-            await self.logger.error(self, message, self.__class__.__name__, "Macro", ctx.message.author.name)
+            await self.logger.error(
+                self, message, self.__class__.__name__, "Macro", ctx.message.author.name
+            )
             await ctx.send("Didn't work!")
 
     def diceroll(self, ctx, input):
@@ -179,7 +179,11 @@ class rpg(commands.Cog):
                 except:
                     message = str(traceback.format_exc())
                     await lt_logger.error(
-                        self, message, self.__class__.__name__, "Macro", ctx.message.author.name
+                        self,
+                        message,
+                        self.__class__.__name__,
+                        "Macro",
+                        ctx.message.author.name,
                     )
 
     @d.command(pass_context=True)
@@ -319,7 +323,11 @@ class rpg(commands.Cog):
             except:
                 message = str(traceback.format_exc())
                 await self.logger.error(
-                    self, message, self.__class__.__name__, "Initiative", ctx.message.author.name
+                    self,
+                    message,
+                    self.__class__.__name__,
+                    "Initiative",
+                    ctx.message.author.name,
                 )
 
     @init.command(pass_context=True, aliases=["display"])
@@ -351,7 +359,11 @@ class rpg(commands.Cog):
                 except:
                     message = str(traceback.format_exc())
                     await lt_logger.error(
-                        self, message, self.__class__.__name__, "Macro", ctx.message.author.name
+                        self,
+                        message,
+                        self.__class__.__name__,
+                        "Macro",
+                        ctx.message.author.name,
                     )
             if mention != None:
                 mention = mention.replace("<@!", "").replace(">", "")
@@ -369,7 +381,11 @@ class rpg(commands.Cog):
         except:
             message = str(traceback.format_exc())
             await self.logger.error(
-                self, message, self.__class__.__name__, "Add Initiative Entry", ctx.message.author.name
+                self,
+                message,
+                self.__class__.__name__,
+                "Add Initiative Entry",
+                ctx.message.author.name,
             )
 
     @init.command(pass_context=True, aliases=["remove"])
@@ -394,7 +410,11 @@ class rpg(commands.Cog):
         except:
             message = str(traceback.format_exc())
             await self.logger.error(
-                self, message, self.__class__.__name__, "Remove Initiative Entry", ctx.message.author.name
+                self,
+                message,
+                self.__class__.__name__,
+                "Remove Initiative Entry",
+                ctx.message.author.name,
             )
 
     @init.command()
@@ -419,7 +439,13 @@ class rpg(commands.Cog):
 
         except:
             message = str(traceback.format_exc())
-            await self.logger.error(self, message, self.__class__.__name__, "End Init", ctx.message.author.name)
+            await self.logger.error(
+                self,
+                message,
+                self.__class__.__name__,
+                "End Init",
+                ctx.message.author.name,
+            )
 
     @init.command(aliases=["pass"])
     async def next(self, ctx):
@@ -516,7 +542,11 @@ class rpg(commands.Cog):
             except:
                 message = str(traceback.format_exc())
                 await self.logger.error(
-                    self, message, self.__class__.__name__, "Character Profile", ctx.message.author.name
+                    self,
+                    message,
+                    self.__class__.__name__,
+                    "Character Profile",
+                    ctx.message.author.name,
                 )
 
     @char.command()
@@ -605,7 +635,11 @@ class rpg(commands.Cog):
         except:
             message = str(traceback.format_exc())
             await self.logger.error(
-                self, message, self.__class__.__name__, "Remove Field", ctx.message.author.name
+                self,
+                message,
+                self.__class__.__name__,
+                "Remove Field",
+                ctx.message.author.name,
             )
 
     @char.command(hidden=True)
@@ -638,7 +672,11 @@ class rpg(commands.Cog):
                 except:
                     message = str(traceback.format_exc())
                     await self.logger.error(
-                        self, message, self.__class__.__name__, "char", ctx.message.author.name
+                        self,
+                        message,
+                        self.__class__.__name__,
+                        "char",
+                        ctx.message.author.name,
                     )
             else:
                 Name = Name.lower()
@@ -664,7 +702,9 @@ class rpg(commands.Cog):
                 color=int(str(output["color"]), 16),
             )
 
-            embed.set_footer(text=f"Owned by: { await self.bot.fetch_user(output['owner'])}")
+            embed.set_footer(
+                text=f"Owned by: { await self.bot.fetch_user(output['owner'])}"
+            )
 
             del (
                 output["_id"],
@@ -698,7 +738,13 @@ class rpg(commands.Cog):
                     await ctx.send(f"It looks like {Name} doesn't exist!")
             except:
                 message = str(traceback.format_exc())
-                self.logger.error(self, message, self.__class__.__name__, "Display", ctx.message.author.name)
+                self.logger.error(
+                    self,
+                    message,
+                    self.__class__.__name__,
+                    "Display",
+                    ctx.message.author.name,
+                )
 
         if len(embeds) == 1:
             msg = await ctx.send(embed=embeds[0])
@@ -811,7 +857,7 @@ class rpg(commands.Cog):
         try:
             Guild = await self.bot.fetch_guild(ctx.guild.id)
             user = ctx.message.author.id
-            #members = await Guild.fetch_members(limit=None).flatten()
+            # members = await Guild.fetch_members(limit=None).flatten()
             embeds = []
 
             def check(reaction, user):
@@ -820,11 +866,12 @@ class rpg(commands.Cog):
             async def reaction_reset(reaction, user):
                 if reaction.message.id == msg.id and user == ctx.author:
                     await msg.remove_reaction(reaction, user)
+
             async with ctx.typing():
                 characters = list(self.db.get_all_char(Guild.id))
-                characters = (sorted(characters, key = lambda i: i['owner']))
+                characters = sorted(characters, key=lambda i: i["owner"])
 
-                owners = [character['owner'] for character in characters]
+                owners = [character["owner"] for character in characters]
                 ownerList = []
                 for owner in owners:
                     if owner not in ownerList:
@@ -835,7 +882,7 @@ class rpg(commands.Cog):
                     for owner in ownerList:
                         characterList = self.db.get_char_by_owner(Guild.id, owner)
 
-                        charList = ''
+                        charList = ""
                         for character in characterList:
 
                             try:
@@ -844,19 +891,29 @@ class rpg(commands.Cog):
                             except:
                                 continue
 
-                            charList += (str(character["name"]).title() + '\n')
+                            charList += str(character["name"]).title() + "\n"
 
-                        if charList != '':  
-                            try: 
-                                member = await Guild.fetch_member(owner) 
-                                embed = discord.Embed(description=charList, title=member.display_name, color=member.color)
+                        if charList != "":
+                            try:
+                                member = await Guild.fetch_member(owner)
+                                embed = discord.Embed(
+                                    description=charList,
+                                    title=member.display_name,
+                                    color=member.color,
+                                )
                                 embed.set_thumbnail(url=member.avatar_url)
                                 embeds.append(embed)
                             except:
-                                member = await self.bot.fetch_user(owner) 
-                                embed = discord.Embed(description=charList, title=member.name, color=member.color)
+                                member = await self.bot.fetch_user(owner)
+                                embed = discord.Embed(
+                                    description=charList,
+                                    title=member.name,
+                                    color=member.color,
+                                )
                                 embed.set_thumbnail(url=member.avatar_url)
-                                embed.set_footer(text="User may no longer be in this server.")
+                                embed.set_footer(
+                                    text="User may no longer be in this server."
+                                )
                                 embeds.append(embed)
 
                 else:
@@ -879,7 +936,9 @@ class rpg(commands.Cog):
                             color=int(str(character["color"]), 16),
                         )
 
-                        embed.set_footer(text=f"Owned by: { await self.bot.fetch_user(character['owner'])}")
+                        embed.set_footer(
+                            text=f"Owned by: { await self.bot.fetch_user(character['owner'])}"
+                        )
 
                         del (
                             character["_id"],
@@ -902,7 +961,7 @@ class rpg(commands.Cog):
 
                             elif keys[i] == "description":
                                 pass
-                            
+
                             else:
                                 embed.add_field(name=str(keys[i]), value=str(vals[i]))
 
@@ -913,11 +972,13 @@ class rpg(commands.Cog):
                                 pass
                         except:
                             message = str(traceback.format_exc())
-                            self.logger.error(self, message, self.__class__.__name__, "Display", ctx.message.author.name)
-
-
-
-
+                            self.logger.error(
+                                self,
+                                message,
+                                self.__class__.__name__,
+                                "Display",
+                                ctx.message.author.name,
+                            )
 
             if len(embeds) == 1:
                 msg = await ctx.send(embed=embeds[0])
@@ -990,12 +1051,12 @@ class rpg(commands.Cog):
                     except:
                         pass
 
-
-
         except Exception as e:
             message = str(traceback.format_exc())
-            await self.logger.error(self, message, self.__class__.__name__, "Macro", ctx.message.author.name)
-            
+            await self.logger.error(
+                self, message, self.__class__.__name__, "Macro", ctx.message.author.name
+            )
+
 
 def setup(bot):
     bot.add_cog(rpg(bot))

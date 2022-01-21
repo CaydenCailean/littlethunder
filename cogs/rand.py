@@ -41,7 +41,7 @@ class rand(commands.Cog):
         If you're wishing to roll on a random table, use this command followed by the table name, i.e. `.random Table2`
         """
         if ctx.invoked_subcommand is None:
-            Table = ctx.message.content.split(" ")[1]
+            Table = ctx.message.content.split(" ", 1)[1]
             try:
                 await self.get(ctx, Table)
             except:

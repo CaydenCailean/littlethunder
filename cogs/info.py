@@ -40,7 +40,7 @@ class info(commands.Cog):
             )
             embed.add_field(
                 name="Invite me!",
-                value="Feel free to invite me to your own server!\n\n My invitation URL: https://discord.com/api/oauth2/authorize?client_id=674835707897839644&permissions=536881152&scope=bot"
+                value="Feel free to invite me to your own server!\n\n My invitation URL: https://discord.com/api/oauth2/authorize?client_id=674835707897839644&permissions=536881152&scope=bot",
             )
             embed.set_thumbnail(url="https://i.imgur.com/lacm87y.png")
             await ctx.send(embed=embed)
