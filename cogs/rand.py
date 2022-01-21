@@ -50,8 +50,8 @@ class rand(commands.Cog):
                     self, message, self.__class__.__name__, "random", self.ctx.author
                 )
         if ctx.invoked_subcommand != None:
-            Table = ctx.message.content.split(" ", 1)[1]
-            Table = Table[:2]
+            Table = ctx.message.content.split(" multi", 1)[1].rsplit(" ", 1)
+    
             try:
                 await self.get(ctx, Table)
             except:
