@@ -38,6 +38,10 @@ class info(commands.Cog):
                 name="Paizo Community Use Disclosure",
                 value="LittleThunder uses trademarks and/or copyrights owned by Paizo Inc., used under Paizo's Community Use Policy (https://paizo.com/communityuse). We are expressly prohibited from charging you to use or access this content. LittleThunder is not published, endorsed, or specifically approved by Paizo. For more information about Paizo Inc. and Paizo products, visit https://paizo.com.",
             )
+            embed.add_field(
+                name="Invite me!",
+                value="Feel free to invite me to your own server!\n\n My invitation URL: https://discord.com/api/oauth2/authorize?client_id=674835707897839644&permissions=536881152&scope=bot"
+            )
             embed.set_thumbnail(url="https://i.imgur.com/lacm87y.png")
             await ctx.send(embed=embed)
         except Exception:
