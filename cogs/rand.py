@@ -49,6 +49,11 @@ class rand(commands.Cog):
                 await self.logger.error(
                     self, message, self.__class__.__name__, "random"
                 )
+                
+    @random.command(case_insensitive=True)
+    async def multi(self, ctx, Table, num):
+        for x in range(1, num):
+            self.random(self, ctx)
 
     @random.command(case_insensitive=True)
     async def new(self, ctx, Table):
