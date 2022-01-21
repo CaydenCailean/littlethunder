@@ -47,7 +47,16 @@ class rand(commands.Cog):
             except:
                 message = str(traceback.format_exc())
                 await self.logger.error(
-                    self, message, self.__class__.__name__, "random"
+                    self, message, self.__class__.__name__, "random", self.ctx.author
+                )
+        if ctx.invoked_subcommand != None:
+            Table = ctx.message.content.split(" ", 1)[1][:1]
+            try:
+                await self.get(ctx, Table)
+            except:
+                message = str(traceback.format_exc())
+                await self.logger.error(
+                    self, message, self.__class__.__name__, "random", self.ctx.author
                 )
                 
     @random.command(case_insensitive=True)
@@ -57,6 +66,7 @@ class rand(commands.Cog):
                 await self.random(ctx)
         except Exception as e:
             await ctx.send(e)
+
     @random.command(case_insensitive=True)
     async def new(self, ctx, Table):
         """
