@@ -51,7 +51,7 @@ class rand(commands.Cog):
                 )
                 
     @random.command(case_insensitive=True)
-    async def multi(self, ctx, Table, num):
+    async def multi(self, ctx, Table, num: int):
         try:
             for x in range(1, num):
                 await self.random(self, ctx)
