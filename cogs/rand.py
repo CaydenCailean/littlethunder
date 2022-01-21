@@ -52,9 +52,11 @@ class rand(commands.Cog):
                 
     @random.command(case_insensitive=True)
     async def multi(self, ctx, Table, num):
-        for x in range(1, num):
-            await self.random(self, ctx)
-
+        try:
+            for x in range(1, num):
+                await self.random(self, ctx)
+        except Exception as e:
+            await ctx.send(e)
     @random.command(case_insensitive=True)
     async def new(self, ctx, Table):
         """
