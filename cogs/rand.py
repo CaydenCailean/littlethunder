@@ -53,7 +53,7 @@ class rand(commands.Cog):
     @random.command(case_insensitive=True)
     async def multi(self, ctx, Table, num):
         for x in range(1, num):
-            self.random(self, ctx)
+            await self.random(self, ctx)
 
     @random.command(case_insensitive=True)
     async def new(self, ctx, Table):
