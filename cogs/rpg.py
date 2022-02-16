@@ -29,7 +29,7 @@ class rpg(commands.Cog):
         except:
             message = str(traceback.format_exc())
             await self.logger.error(
-                self, message, self.__class__.__name__, "Macro", ctx.message.author.name
+                self, message, self.__class__.__name__, "Macro", ctx.message.author
             )
             await ctx.send("Didn't work!")
 
@@ -183,7 +183,7 @@ class rpg(commands.Cog):
                         message,
                         self.__class__.__name__,
                         "Macro",
-                        ctx.message.author.name,
+                        ctx.message.author,
                     )
 
     @d.command(pass_context=True)
@@ -327,7 +327,7 @@ class rpg(commands.Cog):
                     message,
                     self.__class__.__name__,
                     "Initiative",
-                    ctx.message.author.name,
+                    ctx.message.author,
                 )
 
     @init.command(pass_context=True, aliases=["display"])
@@ -363,7 +363,7 @@ class rpg(commands.Cog):
                         message,
                         self.__class__.__name__,
                         "Macro",
-                        ctx.message.author.name,
+                        ctx.message.author,
                     )
             if mention != None:
                 mention = mention.replace("<@!", "").replace(">", "")
@@ -385,7 +385,7 @@ class rpg(commands.Cog):
                 message,
                 self.__class__.__name__,
                 "Add Initiative Entry",
-                ctx.message.author.name,
+                ctx.message.author,
             )
 
     @init.command(pass_context=True, aliases=["remove"])
@@ -414,7 +414,7 @@ class rpg(commands.Cog):
                 message,
                 self.__class__.__name__,
                 "Remove Initiative Entry",
-                ctx.message.author.name,
+                ctx.message.author,
             )
 
     @init.command()
@@ -444,7 +444,7 @@ class rpg(commands.Cog):
                 message,
                 self.__class__.__name__,
                 "End Init",
-                ctx.message.author.name,
+                ctx.message.author,
             )
 
     @init.command(aliases=["pass"])
@@ -546,7 +546,7 @@ class rpg(commands.Cog):
                     message,
                     self.__class__.__name__,
                     "Character Profile",
-                    ctx.message.author.name,
+                    ctx.message.author,
                 )
 
     @char.command()
@@ -639,7 +639,7 @@ class rpg(commands.Cog):
                 message,
                 self.__class__.__name__,
                 "Remove Field",
-                ctx.message.author.name,
+                ctx.message.author,
             )
 
     @char.command(hidden=True)
@@ -676,7 +676,7 @@ class rpg(commands.Cog):
                         message,
                         self.__class__.__name__,
                         "char",
-                        ctx.message.author.name,
+                        ctx.message.author,
                     )
             else:
                 Name = Name.lower()
@@ -743,7 +743,7 @@ class rpg(commands.Cog):
                     message,
                     self.__class__.__name__,
                     "Display",
-                    ctx.message.author.name,
+                    ctx.message.author,
                 )
 
         if len(embeds) == 1:
@@ -977,7 +977,7 @@ class rpg(commands.Cog):
                                 message,
                                 self.__class__.__name__,
                                 "Display",
-                                ctx.message.author.name,
+                                ctx.message.author,
                             )
 
             if len(embeds) == 1:
@@ -1054,7 +1054,7 @@ class rpg(commands.Cog):
         except Exception as e:
             message = str(traceback.format_exc())
             await self.logger.error(
-                self, message, self.__class__.__name__, "Macro", ctx.message.author.name
+                self, message, self.__class__.__name__, "Macro", ctx.message.author
             )
 
 
