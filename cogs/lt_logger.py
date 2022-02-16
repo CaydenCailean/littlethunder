@@ -13,26 +13,26 @@ class lt_logger(commands.Cog):
 
     async def info(self, message, cog, command):
         embed = discord.Embed(
-            title=f"INFO: {cog} [{command}]", description=message, color=0x00FF00
+            title=f"INFO: {cog} | [{command}]", description=message, color=0x00FF00
         )
         await self.bot.get_channel(id=int(self.channel)).send(embed=embed)
 
     async def debug(self, message, cog, command):
         embed = discord.Embed(
-            title=f"DEBUG: {cog} [{command}]", description=message, color=0x00FF0FF
+            title=f"DEBUG: {cog} | [{command}]", description=message, color=0x00FF0FF
         )
         await self.bot.get_channel(id=int(self.channel)).send(embed=embed)
 
     async def error(self, message, cog, command, author):
         embed = discord.Embed(
-            title=f"ERROR: {cog} [{command}]", description=message, color=0xFF0000
+            title=f"ERROR: {cog} | [{command}]", description=message, color=0xFF0000
         )
-        embed.set_footer(text=f"Run by {author}: ")
+        embed.set_footer(text=f"Run by {author} ")
         await self.bot.get_channel(id=int(self.channel)).send(embed=embed)
 
     async def warning(self, message, cog, command):
         embed = discord.Embed(
-            title=f"WARNING: {cog} [{command}]", description=message, color=0xFFFF00
+            title=f"WARNING: {cog} | [{command}]", description=message, color=0xFFFF00
         )
         await self.bot.get_channel(id=int(self.channel)).send(embed=embed)
 
