@@ -896,6 +896,7 @@ class rpg(commands.Cog):
                         if charList != "":
                             try:
                                 member = await Guild.fetch_member(owner)
+                                print(member)
                                 embed = discord.Embed(
                                     description=charList,
                                     title=member.display_name,
@@ -905,6 +906,7 @@ class rpg(commands.Cog):
                                 embeds.append(embed)
                             except:
                                 member = await self.bot.fetch_user(owner)
+                                print(member)
                                 embed = discord.Embed(
                                     description=charList,
                                     title=member.name,
