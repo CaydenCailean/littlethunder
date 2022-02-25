@@ -910,13 +910,13 @@ class rpg(commands.Cog):
                                 embed = discord.Embed(
                                     description=charList,
                                     title=member.name,
-                                    color=member.color,
+                                    color=discord.Color.blurple,
                                 )
                                 embed.set_thumbnail(url=member.avatar_url)
                                 embed.set_footer(
                                     text="User may no longer be in this server."
                                 )
-                                embed.add_field(name="***No Longer in Server***", value=' ')
+                                # embed.add_field(name="***No Longer in Server***", value=' ')
                                 embeds.append(embed)
 
                 else:
