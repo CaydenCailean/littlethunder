@@ -938,10 +938,14 @@ class rpg(commands.Cog):
                             description=description,
                             color=int(str(character["color"]), 16),
                         )
-
-                        embed.set_footer(
-                            text=f"Owned by: { await self.bot.fetch_user(character['owner'])}"
-                        )
+                        try:
+                            embed.set_footer(
+                                text=f"Owned by: { await self.bot.fetch_member(character['owner'])}"
+                            )
+                        except:
+                            embed.set_footer(
+                                text=f"Owned by: { await self.bot.fetch_user(character['owner'])} ***USER NO LONGER IN SERVER***"
+                            )
 
                         del (
                             character["_id"],
