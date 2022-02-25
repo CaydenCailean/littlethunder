@@ -707,7 +707,7 @@ class rpg(commands.Cog):
                 )
             except:
                 embed.set_footer(
-                    text=f"Owned by: { await self.bot.fetch_user(output['owner'])} : ***USER NO LONGER IN SERVER***"
+                    text=f"Owned by: { await self.bot.fetch_user(output['owner'])} : USER NO LONGER IN SERVER"
                 )
 
             del (
