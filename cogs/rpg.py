@@ -943,7 +943,7 @@ class rpg(commands.Cog):
                         try:
                             print("character found")
                             embed.set_footer(
-                                text=f"Owned by: { await self.bot.fetch_member(character['owner'])}"
+                                text=f"Owned by: { await Guild.fetch_member(character['owner'])}"
                             )
                             print("yes")
                         except:
