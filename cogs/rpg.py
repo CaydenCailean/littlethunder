@@ -703,7 +703,7 @@ class rpg(commands.Cog):
             )
             try:
                 embed.set_footer(
-                    text=f"Owned by: { await self.bot.fetch_user(output['owner'])}"
+                    text=f"Owned by: { await Guild.fetch_member(output['owner'])}"
                 )
             except:
                 embed.set_footer(
