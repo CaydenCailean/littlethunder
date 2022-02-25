@@ -914,6 +914,7 @@ class rpg(commands.Cog):
                                 embed.set_footer(
                                     text="User may no longer be in this server."
                                 )
+                                embed.add_field(name="***No Longer in Server***", value='')
                                 embeds.append(embed)
 
                 else:
