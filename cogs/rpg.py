@@ -910,7 +910,7 @@ class rpg(commands.Cog):
                                 embed = discord.Embed(
                                     description=charList,
                                     title=member.name,
-                                    color=discord.Color.blurple,
+                                    
                                 )
                                 embed.set_thumbnail(url=member.avatar_url)
                                 embed.set_footer(
