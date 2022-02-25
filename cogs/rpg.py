@@ -900,7 +900,6 @@ class rpg(commands.Cog):
                         if charList != "":
                             try:
                                 member = await Guild.fetch_member(owner)
-                                print(member)
                                 embed = discord.Embed(
                                     description=charList,
                                     title=member.display_name,
@@ -910,7 +909,6 @@ class rpg(commands.Cog):
                                 embeds.append(embed)
                             except:
                                 member = await self.bot.fetch_user(owner)
-                                print(member)
                                 embed = discord.Embed(
                                     description=charList,
                                     title=member.name,
@@ -949,7 +947,7 @@ class rpg(commands.Cog):
                             )
                             print("yes")
                         except:
-                            print("no")
+                            print(str(traceback.format_exc()))
                             embed.set_footer(
                                 text=f"Owned by: { await self.bot.fetch_user(character['owner'])} ***USER NO LONGER IN SERVER***"
                             )
