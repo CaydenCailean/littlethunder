@@ -657,6 +657,7 @@ class rpg(commands.Cog):
 
         try:
             _, Guild, _ = self.ctx_info(ctx)
+            guild = self.bot.fetch_guild(Guild)
         except:
             await ctx.send("This command doesn't work in DMs!")
 
@@ -702,9 +703,9 @@ class rpg(commands.Cog):
                 color=int(str(output["color"]), 16),
             )
             try:
-            
+                
                 embed.set_footer(
-                    text=f"Owned by: { await self.bot.fetch_guild(Guild).fetch_member(output['owner'])}"
+                    text=f"Owned by: { await guild.fetch_member(output['owner'])}"
                 )
     
             except:
