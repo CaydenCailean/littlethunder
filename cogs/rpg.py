@@ -657,7 +657,7 @@ class rpg(commands.Cog):
 
         try:
             _, Guild, _ = self.ctx_info(ctx)
-            guild = self.bot.fetch_guild(Guild)
+            guild = await self.bot.fetch_guild(Guild)
         except:
             await ctx.send("This command doesn't work in DMs!")
 
@@ -921,7 +921,6 @@ class rpg(commands.Cog):
                                 embed.set_footer(
                                     text="User may no longer be in this server."
                                 )
-                                # embed.add_field(name="***No Longer in Server***", value=' ')
                                 embeds.append(embed)
 
                 else:
