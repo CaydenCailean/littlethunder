@@ -702,18 +702,16 @@ class rpg(commands.Cog):
                 color=int(str(output["color"]), 16),
             )
             try:
-                print(output['owner'])
+            
                 embed.set_footer(
-                    text=f"Owned by: { await Guild.fetch_member(output['owner'])}"
+                    text=f"Owned by: { await self.bot.fetch_guild(Guild).fetch_member(output['owner'])}"
                 )
-                print(2)
+    
             except:
-                print(str(traceback.format_exc()))
                 embed.set_footer(
                     text=f"Owned by: { await self.bot.fetch_user(output['owner'])} : USER NO LONGER IN SERVER"
                 )
-                print(4)
-
+                
             del (
                 output["_id"],
                 output["owner"],
