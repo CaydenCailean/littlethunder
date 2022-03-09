@@ -727,12 +727,12 @@ class rpg(commands.Cog):
                 keys.append(i[0]), vals.append(i[1])
 
             for i in range(len(output)):
-                if keys[i] == "image":
+                if keys[i].lower() == "image":
                     embed.set_image(url=vals[i])
-                elif keys[i] == "token":
+                elif keys[i].lower() == "token":
                     embed.set_thumbnail(url=vals[i])
 
-                elif keys[i] == "description":
+                elif keys[i].lower() == "description":
                     pass
 
                 else:
