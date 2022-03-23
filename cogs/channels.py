@@ -68,7 +68,10 @@ class channels(commands.Cog):
         try:
             Category, Guild, ID = self.ctx_info(ctx)
             dmCheck = self.db.owner_check(Guild, Category, ID)
-            Channel = Channel.id
+            try:
+                Channel = Channel.id
+            except:
+                Channel = ctx.channel.id
             if dmCheck == True:
                 try:
                     try:
