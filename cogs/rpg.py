@@ -736,7 +736,7 @@ class rpg(commands.Cog):
                     pass
 
                 else:
-                    embed.add_field(name=str(keys[i]), value=str(vals[i]), inline=False)
+                    embed.add_field(name=str(keys[i]), value=str(vals[i]))
 
             try:
                 if embed:
