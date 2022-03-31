@@ -45,14 +45,18 @@ class rpg(commands.Cog):
 
     def diceroll(self, ctx, input):
         try:
-            if input.find('#') != -1:
-                diceNum, input = input.split('#', 1)
-            else:
-                diceNum = 1
+            
             try:
                 input, discFooter = input.split(" ", 1)
             except:
                 pass
+            
+            if input.find('#') != -1:
+                diceNum, input = input.split('#', 1)
+            else:
+                diceNum = 1
+            
+
             results=[]
             for _ in range(int(diceNum)):
                 results.append(json.loads(str(d20.roll(input, stringifier=myStringifier()))))
