@@ -6,7 +6,6 @@ from cogs.main import main
 from cogs.info import info
 from cogs.utility import utility
 from cogs.rpg import rpg
-from cogs.mw import mw
 from cogs.rand import rand
 from cogs.lt_logger import lt_logger
 from cogs.channels import channels
