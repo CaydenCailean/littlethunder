@@ -50,7 +50,9 @@ class rpg(commands.Cog):
                 input, discFooter = input.split(" ", 1)
             except:
                 pass
-            
+
+            dice = input
+
             if input.find('#') != -1:
                 diceNum, input = input.split('#', 1)
             else:
@@ -65,7 +67,7 @@ class rpg(commands.Cog):
 
             embed = discord.Embed(
                 title=f"Results for {ctx.message.author.display_name}",
-                description=f"Rolling {input}",
+                description=f"Rolling {dice}",
                 color=ctx.message.author.color,
                 )
             try:
