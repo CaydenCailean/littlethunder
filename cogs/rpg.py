@@ -1,14 +1,23 @@
-import dice
+import d20
 import discord
 import re
 import traceback
 import time
+import json
 
 from .lt_logger import lt_logger
 from aiohttp import ClientSession
 from discord import Webhook, AsyncWebhookAdapter
 from discord.ext import commands
 
+class myStringifier(d20.SimpleStringifier):
+        def _stringify(self, node) -> str:
+            if not node.kept:
+                return 'X'    
+            return super()._stringify(node)
+
+        def _str_expression(self, node):
+            return f'{{"result": {int(node.total)}, "rolled": "{self._stringify(node.roll)}"}}'
 
 class rpg(commands.Cog):
     def __init__(self, bot, lt_db, channel):
@@ -33,119 +42,39 @@ class rpg(commands.Cog):
             )
             await ctx.send("Didn't work!")
 
+
     def diceroll(self, ctx, input):
         try:
             input, discFooter = input.split("#", 1)
         except:
             pass
-        isPlus = input.find("+")
-        isMinus = input.find("-")
-
-        outList = "placeHolder"
-        outResults = []
-        Total = 0
-
         try:
-            if isPlus == -1 and isMinus == -1:
-                try:
-                    diceNum, diceVal = input.split("d")
-                    if diceNum == "":
-                        diceNum = "1"
-                    try:
-                        outList = dice.roll(input)
-                    except Exception as e:
-                        raise e
-
-                except ValueError as e:
-                    raise e
-
-                try:
-                    outList = dice.roll(input)
-                except Exception as e:
-                    raise Exception
-
-                for i in outList:
-                    Total += i
-                    outResults.append(i)
-
-            if isPlus != -1 or isMinus != -1:
-                expr = re.split("[+-]", input)[0]
-
-                diceNum, diceVal = expr.split("d")
-                if diceNum == "":
-                    diceNum = "1"
-
-                outResults = dice.roll(expr)
-
-                posmod = 0
-                negmod = 0
-
-                bonus = re.findall(r"(\+\d+)(?:(?!d))", input)
-
-                for i in bonus:
-                    posmod += int(i)
-
-                bonusDice = re.findall(r"\+\d*d\d+", input)
-                for i in bonusDice:
-                    idiceNum, idiceVal = i.split("d")
-
-                    if idiceNum == "+":
-                        idiceNum = "1"
-                    if int(idiceNum) > 100 or int(idiceVal) > 1000:
-                        raise Exception(
-                            "That's too many numbers. The limit to this value is 100d1000."
-                        )
-                    else:
-                        outResults.extend(dice.roll(i))
-
-                malus = re.findall(r"(\-\d+)(?:(?!d))", input)
-
-                for i in malus:
-                    negmod += int(i)
-
-                malusDice = re.findall(r"\-\d*d\d+", input)
-                for i in malusDice:
-                    output = dice.roll(i)
-                    idiceNum, idiceVal = i.split("d")
-
-                    if idiceNum == "-":
-                        idiceNum = "1"
-                    if int(idiceNum) > 100 or int(idiceVal) > 1000:
-                        raise Exception(
-                            "That's too many numbers. The limit to this value is 100d1000."
-                        )
-                    else:
-                        for i in output:
-                            outResults.append(str(i))
-
-                for i in outResults:
-                    Total += int(i)
-                Total += posmod
-                Total += negmod
-
-                if int(diceNum) > 100 or int(diceVal) > 1000:
-                    raise Exception(
-                        "That's too many numbers. The limit to this value is 100d1000."
-                    )
-
-            commentText = f"Rolling {input}"
-
-            embed = discord.Embed(
-                title=f"Results for {ctx.message.author.display_name}",
-                description=commentText,
-                color=ctx.message.author.color,
-            )
-            try:
-                embed.set_footer(text=discFooter)
-            except:
-                pass
-
-            embed.add_field(name="Results", value=outResults)
-            embed.add_field(name="Total", value=Total)
-
-            return Total, embed
+            result=json.loads(str(d20.roll(input, stringifier=myStringifier())))
+            print(result['Result'])
+            print(result['Rolled'])
+        
+            
         except Exception as e:
-            raise e
+            print(e)
+        
+
+        
+                
+        embed = discord.Embed(
+            title=f"Results for {ctx.message.author.display_name}",
+            description=f"Rolling {input}",
+            color=ctx.message.author.color,
+            )
+        try:
+            embed.set_footer(text=discFooter)
+        except:
+            pass
+
+        embed.add_field(name="Results", value=result['rolled'])
+        embed.add_field(name="Total", value=result['result'])
+
+        return int(result['result']), embed
+        
 
     @commands.group(
         case_insensitive=True,
