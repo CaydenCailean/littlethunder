@@ -45,35 +45,46 @@ class rpg(commands.Cog):
 
     def diceroll(self, ctx, input):
         try:
-            input, discFooter = input.split("#", 1)
-        except:
-            pass
-        try:
-            result=json.loads(str(d20.roll(input, stringifier=myStringifier())))
-            print(result['Result'])
-            print(result['Rolled'])
-        
+            if input.find('#') != -1:
+                diceNum, input = input.split('#', 1)
+            else:
+                diceNum = 1
+            try:
+                input, discFooter = input.split(" ", 1)
+            except:
+                pass
+            results=[]
+            for _ in range(int(diceNum)):
+                results.append(json.loads(str(d20.roll(input, stringifier=myStringifier()))))
+
+
+
+            embed = discord.Embed(
+                title=f"Results for {ctx.message.author.display_name}",
+                description=f"Rolling {input}",
+                color=ctx.message.author.color,
+                )
+            try:
+                embed.set_footer(text=discFooter)
+            except:
+                pass
             
+            if len(results) > 1:
+                for i in range(len(results)):
+                    embed.add_field(name=f"Total {i+1}", value=results[i]['result'], inline=False)
+                    embed.add_field(name=f"Rolls {i+1}", value=results[i]['rolled'])
+            else:
+                embed.add_field(name=f"Total", value=results[0]['result'])
+                embed.add_field(name=f"Rolls", value=results[0]['rolled'])
+
+            if len(results) == 1:
+                intReturn = results[0]['result']
+            else:
+                intReturn = "Multiple Outputs"
+
+            return intReturn, embed
         except Exception as e:
-            print(e)
-        
-
-        
-                
-        embed = discord.Embed(
-            title=f"Results for {ctx.message.author.display_name}",
-            description=f"Rolling {input}",
-            color=ctx.message.author.color,
-            )
-        try:
-            embed.set_footer(text=discFooter)
-        except:
-            pass
-
-        embed.add_field(name="Results", value=result['rolled'])
-        embed.add_field(name="Total", value=result['result'])
-
-        return int(result['result']), embed
+            print(str(traceback.format_exc()))
         
 
     @commands.group(
@@ -91,7 +102,6 @@ class rpg(commands.Cog):
         Comments may be added to a dice output by appending the command with #, followed by the content of the comment you wish to be shown.
         """
         if ctx.invoked_subcommand is None:
-
             if input.find("!") != -1:
                 _, Guild, ID = self.ctx_info(ctx)
 
