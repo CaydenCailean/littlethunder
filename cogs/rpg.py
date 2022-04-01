@@ -89,8 +89,8 @@ class rpg(commands.Cog):
                 intReturn = "Multiple Outputs"
 
             return intReturn, embed
-        except Exception as e:
-            print(str(traceback.format_exc()))
+        except:
+            raise Exception
         
 
     @commands.group(
@@ -127,7 +127,7 @@ class rpg(commands.Cog):
                         self,
                         message,
                         self.__class__.__name__,
-                        "Macro",
+                        "Dice",
                         ctx.message.author,
                     )
 
@@ -493,6 +493,29 @@ class rpg(commands.Cog):
                     "Character Profile",
                     ctx.message.author,
                 )
+
+    @char.command()
+    async def chown(self, ctx, Name):
+        Name = Name.lower()
+        _, Guild, ID = self.ctx_info(ctx)
+        ownerCheck = ""
+        try:
+            ownerCheck = self.db.char_owner(Guild, ID, Name)
+        except:
+            pass
+            # await ctx.send(f"I don't think {Name.title()} belongs to you!")
+        try:
+            newOwner = ctx.message.mentions[0]
+        except:
+            return await ctx.send('You must @ a user in order to designate a new owner.')
+        
+        if ownerCheck == True:
+            output = self.db.change_owner(Guild, Name, newOwner.id)
+        else:
+            output = f"I don't think you own {Name.title()}. Make sure you're trying to change ownership of the correct character profile!"
+
+        await ctx.send(output)
+        
 
     @char.command()
     async def add(self, ctx, *, Name):
@@ -1008,7 +1031,7 @@ class rpg(commands.Cog):
                     except:
                         pass
 
-        except Exception as e:
+        except:
             message = str(traceback.format_exc())
             await self.logger.error(
                 self, message, self.__class__.__name__, "Macro", ctx.message.author

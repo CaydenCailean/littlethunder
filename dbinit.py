@@ -409,6 +409,14 @@ class lt_db(object):
         query = {"name": Name}
         self.db[str(Guild)].update(query, {"$unset": {field: 1}})
 
+    def change_owner(self, Guild, Name, newOwner):
+        query = {"name": Name}
+        self.db[str(Guild)].find_one_and_update(query, {"$set": {"owner": newOwner}})
+        output = f"{Name.title()}'s ownership has been transferred to <@{newOwner}>."
+
+        return output
+
+
     # endregion
 
     # region Random Tables
