@@ -1,6 +1,6 @@
 import discord
 import traceback
-
+import asyncio
 from .lt_logger import lt_logger
 from discord.ext import commands
 
@@ -54,6 +54,7 @@ class utility(commands.Cog):
                                     continue
 
                             await message.delete()
+                            await asyncio.sleep(1)
                         except discord.Forbidden:
                             await ctx.send(
                                 "You do not have permissions to delete other user's messages."
