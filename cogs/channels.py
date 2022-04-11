@@ -148,8 +148,8 @@ class channels(commands.Cog):
                 self, message, self.__class__.__name__, "IC Message Send"
             )
 
-    @commands.command()
-    async def set_char(self, ctx, character):
+    @commands.command(aliases=["set_proxy", "set"])
+    async def set_char(self, ctx, *, character):
         '''
             Set default character to post as for this category's IC channel.
         '''
@@ -159,7 +159,7 @@ class channels(commands.Cog):
         output = self.db.set_proxy(Guild, Category, ID, character)
         
         if output:
-            await ctx.send(f'{character} has been set as the default character for this category.')
+            await ctx.send(f'{character.title()} has been set as the default character for this category.')
 
 
     @commands.Cog.listener()
@@ -222,12 +222,13 @@ class channels(commands.Cog):
 
     @commands.Cog.listener("on_message")
     async def in_character(self, message):
-        if message.author.id != self.bot.user.id and not message.webhook_id:
+        if message.author.id != self.bot.user.id and not message.webhook_id and message.content[0] != ".":
             Guild, Category, Channel, ID = message.guild.id, message.channel.category_id, message.channel.id, message.author.id
             ic_channel, url = self.db.get_ic(Guild, Category)
             
             if ic_channel != Channel:
-                return
+                await self.bot.process_commands(message)
+        
             
             else:
                 try:
