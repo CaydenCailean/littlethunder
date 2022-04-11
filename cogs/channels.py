@@ -161,6 +161,20 @@ class channels(commands.Cog):
         if output:
             await ctx.send(f'{character.title()} has been set as the default character for this category.')
 
+    @commands.command(aliases=["remove_proxy", "unset_proxy"])
+    async def unset_char(self, ctx, *, character):
+        '''
+            Remove default character for this category's IC channel.
+        '''
+
+        Category, Guild, ID = self.ctx_info(ctx)
+
+
+        Category, Guild, ID = self.ctx_info(ctx)
+        output = self.db.remove_proxy(Guild, Category, ID)
+        
+        if output:
+            await ctx.send('Default character has been removed.')
 
     @commands.Cog.listener()
     async def on_raw_reaction_add(self, payload):

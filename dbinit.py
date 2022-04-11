@@ -313,6 +313,12 @@ class lt_db(object):
 
         return output
 
+    def remove_proxy(self, Guild, Category, ID):
+        output = self.db[str(Guild)].find_one_and_update(
+            {"Category": Category}, {"$unset": {f"{ID}": 1}})
+
+        return output
+
     def get_proxy(self, Guild, Category, ID):
         try:
             proxy = self.db[str(Guild)].find_one({"Category": Category})[f"{ID}"]
