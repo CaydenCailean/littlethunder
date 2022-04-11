@@ -159,7 +159,7 @@ class channels(commands.Cog):
         output = self.db.set_proxy(Guild, Category, ID, character)
         
         if output:
-            await ctx.send(f'{character.title()} has been set as the default character for this category.')
+            await ctx.send(f'{character.title()} has been set as {ctx.message.author.display_name}\'s default character for this category.')
 
     @commands.command(aliases=["remove_proxy", "unset_proxy"])
     async def unset_char(self, ctx,):
