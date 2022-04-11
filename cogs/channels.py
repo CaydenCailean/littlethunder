@@ -1,3 +1,4 @@
+from click import pass_context
 import discord
 import traceback
 
@@ -108,7 +109,7 @@ class channels(commands.Cog):
 
     @commands.bot_has_permissions(manage_webhooks=True)
     @commands.command(case_insensitive=True)
-    async def ic(self, ctx, character, *, message):
+    async def ic(self, ctx, character, message):
         """
         Send an in-character message to the current IC channel.
 
@@ -116,7 +117,6 @@ class channels(commands.Cog):
 
         This message can be edited by the user who sent it by replying to it. The entirety of the message sent in the reply will replace the original message.
         """
-
         try:
             Category, Guild, ID = self.ctx_info(ctx)
             character = character.lower()
@@ -147,6 +147,20 @@ class channels(commands.Cog):
             await self.logger.error(
                 self, message, self.__class__.__name__, "IC Message Send"
             )
+
+    @commands.command()
+    async def set_char(self, ctx, character):
+        '''
+            Set default character to post as for this category's IC channel.
+        '''
+
+        Category, Guild, ID = self.ctx_info(ctx)
+        character = character.lower()
+        output = self.db.set_proxy(Guild, Category, ID, character)
+        
+        if output:
+            await ctx.send(f'{character} has been set as the default character for this category.')
+
 
     @commands.Cog.listener()
     async def on_raw_reaction_add(self, payload):
@@ -205,6 +219,37 @@ class channels(commands.Cog):
                         avatar_url=ref_auth.avatar_url,
                     )
                     await message.delete()
+
+    @commands.Cog.listener("on_message")
+    async def in_character(self, message):
+        if message.author.id != self.bot.user.id and not message.webhook_id:
+            Guild, Category, Channel, ID = message.guild.id, message.channel.category_id, message.channel.id, message.author.id
+            ic_channel, url = self.db.get_ic(Guild, Category)
+            
+            if ic_channel != Channel:
+                return
+            
+            else:
+                try:
+                    char = self.db.get_proxy(Guild, Category, ID)
+                    try:
+                            avatar = char["token"]
+                    except:
+                            avatar = message.author.avatar_url
+                    async with ClientSession() as session:
+                        webhook = discord.Webhook.from_url(
+                            url, adapter=discord.AsyncWebhookAdapter(session)
+                            )
+                        await webhook.send(
+                                content=message.content,
+                                username=char["name"].title(),
+                                avatar_url=avatar,
+                            )
+                        await message.delete()
+                except:
+                    return
+        
+
 
 
 def setup(bot):

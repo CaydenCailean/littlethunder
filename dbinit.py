@@ -305,6 +305,22 @@ class lt_db(object):
                 f"An error has occured while trying to get all ICs for {ID} in {Guild}.\n{message}"
             )
 
+    def set_proxy(self, Guild, Category, ID, Character):
+        proxy = self.get_one_char(Guild, Character, ID)['_id']
+
+        output = self.db[str(Guild)].find_one_and_update(
+            {"Category": Category}, {"$set": {f"{ID}": proxy}})
+
+        return output
+
+    def get_proxy(self, Guild, Category, ID):
+        try:
+            proxy = self.db[str(Guild)].find_one({"Category": Category})[f"{ID}"]
+            return self.db[str(Guild)].find_one({"owner":ID, "_id":proxy})
+            
+        except:
+            return None
+
     #    def get_all_webhooks(self, Guild, ID):
     #        try:
     #            categories = self.db[str(Guild)].find({"owner":ID}, "webhook_url": {"$exists": True})
