@@ -306,24 +306,26 @@ class lt_db(object):
             )
 
     def set_proxy(self, Guild, Category, ID, Character):
-        proxy = self.get_one_char(Guild, Character, ID)['_id']
+        proxy = self.get_one_char(Guild, Character, ID)["_id"]
 
         output = self.db[str(Guild)].find_one_and_update(
-            {"Category": Category}, {"$set": {f"{ID}": proxy}})
+            {"Category": Category}, {"$set": {f"{ID}": proxy}}
+        )
 
         return output
 
     def remove_proxy(self, Guild, Category, ID):
         output = self.db[str(Guild)].find_one_and_update(
-            {"Category": Category}, {"$unset": {f"{ID}": 1}})
+            {"Category": Category}, {"$unset": {f"{ID}": 1}}
+        )
 
         return output
 
     def get_proxy(self, Guild, Category, ID):
         try:
             proxy = self.db[str(Guild)].find_one({"Category": Category})[f"{ID}"]
-            return self.db[str(Guild)].find_one({"owner":ID, "_id":proxy})
-            
+            return self.db[str(Guild)].find_one({"owner": ID, "_id": proxy})
+
         except:
             return None
 
@@ -437,7 +439,6 @@ class lt_db(object):
         output = f"{Name.title()}'s ownership has been transferred to <@{newOwner}>."
 
         return output
-
 
     # endregion
 
@@ -563,3 +564,14 @@ class lt_db(object):
 
 
 # endregion
+
+    # region DM Enablement
+
+    def add_server_proxy(self, Guild, ID):
+        query = {"user": ID}
+        self.db.proxies.update_one(query, {"$set": {"guild": Guild, 'user':ID}}, upsert=True)
+
+    def get_server_proxy(self, ID):
+        query = {"user": ID}
+        print(query)
+        return self.db.proxies.find_one(query)['guild']

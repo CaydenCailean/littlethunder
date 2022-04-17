@@ -98,7 +98,7 @@ class channels(commands.Cog):
                 await ctx.send(
                     f'It looks like you\'re not the owner of the "{ctx.channel.category}" category.'
                 )
-        except KeyError as e:
+        except KeyError:
             await ctx.send(
                 f'It looks like you\'re not the owner of the "{ctx.channel.category}" category.'
             )
@@ -150,36 +150,43 @@ class channels(commands.Cog):
 
     @commands.command(aliases=["set_proxy", "set"])
     async def set_char(self, ctx, *, character):
-        '''
-            Set default character to post as for this category's IC channel.
-        '''
+        """
+        Set default character to post as for this category's IC channel.
+        """
 
         Category, Guild, ID = self.ctx_info(ctx)
         character = character.lower()
         output = self.db.set_proxy(Guild, Category, ID, character)
-        
+
         if output:
-            await ctx.send(f'{character.title()} has been set as {ctx.message.author.display_name}\'s default character for this category.')
+            await ctx.send(
+                f"{character.title()} has been set as {ctx.message.author.display_name}'s default character for this category."
+            )
 
     @commands.command(aliases=["remove_proxy", "unset_proxy"])
-    async def unset_char(self, ctx,):
-        '''
-            Remove default character for this category's IC channel.
-        '''
+    async def unset_char(self, ctx):
+        """
+        Remove default character for this category's IC channel.
+        """
 
         Category, Guild, ID = self.ctx_info(ctx)
         output = self.db.remove_proxy(Guild, Category, ID)
-        
+
         if output:
-            await ctx.send('Default character has been removed.')
+            await ctx.send("Default character has been removed.")
 
     @commands.Cog.listener()
     async def on_raw_reaction_add(self, payload):
         """
         Wait for a reaction to be added, then remove the message if it fits certain criteria.
         """
-        Guild = payload.guild_id
         user = payload.user_id
+        
+        try:
+            Guild = payload.guild_id
+        except:
+            Guild = self.db.get_server_proxy(user)
+
 
         message = (
             await self.bot.get_guild(Guild)
@@ -233,35 +240,41 @@ class channels(commands.Cog):
 
     @commands.Cog.listener("on_message")
     async def in_character(self, message):
-        if message.author.id != self.bot.user.id and not message.webhook_id and message.content[0] != ".":
-            Guild, Category, Channel, ID = message.guild.id, message.channel.category_id, message.channel.id, message.author.id
+        if (
+            message.author.id != self.bot.user.id
+            and not message.webhook_id
+            and message.content[0] != "."
+        ):
+            Guild, Category, Channel, ID = (
+                message.guild.id,
+                message.channel.category_id,
+                message.channel.id,
+                message.author.id,
+            )
             ic_channel, url = self.db.get_ic(Guild, Category)
-            
+
             if ic_channel != Channel:
                 await self.bot.process_commands(message)
-        
-            
+
             else:
                 try:
                     char = self.db.get_proxy(Guild, Category, ID)
                     try:
-                            avatar = char["token"]
+                        avatar = char["token"]
                     except:
-                            avatar = message.author.avatar_url
+                        avatar = message.author.avatar_url
                     async with ClientSession() as session:
                         webhook = discord.Webhook.from_url(
                             url, adapter=discord.AsyncWebhookAdapter(session)
-                            )
+                        )
                         await webhook.send(
-                                content=message.content,
-                                username=char["name"].title(),
-                                avatar_url=avatar,
-                            )
+                            content=message.content,
+                            username=char["name"].title(),
+                            avatar_url=avatar,
+                        )
                         await message.delete()
                 except:
                     return
-        
-
 
 
 def setup(bot):

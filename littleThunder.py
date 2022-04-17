@@ -60,7 +60,6 @@ async def list_guilds(ctx):
         m += str(x).replace("',", ":").replace("('", "").replace(")", "")
         m += "\n"
 
-    print(m)
     await ctx.send(f"I am in {len(guilds)} guilds:{m}")
 
 

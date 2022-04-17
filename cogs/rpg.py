@@ -10,14 +10,18 @@ from aiohttp import ClientSession
 from discord import Webhook, AsyncWebhookAdapter
 from discord.ext import commands
 
-class myStringifier(d20.SimpleStringifier):
-        def _stringify(self, node) -> str:
-            if not node.kept:
-                return 'X'    
-            return super()._stringify(node)
 
-        def _str_expression(self, node):
-            return f'{{"result": {int(node.total)}, "rolled": "{self._stringify(node.roll)}"}}'
+class myStringifier(d20.SimpleStringifier):
+    def _stringify(self, node) -> str:
+        if not node.kept:
+            return "X"
+        return super()._stringify(node)
+
+    def _str_expression(self, node):
+        return (
+            f'{{"result": {int(node.total)}, "rolled": "{self._stringify(node.roll)}"}}'
+        )
+
 
 class rpg(commands.Cog):
     def __init__(self, bot, lt_db, channel):
@@ -42,10 +46,9 @@ class rpg(commands.Cog):
             )
             await ctx.send("Didn't work!")
 
-
     def diceroll(self, ctx, input):
         try:
-            
+
             try:
                 input, discFooter = input.split(" ", 1)
             except:
@@ -53,45 +56,45 @@ class rpg(commands.Cog):
 
             dice = input
 
-            if input.find('#') != -1:
-                diceNum, input = input.split('#', 1)
+            if input.find("#") != -1:
+                diceNum, input = input.split("#", 1)
             else:
                 diceNum = 1
-            
 
-            results=[]
+            results = []
             for _ in range(int(diceNum)):
-                results.append(json.loads(str(d20.roll(input, stringifier=myStringifier()))))
-
-
+                results.append(
+                    json.loads(str(d20.roll(input, stringifier=myStringifier())))
+                )
 
             embed = discord.Embed(
                 title=f"Results for {ctx.message.author.display_name}",
                 description=f"Rolling {dice}",
                 color=ctx.message.author.color,
-                )
+            )
             try:
                 embed.set_footer(text=discFooter)
             except:
                 pass
-            
+
             if len(results) > 1:
                 for i in range(len(results)):
-                    embed.add_field(name=f"Total {i+1}", value=results[i]['result'], inline=False)
-                    embed.add_field(name=f"Rolls {i+1}", value=results[i]['rolled'])
+                    embed.add_field(
+                        name=f"Total {i+1}", value=results[i]["result"], inline=False
+                    )
+                    embed.add_field(name=f"Rolls {i+1}", value=results[i]["rolled"])
             else:
-                embed.add_field(name=f"Total", value=results[0]['result'])
-                embed.add_field(name=f"Rolls", value=results[0]['rolled'])
+                embed.add_field(name=f"Total", value=results[0]["result"])
+                embed.add_field(name=f"Rolls", value=results[0]["rolled"])
 
             if len(results) == 1:
-                intReturn = results[0]['result']
+                intReturn = results[0]["result"]
             else:
                 intReturn = "Multiple Outputs"
 
             return intReturn, embed
         except:
             raise Exception
-        
 
     @commands.group(
         case_insensitive=True,
@@ -507,15 +510,16 @@ class rpg(commands.Cog):
         try:
             newOwner = ctx.message.mentions[0]
         except:
-            return await ctx.send('You must @ a user in order to designate a new owner.')
-        
+            return await ctx.send(
+                "You must @ a user in order to designate a new owner."
+            )
+
         if ownerCheck == True:
             output = self.db.change_owner(Guild, Name, newOwner.id)
         else:
             output = f"I don't think you own {Name.title()}. Make sure you're trying to change ownership of the correct character profile!"
 
         await ctx.send(output)
-        
 
     @char.command()
     async def add(self, ctx, *, Name):
@@ -586,7 +590,12 @@ class rpg(commands.Cog):
         Remove a field from a character.
         """
         Name = Name.lower()
-        _, Guild, ID = self.ctx_info(ctx)
+        
+        if ctx.channel.guild is None:
+            ID = ctx.author.id
+            Guild = self.db.get_proxy(ID)
+        else:
+            _, Guild, ID = self.ctx_info(ctx)
         ownerCheck = ""
 
         try:
@@ -624,10 +633,12 @@ class rpg(commands.Cog):
                 await msg.remove_reaction(reaction, user)
 
         try:
-            _, Guild, _ = self.ctx_info(ctx)
-            guild = await self.bot.fetch_guild(Guild)
+            _, Guild, ID = self.ctx_info(ctx)
+           
         except:
-            await ctx.send("This command doesn't work in DMs!")
+            ID = ctx.author.id
+            
+            Guild = self.db.get_server_proxy(ID)
 
         try:
             user = ctx.message.mentions[0].id
@@ -671,16 +682,16 @@ class rpg(commands.Cog):
                 color=int(str(output["color"]), 16),
             )
             try:
-                
+
                 embed.set_footer(
-                    text=f"Owned by: { await guild.fetch_member(output['owner'])}"
+                    text=f"Owned by: { await Guild.fetch_member(output['owner'])}"
                 )
-    
+
             except:
                 embed.set_footer(
                     text=f"Owned by: { await self.bot.fetch_user(output['owner'])} : USER NO LONGER IN SERVER"
                 )
-                
+
             del (
                 output["_id"],
                 output["owner"],
@@ -883,7 +894,6 @@ class rpg(commands.Cog):
                                 embed = discord.Embed(
                                     description=charList,
                                     title=member.name,
-                                    
                                 )
                                 embed.set_thumbnail(url=member.avatar_url)
                                 embed.set_footer(
@@ -914,7 +924,7 @@ class rpg(commands.Cog):
                             embed.set_footer(
                                 text=f"Owned by: { await Guild.fetch_member(character['owner'])}"
                             )
-                            
+
                         except:
                             embed.set_footer(
                                 text=f"Owned by: { await self.bot.fetch_user(character['owner'])} : USER NO LONGER IN SERVER"

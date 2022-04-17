@@ -12,6 +12,7 @@ class utility(commands.Cog):
         self.channel = channel
         self.logger = lt_logger
 
+
     @commands.command(pass_context=True, no_pm=True, aliases=["clear", "p"])
     async def purge(self, ctx, number: int, members="everyone", *, txt=None):
         """
@@ -84,6 +85,20 @@ class utility(commands.Cog):
 
         except discord.Forbidden:
             await ctx.send("I do not have permissions to purge messages.")
+
+    @commands.command()
+    async def add_proxy_guild(self, ctx, guild: int):
+        Guild = await self.bot.fetch_guild(guild)
+        if Guild in self.bot.guilds:
+            try:
+                Guild.get_member(ctx.author.id)
+
+                self.db.add_server_proxy( guild, ctx.author.id)
+                await ctx.send(f"Proxy server \"{Guild.name}\" added.")
+            except:
+                await ctx.send("It appears that you are not a member of that guild.")
+        else:
+            await ctx.send(f"It would appear that you don't")
 
     @commands.Cog.listener()
     async def on_guild_remove(self, guild):
