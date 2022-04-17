@@ -93,7 +93,7 @@ class utility(commands.Cog):
         
             if Guild in self.bot.guilds:
                 try:
-                    Guild.get_member(ctx.author.id)
+                    print(Guild.get_member(ctx.author.id))
                     self.db.add_server_proxy( guild, ctx.author.id)
                     await ctx.send(f"Proxy server \"{Guild.name}\" added.")
                 except:
