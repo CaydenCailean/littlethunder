@@ -88,17 +88,19 @@ class utility(commands.Cog):
 
     @commands.command()
     async def add_proxy_guild(self, ctx, guild: int):
-        Guild = await self.bot.fetch_guild(guild)
-        if Guild in self.bot.guilds:
-            try:
-                Guild.get_member(ctx.author.id)
+        try:
+            Guild = await self.bot.fetch_guild(guild)
+        
+            if Guild in self.bot.guilds:
+                try:
+                    Guild.get_member(ctx.author.id)
+                    self.db.add_server_proxy( guild, ctx.author.id)
+                    await ctx.send(f"Proxy server \"{Guild.name}\" added.")
+                except:
+                    await ctx.send("It appears that you are not a member of that guild.")
+        except:
+            await ctx.send(f"It would appear that this guild does not have {self.bot.user.name} within it.")
 
-                self.db.add_server_proxy( guild, ctx.author.id)
-                await ctx.send(f"Proxy server \"{Guild.name}\" added.")
-            except:
-                await ctx.send("It appears that you are not a member of that guild.")
-        else:
-            await ctx.send(f"It would appear that you don't")
 
     @commands.Cog.listener()
     async def on_guild_remove(self, guild):

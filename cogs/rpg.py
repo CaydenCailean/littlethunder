@@ -841,8 +841,13 @@ class rpg(commands.Cog):
     @char.command()
     async def directory(self, ctx, detailLevel="Default"):
         try:
-            Guild = await self.bot.fetch_guild(ctx.guild.id)
-            user = ctx.message.author.id
+            try:
+                _, Guild, user = self.ctx_info(ctx)
+                Guild = await self.bot.fetch_guild(Guild)
+            except:
+                user = ctx.author.id
+                Guild = await self.bot.fetch_guild(self.db.get_server_proxy(user))
+                print(Guild)
             # members = await Guild.fetch_members(limit=None).flatten()
             embeds = []
 
