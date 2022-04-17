@@ -89,15 +89,15 @@ class utility(commands.Cog):
     @commands.command()
     async def add_proxy_guild(self, ctx, guild: int):
         try:
-            Guild = await self.bot.get_guild(guild)
-        
+            Guild = self.bot.get_guild(guild)
             if Guild in self.bot.guilds:
                 if Guild.get_member(ctx.author.id) is not None:
                     self.db.add_server_proxy( guild, ctx.author.id)
                     await ctx.send(f"Proxy server \"{Guild.name}\" added.")
                 else:
                     await ctx.send("It appears that you are not a member of that guild.")
-        except:
+        except Exception as e:
+            print(e)
             await ctx.send(f"It would appear that this guild does not have {self.bot.user.name} within it.")
 
 
