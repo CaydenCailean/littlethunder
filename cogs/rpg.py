@@ -526,7 +526,12 @@ class rpg(commands.Cog):
         """
         Register a user's character.
         """
-        _, Guild, _ = self.ctx_info(ctx)
+        try:
+            _, Guild, _ = self.ctx_info(ctx)
+        except:
+            ID = ctx.author.id
+            
+            Guild = self.db.get_server_proxy(ID)
 
         try:
             ID = ctx.message.mentions[0].id
@@ -543,7 +548,11 @@ class rpg(commands.Cog):
         """
         Remove a user's character from the guild.
         """
-        _, Guild, ID = self.ctx_info(ctx)
+        try:
+            _, Guild, ID = self.ctx_info(ctx)
+        except:
+            ID = ctx.author.id
+            Guild = self.db.get_server_proxy(ID)
 
         Name = Name.lower()
 
@@ -564,8 +573,14 @@ class rpg(commands.Cog):
         Add a field to a character, or update a field to a new value.
         """
         Name = Name.lower()
-        _, Guild, ID = self.ctx_info(ctx)
+        try:
+            _, Guild, ID = self.ctx_info(ctx)
+        except:
+            ID = ctx.author.id
+            Guild = self.db.get_server_proxy(ID)    
+        
         ownerCheck = ""
+        
         try:
             ownerCheck = self.db.char_owner(Guild, ID, Name)
         except:
@@ -591,11 +606,12 @@ class rpg(commands.Cog):
         """
         Name = Name.lower()
         
-        if ctx.channel.guild is None:
-            ID = ctx.author.id
-            Guild = self.db.get_proxy(ID)
-        else:
+        try:        
             _, Guild, ID = self.ctx_info(ctx)
+        except:
+            ID = ctx.author.id
+            Guild = self.db.get_server_proxy(ID)
+                
         ownerCheck = ""
 
         try:
@@ -847,7 +863,6 @@ class rpg(commands.Cog):
             except:
                 user = ctx.author.id
                 Guild = await self.bot.fetch_guild(self.db.get_server_proxy(user))
-                print(Guild)
             # members = await Guild.fetch_members(limit=None).flatten()
             embeds = []
 
