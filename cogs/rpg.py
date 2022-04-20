@@ -676,6 +676,7 @@ class rpg(commands.Cog):
                 Name = Name.lower()
                 results = self.db.get_char(Guild, Name)
 
+        Guild = self.bot.get_guild(Guild)
         embeds = []
         for output in results:
 
@@ -695,13 +696,13 @@ class rpg(commands.Cog):
                 description=description,
                 color=int(str(output["color"]), 16),
             )
-            Guild = self.bot.get_guild(Guild)
+            
             try:
 
                 embed.set_footer(
                     text=f"Owned by: { await Guild.fetch_member(int(output['owner']))}"
                 )
-            except Exception as e:
+            except:
                 embed.set_footer(
                     text=f"Owned by: { await self.bot.fetch_user(output['owner'])} : USER NO LONGER IN SERVER"
                 )
