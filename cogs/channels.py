@@ -109,7 +109,7 @@ class channels(commands.Cog):
 
     @commands.bot_has_permissions(manage_webhooks=True)
     @commands.command(case_insensitive=True)
-    async def ic(self, ctx, character, message):
+    async def ic(self, ctx, character,*, message):
         """
         Send an in-character message to the current IC channel.
 
