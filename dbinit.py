@@ -573,4 +573,5 @@ class lt_db(object):
 
     def get_server_proxy(self, ID):
         query = {"user": ID}
-        return self.db.proxies.find_one(query)['guild']
+        guild = self.db.proxies.find_one(query)['guild']
+        return int(guild)

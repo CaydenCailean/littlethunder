@@ -650,10 +650,8 @@ class rpg(commands.Cog):
 
         try:
             _, Guild, ID = self.ctx_info(ctx)
-           
         except:
             ID = ctx.author.id
-            
             Guild = self.db.get_server_proxy(ID)
 
         try:
@@ -697,13 +695,13 @@ class rpg(commands.Cog):
                 description=description,
                 color=int(str(output["color"]), 16),
             )
+            Guild = self.bot.get_guild(Guild)
             try:
 
                 embed.set_footer(
-                    text=f"Owned by: { await Guild.fetch_member(output['owner'])}"
+                    text=f"Owned by: { await Guild.fetch_member(int(output['owner']))}"
                 )
-
-            except:
+            except Exception as e:
                 embed.set_footer(
                     text=f"Owned by: { await self.bot.fetch_user(output['owner'])} : USER NO LONGER IN SERVER"
                 )
@@ -859,10 +857,11 @@ class rpg(commands.Cog):
         try:
             try:
                 _, Guild, user = self.ctx_info(ctx)
-                Guild = await self.bot.fetch_guild(Guild)
+                Guild = self.bot.get_guild(Guild)
             except:
                 user = ctx.author.id
-                Guild = await self.bot.fetch_guild(self.db.get_server_proxy(user))
+                Guild = await self.bot.fetch_guild(int(self.db.get_server_proxy(user)))
+            
             # members = await Guild.fetch_members(limit=None).flatten()
             embeds = []
 
