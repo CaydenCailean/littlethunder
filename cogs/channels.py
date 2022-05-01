@@ -213,8 +213,7 @@ class channels(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message):
-
-        if message.author.id != self.bot.user.id and message.reference != None:
+        if message.author.id != self.bot.user.id and message.reference != None and message.content[0:6].lower() == ".edit ":
             Category, Guild, channel = (
                 message.channel.category.id,
                 message.guild.id,
@@ -232,7 +231,7 @@ class channels(commands.Cog):
                 if ref_auth.id == webhook.id and ownerCheck:
                     await webhook.edit_message(
                         message_id=message.reference.message_id,
-                        content=message.content,
+                        content=message.content.replace('.edit ', ''),
                         username=character.title(),
                         avatar_url=ref_auth.avatar_url,
                     )
@@ -263,15 +262,30 @@ class channels(commands.Cog):
                         avatar = char["token"]
                     except:
                         avatar = message.author.avatar_url
+
+                    try:
+                        ref_msg = await message.channel.fetch_message(message.reference.message_id)
+                        ref_auth = ref_msg.author
+                        embed = discord.Embed(title=ref_auth, description=ref_msg.content)
+                    except:
+                        pass    
                     async with ClientSession() as session:
                         webhook = discord.Webhook.from_url(
                             url, adapter=discord.AsyncWebhookAdapter(session)
                         )
-                        await webhook.send(
-                            content=message.content,
-                            username=char["name"].title(),
-                            avatar_url=avatar,
-                        )
+                        try:
+                            await webhook.send(
+                                content=message.content,
+                                username=char["name"].title(),
+                                avatar_url=avatar,
+                                embeds=[embed],
+                            )
+                        except:
+                            await webhook.send(
+                                content=message.content,
+                                username=char["name"].title(),
+                                avatar_url=avatar,
+                            )
                         await message.delete()
                 except:
                     return
