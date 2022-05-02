@@ -214,6 +214,8 @@ class channels(commands.Cog):
     @commands.Cog.listener()
     async def on_message(self, message):
         if message.author.id != self.bot.user.id and message.reference != None and message.content[0:6].lower() == ".edit ":
+            
+           
             Category, Guild, channel = (
                 message.channel.category.id,
                 message.guild.id,
@@ -224,6 +226,10 @@ class channels(commands.Cog):
             ref_auth = ref_msg.author
             character = ref_msg.author.display_name.lower()
             ownerCheck = self.db.char_owner(Guild, message.author.id, character)
+            
+            print(message.author.avatar_url == ref_auth.avatar_url)
+            print(message.author.avatar_url)
+            print(ref_auth.avatar_url)
 
             async with ClientSession() as session:
                 _, url = self.db.get_ic(Guild, Category)
@@ -266,7 +272,7 @@ class channels(commands.Cog):
                     try:
                         ref_msg = await message.channel.fetch_message(message.reference.message_id)
                         ref_auth = ref_msg.author
-                        embed = discord.Embed(title=ref_auth, description=ref_msg.content)
+                        embed = discord.Embed(title=ref_auth, description=ref_msg.content, url=ref_msg.jump_url)
                     except:
                         pass    
                     async with ClientSession() as session:
@@ -278,9 +284,10 @@ class channels(commands.Cog):
                                 content=message.content,
                                 username=char["name"].title(),
                                 avatar_url=avatar,
-                                embeds=[embed],
+                                embeds=[embed]
                             )
-                        except:
+                        except Exception as e:
+                            print(e)
                             await webhook.send(
                                 content=message.content,
                                 username=char["name"].title(),
