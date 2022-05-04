@@ -133,20 +133,31 @@ class channels(commands.Cog):
                     try:
                         ref_msg = await ctx.message.channel.fetch_message(ctx.message.reference.message_id)
                         ref_auth = ref_msg.author
+                        print(ref_auth)
                         embed = discord.Embed(title=ref_auth, description=ref_msg.content, url=ref_msg.jump_url)
                     except:
-                        pass    
+                        pass   
                     
                     async with ClientSession() as session:
                         webhook = discord.Webhook.from_url(
                             url, adapter=discord.AsyncWebhookAdapter(session)
                         )
-                        await webhook.send(
+                        try:
+                            await webhook.send(
+                            content=message,
+                            username=char["name"].title(),
+                            avatar_url=avatar,
+                            embed=embed
+                        )
+                        except:
+                            await webhook.send(
                             content=message,
                             username=char["name"].title(),
                             avatar_url=avatar,
                         )
                         await ctx.message.delete()
+                        
+                        
                 except:
                     await ctx.send("It looks like something's gone wrong...")
                     raise Exception
