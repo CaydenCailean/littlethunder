@@ -129,6 +129,14 @@ class channels(commands.Cog):
                         avatar = char["token"]
                     except:
                         avatar = ctx.author.avatar_url
+
+                    try:
+                        ref_msg = await message.channel.fetch_message(message.reference.message_id)
+                        ref_auth = ref_msg.author
+                        embed = discord.Embed(title=ref_auth, description=ref_msg.content, url=ref_msg.jump_url)
+                    except:
+                        pass    
+                    
                     async with ClientSession() as session:
                         webhook = discord.Webhook.from_url(
                             url, adapter=discord.AsyncWebhookAdapter(session)
@@ -227,9 +235,6 @@ class channels(commands.Cog):
             character = ref_msg.author.display_name.lower()
             ownerCheck = self.db.char_owner(Guild, message.author.id, character)
             
-            print(message.author.avatar_url == ref_auth.avatar_url)
-            print(message.author.avatar_url)
-            print(ref_auth.avatar_url)
 
             async with ClientSession() as session:
                 _, url = self.db.get_ic(Guild, Category)
