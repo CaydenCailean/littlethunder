@@ -294,25 +294,27 @@ class channels(commands.Cog):
                 await self.bot.process_commands(message)
                 return
 
-            try:
-                for file in os.walk('temp'):
-                    for file in file[2]:
-                        os.remove(f'temp/{file}')
-            except:
-                pass
-
-            try:
-                files = []
-                for index, attachment in enumerate(message.attachments):
-                    if attachment.size > 5000000:
-                        return
-                    await attachment.save(f"temp/{index}_{attachment.filename}")
-                    files.append(f"temp/{index}_{attachment.filename}")
-                    files.append(discord.File(f"temp/{index}_{attachment.filename}"))
-            except:
-                files = None
-
+            
             else:
+
+                try:
+                    for file in os.walk('temp'):
+                        for file in file[2]:
+                            os.remove(f'temp/{file}')
+                except:
+                    pass
+
+                try:
+                    files = []
+                    for index, attachment in enumerate(message.attachments):
+                        if attachment.size > 5000000:
+                            return
+                        await attachment.save(f"temp/{index}_{attachment.filename}")
+                        files.append(discord.File(f"temp/{index}_{attachment.filename}"))
+                except:
+                    files = None
+            
+                
                 try:
                     try:
                         avatar = char["token"]
