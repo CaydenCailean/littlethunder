@@ -1,7 +1,9 @@
 from click import pass_context
 import discord
 import traceback
-
+import shutil
+import os
+import asyncio
 from .lt_logger import lt_logger
 from .rpg import rpg
 from aiohttp import ClientSession
@@ -261,6 +263,9 @@ class channels(commands.Cog):
 
     @commands.Cog.listener("on_message")
     async def in_character(self, message):
+        for file in os.walk('temp'):
+            for file in file[2]:
+                os.remove(f'temp/{file}')
         if (
             message.author.id != self.bot.user.id
             and not message.webhook_id
@@ -272,6 +277,17 @@ class channels(commands.Cog):
             
             if message.content.lower().startswith(f".edit") and message.reference != None:
                 return
+            
+            try:
+                files = []
+                for index, attachment in enumerate(message.attachments):
+                    await attachment.save(f"temp/{index}_{attachment.filename}")
+                    files.append(discord.File(f"temp/{index}_{attachment.filename}"))
+                
+            except:
+                
+                files=None
+                    
 
             Guild, Category, Channel, ID = (
                 message.guild.id,
@@ -307,19 +323,27 @@ class channels(commands.Cog):
                                 content=message.content,
                                 username=char["name"].title(),
                                 avatar_url=avatar,
-                                embeds=[embed]
+                                embeds=[embed],
+                                files=files
                             )
-                        except Exception as e:
+                        except:
                             
-                            await webhook.send(
+                            try:
+                                await webhook.send(
                                 content=message.content,
                                 username=char["name"].title(),
                                 avatar_url=avatar,
+                                files=files
                             )
+                            except:
+                                await message.channel.send(str(traceback.format_exc()))
+                                                          
                         await message.delete()
+
+                        
                 except:
                     return
-
+       
 
 def setup(bot):
     bot.add_cog(channels(bot))
