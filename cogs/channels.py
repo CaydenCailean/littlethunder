@@ -267,7 +267,7 @@ class channels(commands.Cog):
         ):
             
             for command in self.bot.walk_commands():
-                if message.content.lower().startswith(f".{command.name.lower()}"):
+                if message.content.lower().startswith(f".{command.name}"):
                     return
             
             if message.content.lower().startswith(f".edit") and message.reference != None:

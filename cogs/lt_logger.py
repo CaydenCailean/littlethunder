@@ -38,24 +38,28 @@ class lt_logger(commands.Cog):
 
     @commands.group(hidden=True)
     @commands.is_owner()
-    async def test(self, ctx):
+    async def test_all(self, ctx):
+        await self.info_test(ctx)
+        await self.warning_test(ctx)
+        await self.error_test(ctx)
+        await self.debug_test(ctx)
         pass
 
-    @test.command(hidden=True)
+    @test_all.command(hidden=True)
     async def info_test(self, ctx):
         await lt_logger.info(self, "This is a test", "lt_logger.py", "info_test")
 
-    @test.command(hidden=True)
+    @test_all.command(hidden=True)
     @commands.is_owner()
     async def warning_test(self, ctx):
         await lt_logger.warning(self, "This is a warning", "lt_logger", "warning_test")
 
-    @test.command(hidden=True)
+    @test_all.command(hidden=True)
     @commands.is_owner()
     async def debug_test(self, ctx):
         await lt_logger.debug(self, "This is a test", "logging", "debug_test")
 
-    @test.command(hidden=True)
+    @test_all.command(hidden=True)
     @commands.is_owner()
     async def error_test(self, ctx):
         try:

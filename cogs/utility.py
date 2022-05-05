@@ -114,7 +114,7 @@ class utility(commands.Cog):
                 self.__class__.__name__,
                 "Event Listener: Removed from Guild",
             )
-        except Exception as e:
+        except:
             message = str(traceback.format_exc())
             await self.logger.error(
                 self,
