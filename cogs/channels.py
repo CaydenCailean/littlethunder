@@ -263,9 +263,7 @@ class channels(commands.Cog):
 
     @commands.Cog.listener("on_message")
     async def in_character(self, message):
-        for file in os.walk('temp'):
-            for file in file[2]:
-                os.remove(f'temp/{file}')
+        
         if (
             message.author.id != self.bot.user.id
             and not message.webhook_id
@@ -278,16 +276,7 @@ class channels(commands.Cog):
             if message.content.lower().startswith(f".edit") and message.reference != None:
                 return
             
-            try:
-                files = []
-                for index, attachment in enumerate(message.attachments):
-                    await attachment.save(f"temp/{index}_{attachment.filename}")
-                    files.append(discord.File(f"temp/{index}_{attachment.filename}"))
-                
-            except:
-                
-                files=None
-                    
+            
 
             Guild, Category, Channel, ID = (
                 message.guild.id,
@@ -295,14 +284,32 @@ class channels(commands.Cog):
                 message.channel.id,
                 message.author.id,
             )
+            char = self.db.get_proxy(Guild, Category, ID)
+            if not char:
+                return
+
             ic_channel, url = self.db.get_ic(Guild, Category)
 
             if ic_channel != Channel:
                 await self.bot.process_commands(message)
 
+            try:
+                for file in os.walk('temp'):
+                    for file in file[2]:
+                        os.remove(f'temp/{file}')
+            except:
+                pass
+
+            try:
+                files = []
+                for index, attachment in enumerate(message.attachments):
+                    await attachment.save(f"temp/{index}_{attachment.filename}")
+                    files.append(discord.File(f"temp/{index}_{attachment.filename}"))
+            except:
+                files = None
+
             else:
                 try:
-                    char = self.db.get_proxy(Guild, Category, ID)
                     try:
                         avatar = char["token"]
                     except:
