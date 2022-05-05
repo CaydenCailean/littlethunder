@@ -292,6 +292,7 @@ class channels(commands.Cog):
 
             if ic_channel != Channel:
                 await self.bot.process_commands(message)
+                return
 
             try:
                 for file in os.walk('temp'):
