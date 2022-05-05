@@ -230,8 +230,8 @@ class channels(commands.Cog):
                 self, message, self.__class__.__name__, "DM Reactions", payload.user_id
             )
 
-    @commands.Cog.listener()
-    async def on_message(self, message):
+    @commands.Cog.listener("on_message")
+    async def edit(self, message):
         if message.author.id != self.bot.user.id and message.reference != None and message.content[0:6].lower() == ".edit ":
             
            
@@ -264,8 +264,15 @@ class channels(commands.Cog):
         if (
             message.author.id != self.bot.user.id
             and not message.webhook_id
-            and message.content[0] != "."
         ):
+            
+            for command in self.bot.walk_commands():
+                if message.content.lower().startswith(f".{command.name.lower()}"):
+                    return
+            
+            if message.content.lower().startswith(f".edit") and message.reference != None:
+                return
+
             Guild, Category, Channel, ID = (
                 message.guild.id,
                 message.channel.category_id,
@@ -303,7 +310,7 @@ class channels(commands.Cog):
                                 embeds=[embed]
                             )
                         except Exception as e:
-                            print(e)
+                            
                             await webhook.send(
                                 content=message.content,
                                 username=char["name"].title(),
