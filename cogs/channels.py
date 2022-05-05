@@ -336,8 +336,7 @@ class channels(commands.Cog):
                                 files=files
                             )
                             except:
-                                await message.channel.send(str(traceback.format_exc()))
-                                                          
+                                pass                          
                         await message.delete()
 
                         
