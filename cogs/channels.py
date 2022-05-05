@@ -147,21 +147,21 @@ class channels(commands.Cog):
                         try:
                             await webhook.send(
                             content=message,
-                            username=char["name"].title() + f" ({message.author.display_name})",
+                            username=char["name"].title() + f" ({ctx.message.author.display_name})",
                             avatar_url=avatar,
                             embed=embed
                         )
                         except:
                             await webhook.send(
                             content=message,
-                            username=char["name"].title() + f" ({message.author.display_name})",
+                            username=char["name"].title() + f" ({ctx.message.author.display_name})",
                             avatar_url=avatar,
                         )
                         await ctx.message.delete()
                         
                         
                 except:
-                    await ctx.send("It looks like something's gone wrong...")
+                    print(str(traceback.format_exc()))
                     raise Exception
         except:
             message = str(traceback.format_exc())
@@ -256,7 +256,7 @@ class channels(commands.Cog):
                     await webhook.edit_message(
                         message_id=message.reference.message_id,
                         content=message.content.replace('.edit ', ''),
-                        username=character.title(),
+                        username=character.title() + f' ({message.author.display_name})',
                         avatar_url=ref_auth.avatar_url,
                     )
                     await message.delete()
