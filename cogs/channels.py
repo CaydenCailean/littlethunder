@@ -304,7 +304,7 @@ class channels(commands.Cog):
             try:
                 files = []
                 for index, attachment in enumerate(message.attachments):
-                    if attachment.size < 5000000:
+                    if attachment.size > 5000000:
                         return
                     await attachment.save(f"temp/{index}_{attachment.filename}")
                     files.append(f"temp/{index}_{attachment.filename}")
