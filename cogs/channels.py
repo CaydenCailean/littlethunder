@@ -276,7 +276,8 @@ class channels(commands.Cog):
             if message.content.lower().startswith(f".edit") and message.reference != None:
                 return
             
-            
+            if message.content.lower().startswith(f".ooc"):
+                return
 
             Guild, Category, Channel, ID = (
                 message.guild.id,
