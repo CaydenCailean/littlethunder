@@ -147,14 +147,14 @@ class channels(commands.Cog):
                         try:
                             await webhook.send(
                             content=message,
-                            username=char["name"].title() + f" ({str(message.author)})",
+                            username=char["name"].title() + f" ({str(ctx.message.author)})",
                             avatar_url=avatar,
                             embed=embed
                         )
                         except:
                             await webhook.send(
                             content=message,
-                            username=char["name"].title() + f" ({str(message.author)})",
+                            username=char["name"].title() + f" ({str(ctx.message.author)})",
                             avatar_url=avatar,
                         )
                         await ctx.message.delete()
