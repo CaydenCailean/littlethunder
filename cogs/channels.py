@@ -111,7 +111,7 @@ class channels(commands.Cog):
 
     @commands.bot_has_permissions(manage_webhooks=True)
     @commands.command(case_insensitive=True)
-    async def ic(self, ctx, character,*, message):
+    async def ic(self, ctx, character, *, message):
         """
         Send an in-character message to the current IC channel.
 
@@ -133,33 +133,40 @@ class channels(commands.Cog):
                         avatar = ctx.author.avatar_url
 
                     try:
-                        ref_msg = await ctx.message.channel.fetch_message(ctx.message.reference.message_id)
+                        ref_msg = await ctx.message.channel.fetch_message(
+                            ctx.message.reference.message_id
+                        )
                         ref_auth = ref_msg.author
                         print(ref_auth)
-                        embed = discord.Embed(title=ref_auth, description=ref_msg.content, url=ref_msg.jump_url)
+                        embed = discord.Embed(
+                            title=ref_auth,
+                            description=ref_msg.content,
+                            url=ref_msg.jump_url,
+                        )
                     except:
-                        pass   
-                    
+                        pass
+
                     async with ClientSession() as session:
                         webhook = discord.Webhook.from_url(
                             url, adapter=discord.AsyncWebhookAdapter(session)
                         )
                         try:
                             await webhook.send(
-                            content=message,
-                            username=char["name"].title() + f" ({str(ctx.message.author)})",
-                            avatar_url=avatar,
-                            embed=embed
-                        )
+                                content=message,
+                                username=char["name"].title()
+                                + f" ({str(ctx.message.author)})",
+                                avatar_url=avatar,
+                                embed=embed,
+                            )
                         except:
                             await webhook.send(
-                            content=message,
-                            username=char["name"].title() + f" ({str(ctx.message.author)})",
-                            avatar_url=avatar,
-                        )
+                                content=message,
+                                username=char["name"].title()
+                                + f" ({str(ctx.message.author)})",
+                                avatar_url=avatar,
+                            )
                         await ctx.message.delete()
-                        
-                        
+
                 except:
                     print(str(traceback.format_exc()))
                     raise Exception
@@ -202,12 +209,11 @@ class channels(commands.Cog):
         Wait for a reaction to be added, then remove the message if it fits certain criteria.
         """
         user = payload.user_id
-        
+
         try:
             Guild = payload.guild_id
         except:
             Guild = self.db.get_server_proxy(user)
-
 
         message = (
             await self.bot.get_guild(Guild)
@@ -234,9 +240,12 @@ class channels(commands.Cog):
 
     @commands.Cog.listener("on_message")
     async def edit(self, message):
-        if message.author.id != self.bot.user.id and message.reference != None and message.content[0:6].lower() == ".edit ":
-            
-           
+        if (
+            message.author.id != self.bot.user.id
+            and message.reference != None
+            and message.content[0:6].lower() == ".edit "
+        ):
+
             Category, Guild, channel = (
                 message.channel.category.id,
                 message.guild.id,
@@ -245,9 +254,10 @@ class channels(commands.Cog):
 
             ref_msg = await channel.fetch_message(message.reference.message_id)
             ref_auth = ref_msg.author
-            character = ref_msg.author.display_name.replace(f' ({str(message.author)})','').lower()
+            character = ref_msg.author.display_name.replace(
+                f" ({str(message.author)})", ""
+            ).lower()
             ownerCheck = self.db.char_owner(Guild, message.author.id, character)
-            
 
             async with ClientSession() as session:
                 _, url = self.db.get_ic(Guild, Category)
@@ -255,27 +265,27 @@ class channels(commands.Cog):
                 if ref_auth.id == webhook.id and ownerCheck:
                     await webhook.edit_message(
                         message_id=message.reference.message_id,
-                        content=message.content.replace('.edit ', ''),
-                        username=character.title() + f' ({str(message.author)})',
+                        content=message.content.replace(".edit ", ""),
+                        username=character.title() + f" ({str(message.author)})",
                         avatar_url=ref_auth.avatar_url,
                     )
                     await message.delete()
 
     @commands.Cog.listener("on_message")
     async def in_character(self, message):
-        
-        if (
-            message.author.id != self.bot.user.id
-            and not message.webhook_id
-        ):
-            
+
+        if message.author.id != self.bot.user.id and not message.webhook_id:
+
             for command in self.bot.walk_commands():
                 if message.content.lower().startswith(f".{command.name}"):
                     return
-            
-            if message.content.lower().startswith(f".edit") and message.reference != None:
+
+            if (
+                message.content.lower().startswith(f".edit")
+                and message.reference != None
+            ):
                 return
-            
+
             if message.content.lower().startswith(f".ooc"):
                 return
 
@@ -295,25 +305,27 @@ class channels(commands.Cog):
                 await self.bot.process_commands(message)
                 return
 
-            
             else:
 
                 try:
-                    for file in os.walk('temp'):
+                    for file in os.walk("temp"):
                         for file in file[2]:
-                            os.remove(f'temp/{file}')
+                            os.remove(f"temp/{file}")
                 except:
                     pass
 
                 try:
                     files = []
                     for index, attachment in enumerate(message.attachments):
+                        if attachment.size > 83886080:
+                            return
                         await attachment.save(f"temp/{index}_{attachment.filename}")
-                        files.append(discord.File(f"temp/{index}_{attachment.filename}"))
+                        files.append(
+                            discord.File(f"temp/{index}_{attachment.filename}")
+                        )
                 except:
                     files = None
-            
-                
+
                 try:
                     try:
                         avatar = char["token"]
@@ -321,17 +333,23 @@ class channels(commands.Cog):
                         avatar = message.author.avatar_url
 
                     try:
-                        ref_msg = await message.channel.fetch_message(message.reference.message_id)
+                        ref_msg = await message.channel.fetch_message(
+                            message.reference.message_id
+                        )
                         ref_auth = ref_msg.author
-                        embed = discord.Embed(title=ref_auth, description=ref_msg.content, url=ref_msg.jump_url)
+                        embed = discord.Embed(
+                            title=ref_auth,
+                            description=ref_msg.content,
+                            url=ref_msg.jump_url,
+                        )
                         try:
                             ref_img = ref_msg.attachments[0].url
                             embed.set_image(url=ref_img)
                         except:
                             pass
-                            
+
                     except:
-                        pass    
+                        pass
                     async with ClientSession() as session:
                         webhook = discord.Webhook.from_url(
                             url, adapter=discord.AsyncWebhookAdapter(session)
@@ -339,28 +357,29 @@ class channels(commands.Cog):
                         try:
                             await webhook.send(
                                 content=message.content,
-                                username=char["name"].title() + f' ({str(message.author)})',
+                                username=char["name"].title()
+                                + f" ({str(message.author)})",
                                 avatar_url=avatar,
                                 embeds=[embed],
-                                files=files
+                                files=files,
                             )
                         except:
-                            
+
                             try:
                                 await webhook.send(
-                                content=message.content,
-                                username=char["name"].title() + f' ({str(message.author)})',
-                                avatar_url=avatar,
-                                files=files
-                            )
+                                    content=message.content,
+                                    username=char["name"].title()
+                                    + f" ({str(message.author)})",
+                                    avatar_url=avatar,
+                                    files=files,
+                                )
                             except:
-                                pass                          
+                                pass
                         await message.delete()
 
-                        
                 except:
                     return
-       
+
 
 def setup(bot):
     bot.add_cog(channels(bot))

@@ -562,16 +562,17 @@ class lt_db(object):
         else:
             return f"{Value} does not appear to belong to you."
 
-
-# endregion
+    # endregion
 
     # region DM Enablement
 
     def add_server_proxy(self, Guild, ID):
         query = {"user": ID}
-        self.db.proxies.update_one(query, {"$set": {"guild": Guild, 'user':ID}}, upsert=True)
+        self.db.proxies.update_one(
+            query, {"$set": {"guild": Guild, "user": ID}}, upsert=True
+        )
 
     def get_server_proxy(self, ID):
         query = {"user": ID}
-        guild = self.db.proxies.find_one(query)['guild']
+        guild = self.db.proxies.find_one(query)["guild"]
         return int(guild)

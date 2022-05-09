@@ -12,7 +12,6 @@ class utility(commands.Cog):
         self.channel = channel
         self.logger = lt_logger
 
-
     @commands.command(pass_context=True, no_pm=True, aliases=["clear", "p"])
     async def purge(self, ctx, number: int, members="everyone", *, txt=None):
         """
@@ -92,14 +91,17 @@ class utility(commands.Cog):
             Guild = self.bot.get_guild(guild)
             if Guild in self.bot.guilds:
                 if Guild.get_member(ctx.author.id) is not None:
-                    self.db.add_server_proxy( guild, ctx.author.id)
-                    await ctx.send(f"Proxy server \"{Guild.name}\" added.")
+                    self.db.add_server_proxy(guild, ctx.author.id)
+                    await ctx.send(f'Proxy server "{Guild.name}" added.')
                 else:
-                    await ctx.send("It appears that you are not a member of that guild.")
+                    await ctx.send(
+                        "It appears that you are not a member of that guild."
+                    )
         except Exception as e:
             print(e)
-            await ctx.send(f"It would appear that this guild does not have {self.bot.user.name} within it.")
-
+            await ctx.send(
+                f"It would appear that this guild does not have {self.bot.user.name} within it."
+            )
 
     @commands.Cog.listener()
     async def on_guild_remove(self, guild):

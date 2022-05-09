@@ -30,9 +30,7 @@ class mw(commands.Cog):
         ).json()
 
         jsondata = charsheet["sheetdata"]["sheet_data"]["jsondata"]
-        
 
-        
         jsondata = json.loads(jsondata, object_pairs_hook=collections.OrderedDict)
         # jsondata = ast.literal_eval(jsondata)
 

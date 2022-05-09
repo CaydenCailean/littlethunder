@@ -530,7 +530,7 @@ class rpg(commands.Cog):
             _, Guild, _ = self.ctx_info(ctx)
         except:
             ID = ctx.author.id
-            
+
             Guild = self.db.get_server_proxy(ID)
 
         try:
@@ -577,10 +577,10 @@ class rpg(commands.Cog):
             _, Guild, ID = self.ctx_info(ctx)
         except:
             ID = ctx.author.id
-            Guild = self.db.get_server_proxy(ID)    
-        
+            Guild = self.db.get_server_proxy(ID)
+
         ownerCheck = ""
-        
+
         try:
             ownerCheck = self.db.char_owner(Guild, ID, Name)
         except:
@@ -605,13 +605,13 @@ class rpg(commands.Cog):
         Remove a field from a character.
         """
         Name = Name.lower()
-        
-        try:        
+
+        try:
             _, Guild, ID = self.ctx_info(ctx)
         except:
             ID = ctx.author.id
             Guild = self.db.get_server_proxy(ID)
-                
+
         ownerCheck = ""
 
         try:
@@ -696,7 +696,7 @@ class rpg(commands.Cog):
                 description=description,
                 color=int(str(output["color"]), 16),
             )
-            
+
             try:
 
                 embed.set_footer(
@@ -835,7 +835,7 @@ class rpg(commands.Cog):
             except:
                 user = ctx.author.id
                 Guild = await self.bot.fetch_guild(int(self.db.get_server_proxy(user)))
-            
+
             # members = await Guild.fetch_members(limit=None).flatten()
             embeds = []
 
