@@ -308,8 +308,6 @@ class channels(commands.Cog):
                 try:
                     files = []
                     for index, attachment in enumerate(message.attachments):
-                        if attachment.size > 5000000:
-                            return
                         await attachment.save(f"temp/{index}_{attachment.filename}")
                         files.append(discord.File(f"temp/{index}_{attachment.filename}"))
                 except:
@@ -327,9 +325,7 @@ class channels(commands.Cog):
                         ref_auth = ref_msg.author
                         embed = discord.Embed(title=ref_auth, description=ref_msg.content, url=ref_msg.jump_url)
                         try:
-                            print(dir(ref_msg.attachments[0].url))
                             ref_img = ref_msg.attachments[0].url
-                            print(ref_img)
                             embed.set_image(url=ref_img)
                         except:
                             pass
