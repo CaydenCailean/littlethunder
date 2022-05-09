@@ -147,14 +147,14 @@ class channels(commands.Cog):
                         try:
                             await webhook.send(
                             content=message,
-                            username=char["name"].title() + f" ({ctx.message.author.display_name})",
+                            username=char["name"].title() + f" ({str(message.author)})",
                             avatar_url=avatar,
                             embed=embed
                         )
                         except:
                             await webhook.send(
                             content=message,
-                            username=char["name"].title() + f" ({ctx.message.author.display_name})",
+                            username=char["name"].title() + f" ({str(message.author)})",
                             avatar_url=avatar,
                         )
                         await ctx.message.delete()
@@ -256,7 +256,7 @@ class channels(commands.Cog):
                     await webhook.edit_message(
                         message_id=message.reference.message_id,
                         content=message.content.replace('.edit ', ''),
-                        username=character.title() + f' ({message.author.display_name})',
+                        username=character.title() + f' ({str(message.author)})',
                         avatar_url=ref_auth.avatar_url,
                     )
                     await message.delete()
@@ -335,7 +335,7 @@ class channels(commands.Cog):
                         try:
                             await webhook.send(
                                 content=message.content,
-                                username=char["name"].title() + f' ({message.author.display_name})',
+                                username=char["name"].title() + f' ({str(message.author)})',
                                 avatar_url=avatar,
                                 embeds=[embed],
                                 files=files
@@ -345,7 +345,7 @@ class channels(commands.Cog):
                             try:
                                 await webhook.send(
                                 content=message.content,
-                                username=char["name"].title() + f' ({message.author.display_name})',
+                                username=char["name"].title() + f' ({str(message.author)})',
                                 avatar_url=avatar,
                                 files=files
                             )
