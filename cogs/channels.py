@@ -327,7 +327,9 @@ class channels(commands.Cog):
                         ref_auth = ref_msg.author
                         embed = discord.Embed(title=ref_auth, description=ref_msg.content, url=ref_msg.jump_url)
                         try:
-                            ref_img = ref_msg.embeds[0].image.url
+                            print(dir(ref_msg.attachments[0].url))
+                            ref_img = ref_msg.attachments[0].url
+                            print(ref_img)
                             embed.set_image(url=ref_img)
                         except:
                             pass
