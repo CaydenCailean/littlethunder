@@ -245,7 +245,7 @@ class channels(commands.Cog):
 
             ref_msg = await channel.fetch_message(message.reference.message_id)
             ref_auth = ref_msg.author
-            character = ref_msg.author.display_name.replace(f' ({message.author.display_name})','').lower()
+            character = ref_msg.author.display_name.replace(f' ({str(message.author)})','').lower()
             ownerCheck = self.db.char_owner(Guild, message.author.id, character)
             
 
