@@ -1,10 +1,7 @@
-import ast
 import collections
 import discord
 import json
-import re
 import requests
-
 from discord.ext import commands
 
 
@@ -33,9 +30,9 @@ class mw(commands.Cog):
         ).json()
 
         jsondata = charsheet["sheetdata"]["sheet_data"]["jsondata"]
-        # jsondata = re.sub(r'\"', '', jsondata)
+        
 
-        # jsondata = json.dumps(jsondata, sort_keys = True, indent = 4)
+        
         jsondata = json.loads(jsondata, object_pairs_hook=collections.OrderedDict)
         # jsondata = ast.literal_eval(jsondata)
 

@@ -326,6 +326,12 @@ class channels(commands.Cog):
                         ref_msg = await message.channel.fetch_message(message.reference.message_id)
                         ref_auth = ref_msg.author
                         embed = discord.Embed(title=ref_auth, description=ref_msg.content, url=ref_msg.jump_url)
+                        try:
+                            ref_img = ref_msg.embeds[0].image.url
+                            embed.set_image(url=ref_img)
+                        except:
+                            pass
+                            
                     except:
                         pass    
                     async with ClientSession() as session:
