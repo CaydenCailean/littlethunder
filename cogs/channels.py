@@ -302,7 +302,6 @@ class channels(commands.Cog):
             ic_channel, url = self.db.get_ic(Guild, Category)
 
             if ic_channel != Channel:
-                await self.bot.process_commands(message)
                 return
 
             else:
