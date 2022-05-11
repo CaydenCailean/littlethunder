@@ -275,10 +275,12 @@ class channels(commands.Cog):
     async def in_character(self, message):
 
         if message.author.id != self.bot.user.id and not message.webhook_id:
-
             for command in self.bot.walk_commands():
                 if message.content.lower().startswith(f".{command.name}"):
                     return
+                for alias in command.aliases:
+                    if message.content.lower().startswith(f".{alias}"):
+                        return
 
             if (
                 message.content.lower().startswith(f".edit")
