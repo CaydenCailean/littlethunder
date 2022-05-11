@@ -275,6 +275,19 @@ class channels(commands.Cog):
     async def in_character(self, message):
 
         if message.author.id != self.bot.user.id and not message.webhook_id:
+            
+            Guild, Category, Channel, ID = (
+                message.guild.id,
+                message.channel.category_id,
+                message.channel.id,
+                message.author.id,
+            )
+
+            ic_channel, url = self.db.get_ic(Guild, Category)
+
+            if ic_channel != Channel:
+                return
+
             for command in self.bot.walk_commands():
                 if message.content.lower().startswith(f".{command.name}"):
                     return
@@ -291,20 +304,6 @@ class channels(commands.Cog):
             if message.content.lower().startswith(f".ooc"):
                 return
 
-            Guild, Category, Channel, ID = (
-                message.guild.id,
-                message.channel.category_id,
-                message.channel.id,
-                message.author.id,
-            )
-            char = self.db.get_proxy(Guild, Category, ID)
-            if not char:
-                return
-
-            ic_channel, url = self.db.get_ic(Guild, Category)
-
-            if ic_channel != Channel:
-                return
 
             else:
 
