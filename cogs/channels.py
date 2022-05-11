@@ -283,11 +283,16 @@ class channels(commands.Cog):
                 message.author.id,
             )
 
+
             ic_channel, url = self.db.get_ic(Guild, Category)
 
             if ic_channel != Channel:
                 return
 
+            char = self.db.get_proxy(Guild, Category, ID)
+            if not char:
+                return
+            
             for command in self.bot.walk_commands():
                 if message.content.lower().startswith(f".{command.name}"):
                     return
