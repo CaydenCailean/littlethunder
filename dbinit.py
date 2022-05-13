@@ -522,12 +522,16 @@ class lt_db(object):
                     updoot = {"$set": {"deckMode": "off"}}
                     output = f"Deckmode has been disabled for {Table.title()}."
             elif Setting == "public":
-                if table["public"] == "off":
+                try:   
+                    if table["public"] == "off":
+                        updoot = {"$set": {"public": "on"}}
+                        output = f"{Table.title()} is now public."
+                    else:
+                        updoot = {"$set": {"public": "off"}}
+                        output = f"{Table.title()} is now private."
+                except:
                     updoot = {"$set": {"public": "on"}}
                     output = f"{Table.title()} is now public."
-                else:
-                    updoot = {"$set": {"public": "off"}}
-                    output = f"{Table.title()} is now private."
             else:
                 output = f"{Setting} is not a valid setting to toggle."
                     
