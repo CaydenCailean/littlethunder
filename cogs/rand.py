@@ -12,6 +12,7 @@ class rand(commands.Cog):
         self.db = lt_db
         self.channel = channel
         self.logger = lt_logger
+        self.settings = ['deckMode', 'public']
 
     # region Utility
 
@@ -28,6 +29,8 @@ class rand(commands.Cog):
             r -= int(weight)
             if r <= 0:
                 return value
+
+    
 
     # endregion
 
@@ -143,16 +146,16 @@ class rand(commands.Cog):
             )
             raise Exception()
 
-    @random.command(aliases=["toggle"])
-    async def toggle_deck(self, ctx, Table):
+    @random.command()
+    async def toggle(self, ctx, Table, Setting):
         Guild, ID = self.ctx_info(ctx)
         try:
-            output = self.db.deck_toggle(Guild, ID, Table)
+            output = self.db.deck_toggle(Guild, ID, Table, Setting)
             await ctx.send(output)
         except:
             message = str(traceback.format_exc())
             await self.logger.error(
-                self, message, self.__class__.__name__, "Deck Toggle"
+                self, message, self.__class__.__name__, "Random Table Toggle"
             )
 
     @random.command(aliases=["reset"])

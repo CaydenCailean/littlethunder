@@ -462,7 +462,13 @@ class lt_db(object):
     def rand_add(self, Guild, ID, Table, Weight, Value):
         query = {"table": Table.lower()}
         table = self.db.rand[str(Guild)].find_one(query)
-        if ID == table["user"]:
+
+        try:
+            pubCheck = table["public"]
+        except:
+            pubCheck = "off"        
+        
+        if ID == table["user"] or pubCheck == "on":
             pairs = table["pairs"]
             pairs.append([Value, Weight])
             updoot = {"$set": {"pairs": pairs}}
@@ -503,19 +509,28 @@ class lt_db(object):
         output = self.db.rand[str(Guild)].find_one({"table": Table.lower()})
         return output
 
-    def deck_toggle(self, Guild, ID, Table):
+    def toggle(self, Guild, ID, Table, Setting):
         query = {"table": Table.lower()}
         table = self.db.rand[str(Guild)].find_one(query)
 
         if ID == table["user"]:
-
-            if table["deckMode"] == "off":
-                updoot = {"$set": {"deckMode": "on"}}
-                output = f"Deckmode has been enabled for {Table.title()}."
+            if Setting == "deck":
+                if table["deckMode"] == "off":
+                    updoot = {"$set": {"deckMode": "on"}}
+                    output = f"Deckmode has been enabled for {Table.title()}."
+                else:
+                    updoot = {"$set": {"deckMode": "off"}}
+                    output = f"Deckmode has been disabled for {Table.title()}."
+            elif Setting == "public":
+                if table["public"] == "off":
+                    updoot = {"$set": {"public": "on"}}
+                    output = f"{Table.title()} is now public."
+                else:
+                    updoot = {"$set": {"public": "off"}}
+                    output = f"{Table.title()} is now private."
             else:
-                updoot = {"$set": {"deckMode": "off"}}
-                output = f"Deckmode has been disabled for {Table.title()}."
-
+                output = f"{Setting} is not a valid setting to toggle."
+                    
         self.db.rand[str(Guild)].update_one(query, updoot)
         return output
 
