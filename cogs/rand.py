@@ -12,7 +12,7 @@ class rand(commands.Cog):
         self.db = lt_db
         self.channel = channel
         self.logger = lt_logger
-        self.settings = ['deckMode', 'public']
+        self.settings = ['deck', 'public']
 
     # region Utility
 
@@ -150,7 +150,7 @@ class rand(commands.Cog):
     async def toggle(self, ctx, Table, Setting):
         Guild, ID = self.ctx_info(ctx)
         try:
-            output = self.db.deck_toggle(Guild, ID, Table, Setting)
+            output = self.db.toggle(Guild, ID, Table, Setting)
             await ctx.send(output)
         except:
             message = str(traceback.format_exc())

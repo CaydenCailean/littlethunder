@@ -512,7 +512,7 @@ class lt_db(object):
     def toggle(self, Guild, ID, Table, Setting):
         query = {"table": Table.lower()}
         table = self.db.rand[str(Guild)].find_one(query)
-
+        
         if ID == table["user"]:
             if Setting == "deck":
                 if table["deckMode"] == "off":
@@ -534,7 +534,7 @@ class lt_db(object):
                     output = f"{Table.title()} is now public."
             else:
                 output = f"{Setting} is not a valid setting to toggle."
-                    
+            
         self.db.rand[str(Guild)].update_one(query, updoot)
         return output
 
