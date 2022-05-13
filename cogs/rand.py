@@ -49,21 +49,11 @@ class rand(commands.Cog):
                 await self.logger.error(
                     self, message, self.__class__.__name__, "random", self.ctx.author
                 )
-        if ctx.invoked_subcommand != None:
-            Table = ctx.message.content.split(" multi ", 1)[1].rsplit(" ", 1)[0]
-
-            try:
-                await self.get(ctx, Table)
-            except:
-                message = str(traceback.format_exc())
-                await self.logger.error(
-                    self, message, self.__class__.__name__, "random", self.ctx.author
-                )
 
     @random.command(case_insensitive=True)
     async def multi(self, ctx, Table, num: int):
 
-        for x in range(1, num):
+        for x in range(0, num):
             try:
                 await self.get(ctx, Table)
             except:

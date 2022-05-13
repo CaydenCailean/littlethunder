@@ -451,10 +451,13 @@ class lt_db(object):
             output = f"{table.title()} is already registered."
             return output
         except:
-            entry = {"table": Table.lower(), "user": ID, "pairs": [], "deckMode": "off"}
-            self.db.rand[str(Guild)].insert_one(entry).inserted_id
-            output = f"{Table.title()} was added to the database. You can edit this table using commands via Discord, or in the future, using the Web Editor, found at https://webthunder.herokuapp.com/"
-            return output
+            try:
+                entry = {"table": Table.lower(), "user": ID, "pairs": [], "deckMode": "off"}
+                self.db.rand[str(Guild)].insert_one(entry).inserted_id
+                output = f"{Table.title()} was added to the database. You can edit this table using commands via Discord, or in the future, using the Web Editor, found at https://webthunder.herokuapp.com/"
+                return output
+            except:
+                output = f"{Table.title()} could not be added to the database."
 
     def rand_add(self, Guild, ID, Table, Weight, Value):
         query = {"table": Table.lower()}
