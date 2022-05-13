@@ -314,7 +314,7 @@ class rpg(commands.Cog):
                         ctx.message.author,
                     )
             if mention != None:
-                mention = mention.replace("<@!", "").replace(">", "")
+                mention = mention.replace("<@", "").replace(">", "")
             else:
                 mention = ctx.message.author.id
             try:
