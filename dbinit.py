@@ -62,17 +62,9 @@ class lt_db(object):
     def dice_add(self, User, Guild, Alias, Value):
 
         query = {"user": User, "Alias": Alias.lower()}
-        try:
-            macro = self.db.dice[str(Guild)].find_one(query)
-            macro["Value"].append(Value)
-            updoot = {"$set": macro}
-            self.db.dice[str(Guild)].update_one(query, updoot, upsert=True)
-            return f"The {Alias} macro has been updated."
-        except Exception as e:
-            print(e)
-            updoot = {"$set": {"user": User, "Alias": Alias.lower(), "Value": [Value]}}
-            self.db.dice[str(Guild)].update_one(query, updoot, upsert=True)
-            return f"The {Alias} macro has been created."
+        updoot = {"$set": {"user": User, "Alias": Alias.lower(), "Value": [Value]}}
+        self.db.dice[str(Guild)].update_one(query, updoot, upsert=True)
+        return f"Your {Alias} variable has been updated."
 
     def dice_get(self, User, Guild, Alias):
 

@@ -24,7 +24,7 @@ class channels(commands.Cog):
         return ctx.channel.category.id, ctx.guild.id, ctx.message.author.id
 
     @commands.group(case_insensitive=True)
-    async def dm(self, ctx):
+    async def dm(self):
         """
         Select a subcommand to use with this command.
         """
@@ -33,14 +33,18 @@ class channels(commands.Cog):
     async def claim(self, ctx):
         """
         Claim the role of dungeon master within current channel category. Only one user can be the dungeon master for a given category.
-        """
+        
+        This command will fail if there is already a dungeon master in the category."""
         Category, Guild, ID = self.ctx_info(ctx)
         output = self.db.add_owner(Guild, Category, ID)
         await ctx.send(output)
 
     @dm.command()
     async def unclaim(self, ctx):
-        """Unclaim current dm for category. Administrators and the Current DM are the only users able to perform this action."""
+        """
+        Unclaim current dm for category. Administrators and the Current DM are the only users able to perform this action.
+        
+        """
         Category, Guild, ID = self.ctx_info(ctx)
         override = ctx.message.author.permissions_in(ctx.channel).administrator
         output = self.db.remove_owner(Guild, Category, ID, override)
@@ -50,6 +54,8 @@ class channels(commands.Cog):
     async def broadcast(self, ctx, *, message):
         """
         Broadcast a message to all IC Channels in a server which you are the DM for.
+
+        This command is only available to the DM of the channel.
         """
         _, Guild, ID = self.ctx_info(ctx)
         channels = self.db.get_all_ic(Guild, ID)
@@ -67,7 +73,10 @@ class channels(commands.Cog):
     @commands.bot_has_permissions(manage_webhooks=True)
     @dm.command()
     async def set_ic(self, ctx, Channel: Optional[discord.TextChannel]):
-        """Set mentioned channel as in-character chat for this channel category. Only usable by DM."""
+        """
+        Set mentioned channel as in-character chat for this channel category. Only usable by DM.
+        
+        If no channel is mentioned, the current channel will be set as the IC channel."""
         try:
             Category, Guild, ID = self.ctx_info(ctx)
             dmCheck = self.db.owner_check(Guild, Category, ID)
@@ -117,7 +126,7 @@ class channels(commands.Cog):
 
         This message can be deleted by the user who sent it by reacting to it with a ❌ emoji.
 
-        This message can be edited by the user who sent it by replying to it. The entirety of the message sent in the reply will replace the original message.
+        This message can be edited by the user who sent it by replying to it with .edit in front of the new message contents. The entirety of the message sent in the reply will replace the original message.
         """
         try:
             Category, Guild, ID = self.ctx_info(ctx)
@@ -180,6 +189,10 @@ class channels(commands.Cog):
     async def set_char(self, ctx, *, character):
         """
         Set default character to post as for this category's IC channel.
+
+        Reacting to your in-character messages with a ❌ emoji will remove the message.
+
+        This message can be edited by the user who sent it by replying to it with .edit in front of the new message contents. The entirety of the message sent in the reply will replace the original message. 
         """
 
         Category, Guild, ID = self.ctx_info(ctx)

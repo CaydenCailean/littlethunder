@@ -6,8 +6,7 @@ import time
 import json
 
 from .lt_logger import lt_logger
-from aiohttp import ClientSession
-from discord import Webhook, AsyncWebhookAdapter
+
 from discord.ext import commands
 
 
@@ -111,13 +110,42 @@ class rpg(commands.Cog):
         Comments may be added to a dice output by appending the command with #, followed by the content of the comment you wish to be shown.
         """
         if ctx.invoked_subcommand is None:
-            if input.find("!") != -1:
-                _, Guild, ID = self.ctx_info(ctx)
 
-                label = input.replace("!", "", 1)
-                macro = self.db.dice_get(ID, Guild, label)
+            _, Guild, ID = self.ctx_info(ctx)
 
-                [await self.macro_list(ctx, input) for input in macro]
+            # Check if the user has a macro for this command
+
+            regex = re.compile(r"\!\w+")
+            macros = regex.findall(input)
+            if macros:
+                # regex to isolate macros
+
+                eval_str = input
+                try:
+                    for macro in macros:
+                        # for each macro, replace it with the macro's value
+                        label = macro.replace("!", "", 1)
+                        val = self.db.dice_get(ID, Guild, label)
+
+                        if len(val) > 1:
+                            return [await self.d(ctx, input=input) for input in val]
+
+                        eval_str = eval_str.replace(macro, val[0], 1)
+
+                    if regex.findall(eval_str):
+                        # if there are still macros in the string, recurse
+                        return await self.d(ctx, input=eval_str)
+
+                    Total, embed = self.diceroll(ctx, eval_str)
+                    await ctx.send(embed=embed)
+                    return Total
+                except:
+                    message = str(traceback.format_exc())
+                    await self.logger.error(
+                        self, message, self.__class__.__name__, "Macro", ctx.message.author
+                    )
+                    await ctx.send("Didn't work!")
+
 
             else:
                 try:
@@ -137,10 +165,14 @@ class rpg(commands.Cog):
     @d.command(pass_context=True)
     async def save(self, ctx, Alias):
         """
-        Saves a dice expression as a variable.
+        Saves a dice expression as a variable. Overwrites existing variables.
 
         Example:
         .d save Attack_Longsword 1d20+8
+
+        This will save the dice expression as Attack_Longsword.
+
+
         """
         _, Guild, User = self.ctx_info(ctx)
 
