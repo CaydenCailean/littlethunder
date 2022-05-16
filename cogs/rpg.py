@@ -176,11 +176,24 @@ class rpg(commands.Cog):
         """
         _, Guild, User = self.ctx_info(ctx)
 
-        for line in ctx.message.content.splitlines():
-            line = line.replace(f".d save {Alias} ", "")
-            self.db.dice_add(User, Guild, Alias, line)
+        try:
+            
+            Value = []
+            for line in ctx.message.content.splitlines():
+                line = line.replace(f".d save {Alias} ", "")
+                Value.append(line)
 
-        await ctx.send(f"The {Alias} macro has been updated.")
+            updoot = {"$set": {"user": User, "alias": Alias.lower(), "Value": Value}}
+            self.db.dice_add(User, Guild, Alias, updoot)
+            
+
+            await ctx.send(f"The {Alias} macro has been updated.")
+
+        except:
+            message = str(traceback.format_exc())
+            await self.logger.error(
+                self, message, self.__class__.__name__, "Macro", ctx.message.author
+            )
 
     @d.command(pass_context=True)
     async def delete(self, ctx, Alias):

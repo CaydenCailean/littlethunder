@@ -59,10 +59,10 @@ class lt_db(object):
 
     # region Dice
 
-    def dice_add(self, User, Guild, Alias, Value):
-
+    def dice_add(self, User, Guild, Alias, updoot):
+        print(updoot)
         query = {"user": User, "Alias": Alias.lower()}
-        updoot = {"$set": {"user": User, "Alias": Alias.lower(), "Value": [Value]}}
+        #updoot = {"$set": {"user": User, "Alias": Alias.lower(), "Value": [Value]}}
         self.db.dice[str(Guild)].update_one(query, updoot, upsert=True)
         return f"Your {Alias} variable has been updated."
 
