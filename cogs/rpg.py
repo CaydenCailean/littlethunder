@@ -130,7 +130,7 @@ class rpg(commands.Cog):
                         if len(val) > 1:
                             return [await self.d(ctx, input=input) for input in val]
 
-                        eval_str = eval_str.replace(macro, val[0], 1)
+                        eval_str = eval_str.replace(macro, f"({val[0]})", 1)
 
                     if regex.findall(eval_str):
                         # if there are still macros in the string, recurse
