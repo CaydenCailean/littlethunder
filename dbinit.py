@@ -84,10 +84,13 @@ class lt_db(object):
     def dice_list(self, User, Guild):
         query = {"user": User}
         dice = self.db.dice[str(Guild)].find(query)
-        outbound = []
+
+        outDict = {}
         for d in dice:
-            outbound.append({d["Alias"]: d["Value"]})
-        return outbound
+            outDict.update({d["Alias"]: d["Value"]})
+        
+        
+        return outDict
     
     # endregion
 
