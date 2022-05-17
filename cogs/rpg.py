@@ -207,70 +207,7 @@ class rpg(commands.Cog):
         outMessage = self.db.dice_delete(User, Guild, Alias)
         await ctx.send(outMessage)
 
-    @commands.command(pass_context=True)
-    async def ready(self, ctx, Alias, *, Value):
-        """
-        Readies an action's dice. Preserves comments through value
-        """
-        if ctx.invoked_subcommand == None:
-            _, Guild, ID = self.ctx_info(ctx)
-            outMessage = self.db.ready_set(ID, Guild, Alias, Value)
-            await ctx.send(outMessage)
-
-    @commands.command(pass_context=True)
-    async def trigger(self, ctx, Alias):
-        """
-        Triggers a readied action.
-        """
-        pattern = r"(#\d|\D*)$"
-
-        _, Guild, _ = self.ctx_info(ctx)
-        trigger = self.db.ready_trigger(Guild, Alias.lower())
-        User = self.bot.get_user(trigger["User"])
-
-        check = re.search(pattern, trigger["Value"])
-
-        if trigger != None:
-            try:
-                if check.group(1).find("#") == -1:
-
-                    ctx.message.content = (
-                        ctx.message.content
-                        + " # "
-                        + trigger["Value"]
-                        + f": Being rolled for {User.display_name}"
-                    )
-                else:
-                    start, end = trigger["Value"].split("#")
-                    ctx.message.content = (
-                        "# "
-                        + end
-                        + " :: "
-                        + start
-                        + f": Being rolled for {User.display_name}"
-                    )
-
-            except:
-                ctx.message.content
-                pass
-            await self.d(ctx, trigger["Value"])
-        else:
-            await ctx.send(f"It looks like {Alias} was never readied.")
-
-    @d.command(pass_context=True)
-    async def ready_remove(self, ctx, Alias):
-        """
-        WIP. Do not use.
-        """
-        Category, Guild, ID = self.ctx_info(ctx)
-        dmCheck = self.db.owner_check(Guild, Category, ID)
-        playerCheck = self.db.ready_get(ID, Guild, Alias.lower())
-        if dmCheck == True or playerCheck == True:
-            outMessage = self.db.ready_remove(Guild, Alias.lower())
-            await ctx.send(outMessage)
-        else:
-            await ctx.send("Looks like either that doesn't exist, or you don't own it.")
-
+    
     @commands.group(case_insensitive=True)
     async def init(self, ctx):
         """
