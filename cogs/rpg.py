@@ -226,14 +226,12 @@ class rpg(commands.Cog):
                 for i in v:
                     if i == v[0]:
                         description += f"{k:<{max_len}}: {i}\n"
-                        print(f"{k:<{max_len}}: {i}")
                         
                     else:
                         for _ in range(max_len+2):
                             description += ' '
                         description += f"{i}\n"
-                        print(f"{' ':<{max_len}}: {i}")
-            
+                        
             description += "```"
             embed = discord.Embed(
                 title=f"Dice Variables for {ctx.message.author.display_name}",
