@@ -207,7 +207,45 @@ class rpg(commands.Cog):
         outMessage = self.db.dice_delete(User, Guild, Alias)
         await ctx.send(outMessage)
 
-    
+    @d.command(pass_context=True)
+    async def list(self, ctx):
+        """
+        Lists all dice variables.
+        """
+        try:
+            _, Guild, User = self.ctx_info(ctx)
+            outMessage = self.db.dice_list(User, Guild)
+            macroDict = {}
+            for macro in outMessage:
+                macroDict.update(macro)
+            
+            description = "```\n"
+            max_len = max([len(x) for x in macroDict.keys()])
+
+            for k, v in macroDict.items():
+                for i in v:
+                    if i == v[0]:
+                        description += f"{k:<{max_len}}: {i}\n"
+                        print(f"{k:<{max_len}}: {i}")
+                        
+                    else:
+                        for _ in range(max_len+2):
+                            description += ' '
+                        description += f"{i}\n"
+                        print(f"{' ':<{max_len}}: {i}")
+            
+            description += "```"
+            embed = discord.Embed(
+                title=f"Dice Variables for {ctx.message.author.display_name}",
+                description = description,
+                color=ctx.message.author.color,
+            )
+            await ctx.send(embed=embed)
+        except:
+            message = str(traceback.format_exc())
+            await self.logger.error(
+                self, message, self.__class__.__name__, "Macro", ctx.message.author
+            )
     @commands.group(case_insensitive=True)
     async def init(self, ctx):
         """

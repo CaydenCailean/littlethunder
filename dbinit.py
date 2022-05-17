@@ -81,6 +81,14 @@ class lt_db(object):
         else:
             return f"It doesn't looks like {Alias} was a saved dice expression."
 
+    def dice_list(self, User, Guild):
+        query = {"user": User}
+        dice = self.db.dice[str(Guild)].find(query)
+        outbound = []
+        for d in dice:
+            outbound.append({d["Alias"]: d["Value"]})
+        return outbound
+    
     # endregion
 
     
