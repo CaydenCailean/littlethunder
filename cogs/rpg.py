@@ -225,12 +225,10 @@ class rpg(commands.Cog):
             for k, v in macroDict.items():
                 for i in v:
                     if i == v[0]:
-                        description += f"{k:<{max_len}}: {i}\n"
+                        description += f"{k:<{max_len+1}}: {i}\n"
                         
                     else:
-                        for _ in range(max_len+2):
-                            description += ' '
-                        description += f"{i}\n"
+                        description += f"{'':<{max_len+3}}{i}\n"
                         
             description += "```"
             embed = discord.Embed(
