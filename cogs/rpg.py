@@ -215,7 +215,7 @@ class rpg(commands.Cog):
         try:
             _, Guild, User = self.ctx_info(ctx)
             macroDict = self.db.dice_list(User, Guild)
-            
+
             description = "```\n"
             max_len = max([len(x) for x in macroDict.keys()])
 
