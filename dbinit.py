@@ -83,38 +83,7 @@ class lt_db(object):
 
     # endregion
 
-    # region Readied Actions
-
-    def ready_set(self, User, Guild, Alias, Value):
-        updoot = {"$set": {"User": User, "Alias": Alias.lower(), "Value": Value}}
-        query = {"User": User, "Alias": Alias.lower()}
-        self.db.ready[str(Guild)].update_one(query, updoot, upsert=True)
-        return f"{Alias} has been set!"
-
-    def ready_get(self, User, Guild, Alias):
-        query = {"User": User, "Alias": Alias.lower()}
-        check = self.db.ready[str(Guild)].find_one(query)
-        if check != None:
-            return True
-
-    def ready_trigger(self, Guild, Alias):
-        query = {"Alias": Alias}
-        check = self.db.ready[str(Guild)].find_one_and_delete(query)
-        if check != None:
-            return check
-        else:
-            return
-
-    def ready_remove(self, Guild, Alias):
-        query = {"Alias": Alias}
-        check = self.db.ready[str(Guild)].find_one_and_delete(query)
-        if check != None:
-            return f"{Alias} has been removed!"
-        else:
-            return "It doesn't look like there was a readied action by that name!"
-
-    # endregion
-
+    
     # region Initiative
 
     def init_add(self, Guild, Category, Name, ID, Init):
