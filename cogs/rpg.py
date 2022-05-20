@@ -99,19 +99,20 @@ class rpg(commands.Cog):
         # check len(ownerList)
         # if len(ownerList) > 6, iterate through first 6 owners:
         # if len(ownerList) < 6, iterate through all owners:
-        print(embeds)
+        
+        
+
         if len(ownerList) > 6:
             newList = ownerList[:6]
             del ownerList[6:]
         
         else:
             newList = ownerList
-        
+        embed = discord.Embed(description=f"Character List for {Guild.name}", title=f"__**Character List by Owner**__", color=0x202020)
         
         for owner in newList:
             characterList = self.db.get_char_by_owner(Guild.id, owner)
             charList = ''
-            embed = discord.Embed(description=f"Character List for {Guild.name}", title=f"__**Character List by Owner**__", color=0x202020)
             for char in characterList:
                 try:
                     char["name"]
@@ -128,11 +129,14 @@ class rpg(commands.Cog):
                 owner_name = await self.bot.fetch_user(owner)
 
             embed.add_field(name=f"{owner_name}", value=charList)
-        
+
         embeds.append(embed)
 
-        if len(ownerList) > 0:
-            await self.paginate_embeds(Guild, embeds, ownerList)
+        list_out = [x for x in ownerList if x not in newList]
+        print(list_out)
+        print(len(list_out))
+        if len(list_out) > 0:
+            await self.paginate_embeds(Guild, embeds, list_out)
             
         
 
@@ -980,9 +984,8 @@ class rpg(commands.Cog):
                                 ctx.message.author,
                             )
                 elif detailLevel.lower() == "expanded":
-                    print(embeds)
-                    embeds = self.paginate_embeds(Guild, embeds, ownerList)
-
+                    new_embeds = await self.paginate_embeds(Guild, embeds, ownerList)
+                    
                 else:
 
                     for owner in ownerList:
