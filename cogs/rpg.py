@@ -950,7 +950,7 @@ class rpg(commands.Cog):
                             except:
                                 continue
                             
-                            charList += f"{char['name']}\n"
+                            charList += f"{char['name']}\n".title()
                         
                         if charList != '':
                             try:
