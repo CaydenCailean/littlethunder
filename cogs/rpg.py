@@ -104,8 +104,6 @@ class rpg(commands.Cog):
 
         if len(ownerList) > 6:
             newList = ownerList[:6]
-            del ownerList[6:]
-        
         else:
             newList = ownerList
         embed = discord.Embed(description=f"Character List for {Guild.name}", title=f"__**Character List by Owner**__", color=0x202020)
@@ -128,15 +126,12 @@ class rpg(commands.Cog):
             except:
                 owner_name = await self.bot.fetch_user(owner)
 
-            embed.add_field(name=f"{owner_name}", value=charList)
+            embed.add_field(name=f"{owner_name}", value=charList.title())
 
         embeds.append(embed)
-
-        list_out = [x for x in ownerList if x not in newList]
-        print(list_out)
-        print(len(list_out))
-        if len(list_out) > 0:
-            await self.paginate_embeds(Guild, embeds, list_out)
+        del ownerList[:6]
+        if len(ownerList) > 0:
+            await self.paginate_embeds(Guild, embeds, ownerList)
             
         
 
