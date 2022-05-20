@@ -939,6 +939,7 @@ class rpg(commands.Cog):
                                 ctx.message.author,
                             )
                 elif detailLevel.lower() == "expanded":
+
                     embed = discord.Embed(description="Character list for " + Guild.name, color=0x202020, title="__Character List by Owner__")
                     
                     for owner in ownerList:
@@ -953,7 +954,7 @@ class rpg(commands.Cog):
                             charList += f"{char['name']}\n".title()
                         
                         if charList != '':
-                            charlist += "\n\n"
+                            charList += "\n\n"
                             try:
                                 member = await Guild.fetch_member(owner)
                                 embed.add_field(name=f"{member.display_name}", value=charList)
