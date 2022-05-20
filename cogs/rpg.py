@@ -95,6 +95,28 @@ class rpg(commands.Cog):
         except:
             raise Exception
 
+    def paginate_embeds(self, ctx, embeds, ownerList):
+        # iterate through first 6 owners
+        for i in range(0, len(ownerList), 6):
+            characterList = self.db.get_char_by_owner(ctx.Guild.id, ownerList[i])
+            charList = ''
+            embed = discord.Embed(description=f"Character List for {ctx.Guild.name}", title=f"__**Character List by Owner**__", color=0x202020)
+            for char in characterList:
+                try:
+                    char["name"]
+                except:
+                    continue
+                
+                charList += f"{char['name']}\n"
+            embed.add_field(name=f"{ownerList[i]}", value=charList)
+            del ownerList[i]
+            embeds.append(embed)
+
+        if len(ownerList) > 0:
+            self.paginate_embeds(ctx, embeds, ownerList)
+            
+        
+
     @commands.group(
         case_insensitive=True,
         invoke_without_command=True,
@@ -938,35 +960,33 @@ class rpg(commands.Cog):
                                 "Display",
                                 ctx.message.author,
                             )
-                elif detailLevel.lower() == "expanded":
-
-                    embed = discord.Embed(description="Character list for " + Guild.name, color=0x202020, title="__Character List by Owner__")
-                    
-                    for owner in ownerList:
-                        characterList = self.db.get_char_by_owner(Guild.id, owner)
-                        charList = ''
-                        for char in characterList:
-                            try:
-                                char["name"]
-                            except:
-                                continue
-                            
-                            charList += f"{char['name']}\n".title()
-                        
-                        if charList != '':
-                            charList += "\n\n"
-                            try:
-                                member = await Guild.fetch_member(owner)
-                                embed.add_field(name=f"{member.display_name}", value=charList)
-                                embeds.append(embed)
-                            except:
-                                member = await self.bot.fetch_user(owner)
-                                embed.add_field(name=f"{member.name} [NO LONGER IN SERVER]", value=charList)
-                                embeds.append(embed)
-                        
-                    pass
-
-
+                #elif detailLevel.lower() == "expanded":
+                #    embed = discord.Embed(description="Character list for " + Guild.name, color=0x202020, title="__Character List by Owner__")
+                #    
+                #    for owner in ownerList:
+                #        characterList = self.db.get_char_by_owner(Guild.id, owner)
+                #        charList = ''
+                #        for char in characterList:
+                #            try:
+                #                char["name"]
+                #            except:
+                #                continue
+                #            
+                #            charList += f"{char['name']}\n".title()
+                #        
+                #        if charList != '':
+                #            charList += "\n\n"
+                #            try:
+                #                member = await Guild.fetch_member(owner)
+                #                embed.add_field(name=f"{member.display_name}", value=charList)
+                #            except:
+                #                member = await self.bot.fetch_user(owner)
+                #                embed.add_field(name=f"{member.name} [NO LONGER IN SERVER]", value=charList)
+                #                
+                #    print(len(embed))
+                #    embeds.append(embed)
+                #        
+                #    pass
 
                 else:
 
