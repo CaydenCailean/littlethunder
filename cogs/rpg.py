@@ -95,25 +95,44 @@ class rpg(commands.Cog):
         except:
             raise Exception
 
-    def paginate_embeds(self, ctx, embeds, ownerList):
-        # iterate through first 6 owners
-        for i in range(0, len(ownerList), 6):
-            characterList = self.db.get_char_by_owner(ctx.Guild.id, ownerList[i])
+    async def paginate_embeds(self, Guild, embeds, ownerList):
+        # check len(ownerList)
+        # if len(ownerList) > 6, iterate through first 6 owners:
+        # if len(ownerList) < 6, iterate through all owners:
+        print(embeds)
+        if len(ownerList) > 6:
+            newList = ownerList[:6]
+            del ownerList[6:]
+        
+        else:
+            newList = ownerList
+        
+        
+        for owner in newList:
+            characterList = self.db.get_char_by_owner(Guild.id, owner)
             charList = ''
-            embed = discord.Embed(description=f"Character List for {ctx.Guild.name}", title=f"__**Character List by Owner**__", color=0x202020)
+            embed = discord.Embed(description=f"Character List for {Guild.name}", title=f"__**Character List by Owner**__", color=0x202020)
             for char in characterList:
                 try:
                     char["name"]
+                    charList += f"{char['name']}\n"
                 except:
                     continue
-                
-                charList += f"{char['name']}\n"
-            embed.add_field(name=f"{ownerList[i]}", value=charList)
-            del ownerList[i]
-            embeds.append(embed)
+
+            if charList == '':
+                continue
+
+            try:
+                owner_name = await Guild.fetch_member(owner)
+            except:
+                owner_name = await self.bot.fetch_user(owner)
+
+            embed.add_field(name=f"{owner_name}", value=charList)
+        
+        embeds.append(embed)
 
         if len(ownerList) > 0:
-            self.paginate_embeds(ctx, embeds, ownerList)
+            await self.paginate_embeds(Guild, embeds, ownerList)
             
         
 
@@ -960,33 +979,9 @@ class rpg(commands.Cog):
                                 "Display",
                                 ctx.message.author,
                             )
-                #elif detailLevel.lower() == "expanded":
-                #    embed = discord.Embed(description="Character list for " + Guild.name, color=0x202020, title="__Character List by Owner__")
-                #    
-                #    for owner in ownerList:
-                #        characterList = self.db.get_char_by_owner(Guild.id, owner)
-                #        charList = ''
-                #        for char in characterList:
-                #            try:
-                #                char["name"]
-                #            except:
-                #                continue
-                #            
-                #            charList += f"{char['name']}\n".title()
-                #        
-                #        if charList != '':
-                #            charList += "\n\n"
-                #            try:
-                #                member = await Guild.fetch_member(owner)
-                #                embed.add_field(name=f"{member.display_name}", value=charList)
-                #            except:
-                #                member = await self.bot.fetch_user(owner)
-                #                embed.add_field(name=f"{member.name} [NO LONGER IN SERVER]", value=charList)
-                #                
-                #    print(len(embed))
-                #    embeds.append(embed)
-                #        
-                #    pass
+                elif detailLevel.lower() == "expanded":
+                    print(embeds)
+                    embeds = self.paginate_embeds(Guild, embeds, ownerList)
 
                 else:
 
