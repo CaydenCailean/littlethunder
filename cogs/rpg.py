@@ -123,8 +123,10 @@ class rpg(commands.Cog):
 
             try:
                 owner_name = await Guild.fetch_member(owner)
+                owner_name = owner_name.display_name
             except:
                 owner_name = await self.bot.fetch_user(owner)
+                owner_name = owner_name.name
 
             embed.add_field(name=f"{owner_name}", value=charList.title())
 
