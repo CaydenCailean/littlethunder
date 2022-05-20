@@ -869,45 +869,8 @@ class rpg(commands.Cog):
                     if owner not in ownerList:
                         ownerList.append(owner)
 
-                if detailLevel.lower() != "verbose":
-
-                    for owner in ownerList:
-                        characterList = self.db.get_char_by_owner(Guild.id, owner)
-
-                        charList = ""
-                        for character in characterList:
-
-                            try:
-                                character["name"]
-
-                            except:
-                                continue
-
-                            charList += str(character["name"]).title() + "\n"
-
-                        if charList != "":
-                            try:
-                                member = await Guild.fetch_member(owner)
-                                embed = discord.Embed(
-                                    description=charList,
-                                    title=member.display_name,
-                                    color=member.color,
-                                )
-                                embed.set_thumbnail(url=member.avatar_url)
-                                embeds.append(embed)
-                            except:
-                                member = await self.bot.fetch_user(owner)
-                                embed = discord.Embed(
-                                    description=charList,
-                                    title=member.name,
-                                )
-                                embed.set_thumbnail(url=member.avatar_url)
-                                embed.set_footer(
-                                    text="User may no longer be in this server."
-                                )
-                                embeds.append(embed)
-
-                else:
+                
+                if detailLevel.lower() == "verbose":
                     for character in characters:
 
                         try:
@@ -975,6 +938,72 @@ class rpg(commands.Cog):
                                 "Display",
                                 ctx.message.author,
                             )
+                elif detailLevel.lower() == "succinct":
+                    embed = discord.Embed(description="Character list for " + Guild.name, color=0x202020, title="__Character List by Owner__")
+                    
+                    for owner in ownerList:
+                        characterList = self.db.get_char_by_owner(Guild.id, owner)
+                        charList = ''
+                        for char in characterList:
+                            try:
+                                char["name"]
+                            except:
+                                continue
+                            
+                            charList += f"{char['name']}\n"
+                        
+                        if charList != '':
+                            try:
+                                member = await Guild.fetch_member(owner)
+                                embed.add_field(name=f"{member.display_name}", value=charList)
+                                embeds.append(embed)
+                            except:
+                                member = await self.bot.fetch_user(owner)
+                                embed.add_field(name=f"{member.name} [NO LONGER IN SERVER]", value=charList)
+                                embeds.append(embed)
+                        
+                    pass
+
+
+
+                else:
+
+                    for owner in ownerList:
+                        characterList = self.db.get_char_by_owner(Guild.id, owner)
+
+                        charList = ""
+                        for character in characterList:
+
+                            try:
+                                character["name"]
+
+                            except:
+                                continue
+
+                            charList += str(character["name"]).title() + "\n"
+
+                        if charList != "":
+                            try:
+                                member = await Guild.fetch_member(owner)
+                                embed = discord.Embed(
+                                    description=charList,
+                                    title=member.display_name,
+                                    color=member.color,
+                                )
+                                embed.set_thumbnail(url=member.avatar_url)
+                                embeds.append(embed)
+                            except:
+                                member = await self.bot.fetch_user(owner)
+                                embed = discord.Embed(
+                                    description=charList,
+                                    title=member.name,
+                                )
+                                embed.set_thumbnail(url=member.avatar_url)
+                                embed.set_footer(
+                                    text="User may no longer be in this server."
+                                )
+                                embeds.append(embed)
+
 
             if len(embeds) == 1:
                 msg = await ctx.send(embed=embeds[0])
