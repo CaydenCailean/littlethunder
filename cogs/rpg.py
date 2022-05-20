@@ -128,9 +128,7 @@ class rpg(commands.Cog):
             except:
                 owner_name = await self.bot.fetch_user(owner)
                 owner_name = owner_name.name
-                embed.add_field(name=f"{owner_name}", value="**__[USER NO LONGER IN SERVER__**]\n\n" + charList.title())
-
-            
+                embed.add_field(name=f"{owner_name}", value="**__[USER NO LONGER IN SERVER]__**\n\n" + charList.title())
 
         embeds.append(embed)
         del ownerList[:6]
