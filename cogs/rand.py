@@ -97,14 +97,17 @@ class rand(commands.Cog):
         """
         try:
             table = self.db.rand_get(ctx.message.guild.id, Table)
+            print(table)
         except:
             message = str(traceback.format_exc())
             await self.logger.error(
                 self, message, self.__class__.__name__, "random", self.ctx.author
             )
-        outstring = ''
+        outstring = '```'
         for value in table['pairs']:
+            print(value)
             outString += f"{value[0]} - {value[1]}\n"
+        outstring += outString + '```'
         
         embed = discord.Embed(
             title=f"Random Table: {table['table']}",
