@@ -70,15 +70,19 @@ class rand(commands.Cog):
         """
         Lists all random tables that you have created.
         """
-        if scope != "all":
 
-            try:
+
+        try:
+            if scope != "all":
                 tables = self.db.rand_get_owned(ctx.message.author.id, ctx.message.guild.id)
-            except:
-                message = str(traceback.format_exc())
-                await self.logger.error(
-                    self, message, self.__class__.__name__, "random", self.ctx.author
+            else:
+                tables = self.db.rand_get_all(ctx.message.guild.id)
+        except:
+            message = str(traceback.format_exc())
+            await self.logger.error(
+                self, message, self.__class__.__name__, "random", self.ctx.author
                 )
+
         outString = ''
         for table in tables:
             outString += f"{table['table'].title()}\n"
@@ -105,9 +109,6 @@ class rand(commands.Cog):
             )
         outString = '```'
         for value in table['pairs']:
-            print(value)
-            print(value[0])
-            print(value[1])
             outString += f"{value[0]} - {value[1]}\n"
         outString +='```'
 
