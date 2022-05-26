@@ -106,8 +106,6 @@ class utility(commands.Cog):
     @commands.command(hidden=True)
     async def force_collections(self, ctx):
         for guild in self.bot.guilds:
-            print(guild.name)
-            print(guild.id)
             self.db.create_collections(guild.id)
         return await ctx.send("Done.")
 

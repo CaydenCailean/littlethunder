@@ -42,8 +42,10 @@ class lt_db(object):
         return True
 
     def create_collections(self, Guild):
-        self.db.dice[str(Guild)]
-        self.db.rand[str(Guild)]
+        self.db.dice[str(Guild)].insert_one({"user": "N/A"})
+        self.db.dice[str(Guild)].delete_one({"user": "N/A"})
+        self.db.rand[str(Guild)].insert_one({"user": "N/A"})
+        self.db.rand[str(Guild)].delete_one({"user": "N/A"})
         self.db[str(Guild)].create_index([("name", "text")])
 
     def drop_collection(self, Guild):
