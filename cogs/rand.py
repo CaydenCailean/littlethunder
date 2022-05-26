@@ -75,8 +75,10 @@ class rand(commands.Cog):
         try:
             if scope != "all":
                 tables = self.db.rand_get_owned(ctx.message.author.id, ctx.message.guild.id)
+                title = f"Random Tables owned by {ctx.message.author.display_name}"
             else:
                 tables = self.db.rand_get_all(ctx.message.guild.id)
+                title = "All Tables"
         except:
             message = str(traceback.format_exc())
             await self.logger.error(
@@ -87,8 +89,10 @@ class rand(commands.Cog):
         for table in tables:
             outString += f"{table['table'].title()}\n"
         
+
+
         embed = discord.Embed(
-            title=f"Random Tables owned by {ctx.message.author.display_name}",
+            title=title,
             description=outString,
             color=0x00ff00,
         )
