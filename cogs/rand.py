@@ -96,7 +96,7 @@ class rand(commands.Cog):
         Displays a random table.
         """
         try:
-            table = await self.db.rand_get(ctx.message.guild.id, Table)
+            table = self.db.rand_get(ctx.message.guild.id, Table)
         except:
             message = str(traceback.format_exc())
             await self.logger.error(
