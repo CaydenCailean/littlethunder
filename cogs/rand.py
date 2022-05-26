@@ -81,7 +81,7 @@ class rand(commands.Cog):
                 )
         outString = ''
         for table in tables:
-            outString += f"{table['table']}\n"
+            outString += f"{table['table'].title()}\n"
         
         embed = discord.Embed(
             title=f"Random Tables owned by {ctx.message.author.display_name}",
