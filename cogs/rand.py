@@ -106,6 +106,8 @@ class rand(commands.Cog):
         outstring = '```'
         for value in table['pairs']:
             print(value)
+            print(value[0])
+            print(value[1])
             outString += f"{value[0]} - {value[1]}\n"
         outstring +='```'
         print(outstring)
