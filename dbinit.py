@@ -43,6 +43,7 @@ class lt_db(object):
 
     def create_collections(self, Guild):
         self.db.dice[str(Guild)]
+        self.db.rand[str(Guild)]
         self.db[str(Guild)].create_index([("name", "text")])
 
     def drop_collection(self, Guild):

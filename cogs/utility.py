@@ -103,6 +103,12 @@ class utility(commands.Cog):
                 f"It would appear that this guild does not have {self.bot.user.name} within it."
             )
 
+    @commands.command(hidden=True)
+    async def force_collections(self, ctx):
+        for guild in self.bot.guilds:
+            self.db.create_collections(guild.id)
+        return await ctx.send("Done.")
+
     @commands.Cog.listener()
     async def on_guild_remove(self, guild):
         try:
