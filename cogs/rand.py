@@ -89,7 +89,30 @@ class rand(commands.Cog):
             color=0x00ff00,
         )
         await ctx.send(embed=embed)
+
+    @random.command(case_insensitive=True)
+    async def display(self, ctx, Table):
+        """
+        Displays a random table.
+        """
+        try:
+            await self.db.rand_get(ctx, Table)
+        except:
+            message = str(traceback.format_exc())
+            await self.logger.error(
+                self, message, self.__class__.__name__, "random", self.ctx.author
+            )
+        outstring = ''
+        for value in Table['pairs']:
+            outString += f"{value[0]} - {value[1]}\n"
         
+        embed = discord.Embed(
+            title=f"Random Table: {Table['table']}",
+            description=outString,
+            color=0x00ff00,
+        )
+        await ctx.send(embed=embed)
+
     @random.command(case_insensitive=True)
     async def new(self, ctx, Table):
         """
