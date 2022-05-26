@@ -107,8 +107,8 @@ class rand(commands.Cog):
         for value in table['pairs']:
             print(value)
             outString += f"{value[0]} - {value[1]}\n"
-        outstring += outString + '```'
-        
+        outstring +='```'
+        print(outstring)
         embed = discord.Embed(
             title=f"Random Table: {table['table']}",
             description=outString,
