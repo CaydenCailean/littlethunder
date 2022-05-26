@@ -89,8 +89,6 @@ class rand(commands.Cog):
         for table in tables:
             outString += f"{table['table'].title()}\n"
         
-
-
         embed = discord.Embed(
             title=title,
             description=outString,
@@ -113,7 +111,7 @@ class rand(commands.Cog):
             )
         outString = '```'
         for value in table['pairs']:
-            outString += f"{value[0]} - {value[1]}\n"
+            outString += f"{value[1]} - {value[0]}\n"
         outString +='```'
 
         embed = discord.Embed(
