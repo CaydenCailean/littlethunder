@@ -483,6 +483,11 @@ class lt_db(object):
         output = self.db.rand[str(Guild)].find_one({"table": Table.lower()})
         return output
 
+    def rand_get_owned(self, User, Guild):
+        query = {'user':User}
+        output = self.db.rand[str(Guild)].find(query)
+        return output
+
     def toggle(self, Guild, ID, Table, Setting):
         query = {"table": Table.lower()}
         table = self.db.rand[str(Guild)].find_one(query)

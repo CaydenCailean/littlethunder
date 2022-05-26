@@ -66,6 +66,31 @@ class rand(commands.Cog):
                 )
 
     @random.command(case_insensitive=True)
+    async def list(self, ctx,scope=None):
+        """
+        Lists all random tables that you have created.
+        """
+        if scope != "all":
+
+            try:
+                tables = self.db.rand_get_owned(ctx.message.author.id, ctx.message.guild.id)
+            except:
+                message = str(traceback.format_exc())
+                await self.logger.error(
+                    self, message, self.__class__.__name__, "random", self.ctx.author
+                )
+        outString = ''
+        for table in tables:
+            outString += f"{table['table']}\n"
+        
+        embed = discord.Embed(
+            title=f"Random Tables owned by {ctx.message.author.display_name}",
+            description=outString,
+            color=0x00ff00,
+        )
+        await ctx.send(embed=embed)
+        
+    @random.command(case_insensitive=True)
     async def new(self, ctx, Table):
         """
         Adds a new table to the random tables for the server it is called in. Multiple word table names - "Wild Magic" for instance, must be surrounded in quotation marks.
