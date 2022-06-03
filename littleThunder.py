@@ -103,6 +103,7 @@ while check == False:
 # add cogs before startup
 
 
+
 bot.add_cog(main(bot, config["log_channel"]))
 # bot.add_cog(economy(bot, lt_db, config["log_channel"]))
 bot.add_cog(channels(bot, lt_db, config["log_channel"]))
