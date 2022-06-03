@@ -13,12 +13,21 @@ class main(commands.Cog):
     # when bot is ready
     @commands.Cog.listener()
     async def on_ready(self):
-        await self.bot.change_presence(
-            activity=discord.Game(name=f"games in {len(self.bot.guilds)} servers!")
-        )
-        await self.logger.info(
-            self, f"{self.bot.user.name} is now online", "Main", "Startup"
-        )
+        try:
+            await self.bot.change_presence(
+                activity=discord.Game(name=f"games in {len(self.bot.guilds)} servers!")
+            )
+            await self.logger.info(
+                self, f"{self.bot.user.name} is now online", "Main", "Startup"
+            )
+        except:
+            await self.logger.error(
+                self,
+                str(traceback.format_exc()),
+                "Main",
+                "on_ready",
+                self.bot.user,
+            )
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
