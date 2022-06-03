@@ -1,6 +1,8 @@
 import discord
 import os
 import configparser
+import traceback
+import time
 
 from cogs.main import main
 from cogs.info import info
@@ -88,8 +90,15 @@ async def pat(ctx):
 # connect to and initialize DB
 
 lt_db = lt_db(config)
-lt_db.connect()
-lt_db.db_init()
+check = False
+while check == False:
+    try:
+        check = lt_db.connect()
+        lt_db.db_init()
+    except:
+        print("DB connection failed, retrying in 30 seconds")
+        lt_logger.error(bot, str(traceback.format_exc()), "Main", "DB Connection")
+        time.sleep(30)
 
 # add cogs before startup
 

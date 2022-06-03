@@ -36,6 +36,7 @@ class lt_db(object):
             return True
         except Exception as ex:
             print(f"An error occured connecting to the database.{ex}")
+            return False
 
     def db_init(self):
         self.db = self.client.brertdtw29riga7
