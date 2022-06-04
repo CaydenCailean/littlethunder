@@ -78,11 +78,29 @@ def weighted(pairs):
 async def pat(ctx):
     user = ctx.author.display_name
     responses = [
-        (10, "_closes his eyes, enjoying the pat thoroughly._"),
-        (10, "_wags his tail energetically as he's pet._"),
-        (10, f"_licks {user} appreciatively._"),
-        (10, "_rolls over and exposes his belly for more rubs._"),
-        (1, "_uwu_"),
+        (50, "_closes his eyes, enjoying the pat thoroughly._"),
+        (50, "_wags his tail energetically as he's pet._"),
+        (50, f"_licks {user} appreciatively._"),
+        (50, "_rolls over and exposes his belly for more rubs._"),
+        (50, "_wags his tail happily as he's pet._"),
+        (50, "_perks his ears as he's pet._"),
+        (50, "_starts kicking his leg aggressively, scratching at the air in bliss._"),
+        (50, "_pants softly, thoroughly enjoying the attention._")
+        (10, "_uwu_"),
+        (10, "_owo_"),
+        (1, """```
+        ██████████████        
+    ████▒▒▒▒    ░░  ▒▒████    
+  ██▒▒▒▒██        ░░░░▒▒▒▒▓▓  
+▓▓▒▒░░██        ░░▒▒░░▓▓▒▒▒▒▓▓
+██░░░░██  ▓▓    ▒▒▓▓░░██░░▒▒██
+░░██░░██        ▒▒▒▒░░██▒▒██░░
+  ██░░██          ▒▒░░██░░██  
+  ░░▓▓░░██  ████▓▓  ▓▓░░██░░  
+    ░░  ██    ██    ██        
+        ░░██      ██▓▓        
+          ▒▒██████░░          
+          ```""")
     ]
     await ctx.send(weighted(responses))
 
