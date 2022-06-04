@@ -85,7 +85,7 @@ async def pat(ctx):
         (50, "_wags his tail happily as he's pet._"),
         (50, "_perks his ears as he's pet._"),
         (50, "_starts kicking his leg aggressively, scratching at the air in bliss._"),
-        (50, "_pants softly, thoroughly enjoying the attention._")
+        (50, "_pants softly, thoroughly enjoying the attention._"),
         (10, "_uwu_"),
         (10, "_owo_"),
         (1, """```
