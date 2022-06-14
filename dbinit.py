@@ -14,24 +14,16 @@ class lt_db(object):
         self.logger = lt_logger
         # connection information for DB
         try:
-            self.user = os.environ("DBUSER")
-            self.password = os.environ("DBPASS")
-            self.host = os.environ("DBHOST")
-            self.port = os.environ("DBPORT")
+            self.URI = os.environ["DB_URI"]
             self.dbname = os.environ("DBNAME")
         except:
-            self.user = config["user"]
-            self.password = config["pass"]
-            self.host = config["host"]
-            self.port = config["port"]
+            self.URI = config["DB_URI"]
             self.dbname = config["dbname"]
-
+            
     def connect(self):
-        connection = {
-            f"mongodb://{self.user}:{self.password}@{self.host}:{self.port}/{self.dbname}"
-        }
+        
         try:
-            self.client = MongoClient(connection)
+            self.client = MongoClient(self.URI)
             print("Connected to db!")
             return True
         except Exception as ex:
@@ -281,11 +273,15 @@ class lt_db(object):
             )
 
     def set_proxy(self, Guild, Category, ID, Character):
-        proxy = self.get_one_char(Guild, Character, ID)["_id"]
+        
 
+        
+        proxy = self.get_one_char(Guild, Character, ID)["_id"]
+       
         output = self.db[str(Guild)].find_one_and_update(
             {"Category": Category}, {"$set": {f"{ID}": proxy}}
         )
+       
 
         return output
 

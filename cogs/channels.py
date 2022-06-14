@@ -24,7 +24,7 @@ class channels(commands.Cog):
         return ctx.channel.category.id, ctx.guild.id, ctx.message.author.id
 
     @commands.group(case_insensitive=True)
-    async def dm(self):
+    async def dm(self, ctx):
         """
         Select a subcommand to use with this command.
         """
@@ -146,7 +146,7 @@ class channels(commands.Cog):
                             ctx.message.reference.message_id
                         )
                         ref_auth = ref_msg.author
-                        print(ref_auth)
+                        
                         embed = discord.Embed(
                             title=ref_auth,
                             description=ref_msg.content,
@@ -194,7 +194,6 @@ class channels(commands.Cog):
 
         This message can be edited by the user who sent it by replying to it with .edit in front of the new message contents. The entirety of the message sent in the reply will replace the original message. 
         """
-
         Category, Guild, ID = self.ctx_info(ctx)
         character = character.lower()
         output = self.db.set_proxy(Guild, Category, ID, character)

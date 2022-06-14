@@ -112,7 +112,17 @@ check = False
 while check == False:
     try:
         check = lt_db.connect()
-        lt_db.db_init()
+        check2 = False
+        while check2 == False:
+            try:
+                lt_db.db_init()
+                check2 = True
+            except:
+                print("DB init failed, retrying in 30 seconds...")
+                lt_logger.error(bot, str(traceback.format_exc()), "Main", "DB init failed")
+                time.sleep(30)
+
+
     except:
         print("DB connection failed, retrying in 30 seconds")
         lt_logger.error(bot, str(traceback.format_exc()), "Main", "DB Connection")
