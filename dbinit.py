@@ -13,12 +13,9 @@ class lt_db(object):
     def __init__(self, config):
         self.logger = lt_logger
         # connection information for DB
-        try:
-            self.URI = os.environ("DB_URI")
-            self.dbname = os.environ("DBNAME")
-        except:
-            self.URI = config["DB_URI"]
-            self.dbname = config["dbname"]
+        
+        self.URI = config["DB_URI"]
+        self.dbname = config["dbname"]
             
     def connect(self):
         

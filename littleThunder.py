@@ -23,6 +23,7 @@ if "DBUSER" in os.environ:
         "dbname": os.environ["DBNAME"],
         "discordtoken": os.environ["DISCTOKEN"],
         "log_channel": os.environ["LOG_CHANNEL"],
+        "DB_URI": os.environ["DB_URI"]
     }
 else:
     cfg = configparser.ConfigParser()
