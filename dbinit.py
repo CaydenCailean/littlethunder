@@ -14,7 +14,7 @@ class lt_db(object):
         self.logger = lt_logger
         # connection information for DB
         try:
-            self.URI = os.environ["DB_URI"]
+            self.URI = os.environ("DB_URI")
             self.dbname = os.environ("DBNAME")
         except:
             self.URI = config["DB_URI"]
