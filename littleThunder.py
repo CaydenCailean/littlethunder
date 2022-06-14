@@ -18,7 +18,7 @@ from dbinit import lt_db
 from random import randint
 
 # Read config and connect to db
-if "DBUSER" in os.environ:
+if "DBNAME" in os.environ:
     config = {
         "dbname": os.environ["DBNAME"],
         "discordtoken": os.environ["DISCTOKEN"],
