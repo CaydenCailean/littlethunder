@@ -20,10 +20,6 @@ from random import randint
 # Read config and connect to db
 if "DBUSER" in os.environ:
     config = {
-        "user": os.environ["DBUSER"],
-        "pass": os.environ["DBPASS"],
-        "host": os.environ["DBHOST"],
-        "port": os.environ["DBPORT"],
         "dbname": os.environ["DBNAME"],
         "discordtoken": os.environ["DISCTOKEN"],
         "log_channel": os.environ["LOG_CHANNEL"],
