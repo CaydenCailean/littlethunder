@@ -1,7 +1,6 @@
 from pymongo import MongoClient, ReturnDocument, ASCENDING
 from cogs.lt_logger import lt_logger
 import traceback
-import os
 import re
 
 
@@ -14,7 +13,7 @@ class lt_db(object):
         self.logger = lt_logger
         # connection information for DB
         
-        self.URI = config["DB_URI"]
+        self.URI = config["db_uri"]
         self.dbname = config["dbname"]
             
     def connect(self):

@@ -23,7 +23,7 @@ if "DBNAME" in os.environ:
         "dbname": os.environ["DBNAME"],
         "discordtoken": os.environ["DISCTOKEN"],
         "log_channel": os.environ["LOG_CHANNEL"],
-        "DB_URI": os.environ["DB_URI"]
+        "db_uri": os.environ["DB_URI"]
     }
 else:
     cfg = configparser.ConfigParser()
@@ -73,6 +73,9 @@ def weighted(pairs):
 
 @bot.command(pass_context="true", aliases=["pet"])
 async def pat(ctx):
+    """
+    You can pet the dog.
+    """
     user = ctx.author.display_name
     responses = [
         (50, "_closes his eyes, enjoying the pat thoroughly._"),
