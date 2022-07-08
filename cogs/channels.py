@@ -1,9 +1,6 @@
-from click import pass_context
 import discord
 import traceback
-import shutil
 import os
-import asyncio
 from .lt_logger import lt_logger
 from .rpg import rpg
 from aiohttp import ClientSession
@@ -43,7 +40,6 @@ class channels(commands.Cog):
     async def unclaim(self, ctx):
         """
         Unclaim current dm for category. Administrators and the Current DM are the only users able to perform this action.
-        
         """
         Category, Guild, ID = self.ctx_info(ctx)
         override = ctx.message.author.permissions_in(ctx.channel).administrator
@@ -55,7 +51,7 @@ class channels(commands.Cog):
         """
         Broadcast a message to all IC Channels in a server which you are the DM for.
 
-        This command is only available to the DM of the channel.
+        This command is only available to the DM of the category.
         """
         _, Guild, ID = self.ctx_info(ctx)
         channels = self.db.get_all_ic(Guild, ID)

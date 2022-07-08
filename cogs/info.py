@@ -14,9 +14,7 @@ class info(commands.Cog):
     @commands.command()
     async def info(self, ctx):
         """
-        The goodest boi.
-
-        Prints a small snippet about the bot to the channel.
+        Prints a snippet about the bot to the channel.
         """
         try:
             embed = discord.Embed(
@@ -50,6 +48,9 @@ class info(commands.Cog):
 
     @commands.command(aliases=["suggestion"])
     async def suggest(self, ctx, *, arg):
+        """
+        Sends a suggestion to the bot owner.
+        """
         user = ctx.message.author.name
 
         await ctx.channel.send(
@@ -61,6 +62,9 @@ class info(commands.Cog):
 
     @commands.command()
     async def bugreport(self, ctx, *, arg):
+        """
+        Reports a bug to the bot owner.
+        """
         user = ctx.message.author.name
 
         await ctx.channel.send(

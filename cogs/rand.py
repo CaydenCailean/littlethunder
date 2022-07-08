@@ -55,7 +55,9 @@ class rand(commands.Cog):
 
     @random.command(case_insensitive=True)
     async def multi(self, ctx, Table, num: int):
-
+        """
+        Run multiple .random commands on the provided table.
+        """
         for x in range(0, num):
             try:
                 await self.get(ctx, Table)
@@ -70,7 +72,6 @@ class rand(commands.Cog):
         """
         Lists all random tables that you have created.
         """
-
 
         try:
             if scope != "all":
@@ -204,6 +205,9 @@ class rand(commands.Cog):
 
     @random.command()
     async def toggle(self, ctx, Table, Setting):
+        """Toggles a designated mode for the provided random table.
+        
+        Currently settings are Public and DeckMode"""
         Guild, ID = self.ctx_info(ctx)
         try:
             output = self.db.toggle(Guild, ID, Table, Setting)
@@ -216,6 +220,9 @@ class rand(commands.Cog):
 
     @random.command(aliases=["reset"])
     async def shuffle(self, ctx, Table):
+        """
+        Shuffle entries back into the deck in deckmode.
+        """
         Guild, ID = self.ctx_info(ctx)
         try:
             output = self.db.deck_shuffle(Guild, ID, Table)
@@ -228,6 +235,9 @@ class rand(commands.Cog):
 
     @random.command(aliases=["return"])
     async def return_one(self, ctx, Table, Value):
+        """
+        Return one entry to the deck in deckmode. WIP
+        """
         Guild, ID = self.ctx_info(ctx)
         try:
             pass

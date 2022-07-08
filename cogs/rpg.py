@@ -145,11 +145,18 @@ class rpg(commands.Cog):
     async def d(self, ctx, *, input: str):
 
         """
-        Rolls dice using #d# format, with a maximum of 100d1000.
+        Rolls dice and/pr performs mathematical operations.
 
-        You may add or subtract flat modifiers or dice by appending them to your initial #d# roll.
+        Dice can be compounded, such as 1d10+2d6, have modifiers added, like 1d20+3, or use a variety of flags, listed below. These flags can be used together.
 
-        Comments may be added to a dice output by appending the command with #, followed by the content of the comment you wish to be shown.
+        k - Keep - Keep all matched values - 8d6k6 only keeps results of 6.
+        p - Drop - Drops all matched values - 8d6p<3 drops all dice less than 3.
+        rr - Reroll - Rerolls matched values until none match - 8d6rr1 rerolls all ones until there are not any ones.
+        ro - Reroll once - Rerolls all matched values once - 8d6ro1 rerolls any of the first eight dice if they roll a one.
+        ra - Reroll and add - Reroll once, keeping the original roll.
+        e - Explode - Rolls a die for each match - 8d6e6 rerolls all sixes and adds them to the total.
+        mi - Minimum - Sets a minimum value for each die rolled - 8d6mi3 gives a minimum of 3 on any single die.
+        ma - Maximum - Sets a maximum value for each die rolled - 8d6ma5 gives a maximum of 5 on any single die.
         """
         if ctx.invoked_subcommand is None:
 
@@ -207,12 +214,15 @@ class rpg(commands.Cog):
     @d.command(pass_context=True)
     async def save(self, ctx, Alias):
         """
-        Saves a dice expression as a variable. Overwrites existing variables.
+        Saves a dice expression as a variable. Overwrites existing variables. Consecutive expressions can be added after a line break in order to roll multiple dice at once.
 
         Example:
         .d save Attack_Longsword 1d20+8
 
         This will save the dice expression as Attack_Longsword.
+
+        Example of using macros:
+        .d !Attack_Longsword
 
 
         """
