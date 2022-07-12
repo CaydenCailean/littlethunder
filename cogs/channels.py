@@ -330,8 +330,6 @@ class channels(commands.Cog):
                 try:
                     files = []
                     for index, attachment in enumerate(message.attachments):
-                        if attachment.size > 83886080:
-                            return
                         await attachment.save(f"temp/{index}_{attachment.filename}")
                         files.append(
                             discord.File(f"temp/{index}_{attachment.filename}")

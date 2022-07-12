@@ -68,7 +68,7 @@ class rpg(commands.Cog):
 
             embed = discord.Embed(
                 title=f"Results for {ctx.message.author.display_name}",
-                description=f"Rolling {dice}",
+                description=f"Rolling {input}",
                 color=ctx.message.author.color,
             )
             try:
