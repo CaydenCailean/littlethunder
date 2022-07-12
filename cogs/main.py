@@ -1,4 +1,5 @@
 import discord
+import os
 import traceback
 from .lt_logger import lt_logger
 from discord.ext import commands
@@ -20,6 +21,9 @@ class main(commands.Cog):
             await self.logger.info(
                 self, f"{self.bot.user.name} is now online", "Main", "Startup"
             )
+            items = os.listdir(os.getcwd())
+            if 'temp' not in items:
+                os.mkdir('temp')
         except:
             await self.logger.error(
                 self,

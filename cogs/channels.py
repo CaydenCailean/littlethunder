@@ -385,10 +385,12 @@ class channels(commands.Cog):
                                     files=files,
                                 )
                             except:
+                                print("await webhook.send, no embed array")
                                 pass
                         await message.delete()
 
                 except:
+                    print("last")
                     return
 
 
