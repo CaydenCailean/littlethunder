@@ -4,7 +4,7 @@ import os
 from .lt_logger import lt_logger
 from .rpg import rpg
 from aiohttp import ClientSession
-from discord import Webhook, AsyncWebhookAdapter
+from discord import Webhook
 from discord.ext import commands
 from typing import Optional
 
@@ -21,7 +21,7 @@ class channels(commands.Cog):
         return ctx.channel.category.id, ctx.guild.id, ctx.message.author.id
 
     @commands.group(case_insensitive=True)
-    async def dm(self, ctx):
+    async def dm(self):
         """
         Select a subcommand to use with this command.
         """
@@ -152,8 +152,8 @@ class channels(commands.Cog):
                         pass
 
                     async with ClientSession() as session:
-                        webhook = discord.Webhook.from_url(
-                            url, adapter=discord.AsyncWebhookAdapter(session)
+                        webhook = Webhook.from_url(
+                            url=url, session=session
                         )
                         try:
                             await webhook.send(
@@ -173,7 +173,6 @@ class channels(commands.Cog):
                         await ctx.message.delete()
 
                 except:
-                    print(str(traceback.format_exc()))
                     raise Exception
         except:
             message = str(traceback.format_exc())
@@ -269,7 +268,7 @@ class channels(commands.Cog):
 
             async with ClientSession() as session:
                 _, url = self.db.get_ic(Guild, Category)
-                webhook = Webhook.from_url(url, adapter=AsyncWebhookAdapter(session))
+                webhook = Webhook.from_url(url=url, session=session)
                 if ref_auth.id == webhook.id and ownerCheck:
                     await webhook.edit_message(
                         message_id=message.reference.message_id,
@@ -281,7 +280,6 @@ class channels(commands.Cog):
 
     @commands.Cog.listener("on_message")
     async def in_character(self, message):
-
         if message.author.id != self.bot.user.id and not message.webhook_id:
             
             Guild, Category, Channel, ID = (
@@ -363,7 +361,7 @@ class channels(commands.Cog):
                         pass
                     async with ClientSession() as session:
                         webhook = discord.Webhook.from_url(
-                            url, adapter=discord.AsyncWebhookAdapter(session)
+                            url= url, session=session
                         )
                         try:
                             await webhook.send(
@@ -371,7 +369,7 @@ class channels(commands.Cog):
                                 username=char["name"].title()
                                 + f" ({str(message.author)})",
                                 avatar_url=avatar,
-                                embeds=[embed],
+                                embed=embed,
                                 files=files,
                             )
                         except:
@@ -385,12 +383,18 @@ class channels(commands.Cog):
                                     files=files,
                                 )
                             except:
-                                print("await webhook.send, no embed array")
+                                msg = str(traceback.format_exc())
+                                await lt_logger.error(
+                                    self,
+                                    msg,
+                                    self.__class__.__name__,
+                                    "Macro",
+                                    message.author,
+                                )
                                 pass
                         await message.delete()
 
                 except:
-                    print("last")
                     return
 
 

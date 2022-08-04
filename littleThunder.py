@@ -34,11 +34,7 @@ else:
 
 discToken = {"discToken": config["discordtoken"]}["discToken"]
 
-intents = discord.Intents.default()
-intents.members = True
-intents.guilds = True
-intents.reactions = True
-
+intents = discord.Intents.all()
 
 # bot command prefix
 
