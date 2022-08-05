@@ -10,7 +10,7 @@ from .lt_logger import lt_logger
 from discord.ext import commands
 
 
-class myStringifier(d20.SimpleStringifier):
+class LTStringifier(d20.SimpleStringifier):
     def _stringify(self, node) -> str:
         if not node.kept:
             return "X"
@@ -63,7 +63,7 @@ class rpg(commands.Cog):
             results = []
             for _ in range(int(diceNum)):
                 results.append(
-                    json.loads(str(d20.roll(input, stringifier=myStringifier())))
+                    json.loads(str(d20.roll(input, stringifier=LTStringifier())))
                 )
 
             embed = discord.Embed(
@@ -99,18 +99,20 @@ class rpg(commands.Cog):
         # check len(ownerList)
         # if len(ownerList) > 6, iterate through first 6 owners:
         # if len(ownerList) < 6, iterate through all owners:
-        
-        
 
         if len(ownerList) > 6:
             newList = ownerList[:6]
         else:
             newList = ownerList
-        embed = discord.Embed(description=f"Character List for {Guild.name}", title=f"__**Character List by Owner**__", color=0x202020)
-        
+        embed = discord.Embed(
+            description=f"Character List for {Guild.name}",
+            title=f"__**Character List by Owner**__",
+            color=0x202020,
+        )
+
         for owner in newList:
             characterList = self.db.get_char_by_owner(Guild.id, owner)
-            charList = ''
+            charList = ""
             for char in characterList:
                 try:
                     char["name"]
@@ -118,7 +120,7 @@ class rpg(commands.Cog):
                 except:
                     continue
 
-            if charList == '':
+            if charList == "":
                 continue
 
             try:
@@ -128,14 +130,15 @@ class rpg(commands.Cog):
             except:
                 owner_name = await self.bot.fetch_user(owner)
                 owner_name = owner_name.name
-                embed.add_field(name=f"{owner_name}", value="**__[USER NO LONGER IN SERVER]__**\n\n" + charList.title())
+                embed.add_field(
+                    name=f"{owner_name}",
+                    value="**__[USER NO LONGER IN SERVER]__**\n\n" + charList.title(),
+                )
 
         embeds.append(embed)
         del ownerList[:6]
         if len(ownerList) > 0:
             await self.paginate_embeds(Guild, embeds, ownerList)
-            
-        
 
     @commands.group(
         case_insensitive=True,
@@ -191,10 +194,13 @@ class rpg(commands.Cog):
                 except:
                     message = str(traceback.format_exc())
                     await self.logger.error(
-                        self, message, self.__class__.__name__, "Macro", ctx.message.author
+                        self,
+                        message,
+                        self.__class__.__name__,
+                        "Macro",
+                        ctx.message.author,
                     )
                     await ctx.send("Didn't work!")
-
 
             else:
                 try:
@@ -229,7 +235,7 @@ class rpg(commands.Cog):
         _, Guild, User = self.ctx_info(ctx)
 
         try:
-            
+
             Value = []
             for line in ctx.message.content.splitlines():
                 line = line.replace(f".d save {Alias} ", "")
@@ -237,7 +243,6 @@ class rpg(commands.Cog):
 
             updoot = {"$set": {"user": User, "alias": Alias.lower(), "Value": Value}}
             self.db.dice_add(User, Guild, Alias, updoot)
-            
 
             await ctx.send(f"The {Alias} macro has been updated.")
 
@@ -275,14 +280,14 @@ class rpg(commands.Cog):
                 for i in v:
                     if i == v[0]:
                         description += f"{k:<{max_len+1}}: {i}\n"
-                        
+
                     else:
                         description += f"{'':<{max_len+3}}{i}\n"
-                        
+
             description += "```"
             embed = discord.Embed(
                 title=f"Dice Variables for {ctx.message.author.display_name}",
-                description = description,
+                description=description,
                 color=ctx.message.author.color,
             )
             await ctx.send(embed=embed)
@@ -291,6 +296,7 @@ class rpg(commands.Cog):
             await self.logger.error(
                 self, message, self.__class__.__name__, "Macro", ctx.message.author
             )
+
     @commands.group(case_insensitive=True)
     async def init(self, ctx):
         """
@@ -320,7 +326,7 @@ class rpg(commands.Cog):
                     outstring = f"{list(i.values())[0]} : {list(i.values())[1]}"
                     output += outstring + "\n"
                 embed = discord.Embed(
-                    Title=f"Initiative for {ctx.channel.category}", colour=0x00FF00
+                    title=f"Initiative for {ctx.channel.category}", colour=0x00FF00
                 )
                 embed.add_field(name="Initiative", value=output)
 
@@ -921,7 +927,6 @@ class rpg(commands.Cog):
                     if owner not in ownerList:
                         ownerList.append(owner)
 
-                
                 if detailLevel.lower() == "verbose":
                     for character in characters:
 
@@ -992,7 +997,7 @@ class rpg(commands.Cog):
                             )
                 elif detailLevel.lower() == "expanded":
                     new_embeds = await self.paginate_embeds(Guild, embeds, ownerList)
-                    
+
                 else:
 
                     for owner in ownerList:
@@ -1030,7 +1035,6 @@ class rpg(commands.Cog):
                                     text="User may no longer be in this server."
                                 )
                                 embeds.append(embed)
-
 
             if len(embeds) == 1:
                 msg = await ctx.send(embed=embeds[0])

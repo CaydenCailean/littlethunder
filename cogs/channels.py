@@ -30,7 +30,7 @@ class channels(commands.Cog):
     async def claim(self, ctx):
         """
         Claim the role of dungeon master within current channel category. Only one user can be the dungeon master for a given category.
-        
+
         This command will fail if there is already a dungeon master in the category."""
         Category, Guild, ID = self.ctx_info(ctx)
         output = self.db.add_owner(Guild, Category, ID)
@@ -71,7 +71,7 @@ class channels(commands.Cog):
     async def set_ic(self, ctx, Channel: Optional[discord.TextChannel]):
         """
         Set mentioned channel as in-character chat for this channel category. Only usable by DM.
-        
+
         If no channel is mentioned, the current channel will be set as the IC channel."""
         try:
             Category, Guild, ID = self.ctx_info(ctx)
@@ -142,7 +142,7 @@ class channels(commands.Cog):
                             ctx.message.reference.message_id
                         )
                         ref_auth = ref_msg.author
-                        
+
                         embed = discord.Embed(
                             title=ref_auth,
                             description=ref_msg.content,
@@ -152,9 +152,7 @@ class channels(commands.Cog):
                         pass
 
                     async with ClientSession() as session:
-                        webhook = Webhook.from_url(
-                            url=url, session=session
-                        )
+                        webhook = Webhook.from_url(url=url, session=session)
                         try:
                             await webhook.send(
                                 content=message,
@@ -187,7 +185,7 @@ class channels(commands.Cog):
 
         Reacting to your in-character messages with a ❌ emoji will remove the message.
 
-        This message can be edited by the user who sent it by replying to it with .edit in front of the new message contents. The entirety of the message sent in the reply will replace the original message. 
+        This message can be edited by the user who sent it by replying to it with .edit in front of the new message contents. The entirety of the message sent in the reply will replace the original message.
         """
         Category, Guild, ID = self.ctx_info(ctx)
         character = character.lower()
@@ -281,14 +279,13 @@ class channels(commands.Cog):
     @commands.Cog.listener("on_message")
     async def in_character(self, message):
         if message.author.id != self.bot.user.id and not message.webhook_id:
-            
+
             Guild, Category, Channel, ID = (
                 message.guild.id,
                 message.channel.category_id,
                 message.channel.id,
                 message.author.id,
             )
-
 
             ic_channel, url = self.db.get_ic(Guild, Category)
 
@@ -298,7 +295,7 @@ class channels(commands.Cog):
             char = self.db.get_proxy(Guild, Category, ID)
             if not char:
                 return
-            
+
             for command in self.bot.walk_commands():
                 if message.content.lower().startswith(f".{command.name}"):
                     return
@@ -314,7 +311,6 @@ class channels(commands.Cog):
 
             if message.content.lower().startswith(f".ooc"):
                 return
-
 
             else:
 
@@ -360,9 +356,7 @@ class channels(commands.Cog):
                     except:
                         pass
                     async with ClientSession() as session:
-                        webhook = discord.Webhook.from_url(
-                            url= url, session=session
-                        )
+                        webhook = discord.Webhook.from_url(url=url, session=session)
                         try:
                             await webhook.send(
                                 content=message.content,

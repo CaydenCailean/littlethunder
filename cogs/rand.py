@@ -12,7 +12,7 @@ class rand(commands.Cog):
         self.db = lt_db
         self.channel = channel
         self.logger = lt_logger
-        self.settings = ['deck', 'public']
+        self.settings = ["deck", "public"]
 
     # region Utility
 
@@ -29,8 +29,6 @@ class rand(commands.Cog):
             r -= int(weight)
             if r <= 0:
                 return value
-
-    
 
     # endregion
 
@@ -68,14 +66,16 @@ class rand(commands.Cog):
                 )
 
     @random.command(case_insensitive=True)
-    async def list(self, ctx,scope=None):
+    async def list(self, ctx, scope=None):
         """
         Lists all random tables that you have created.
         """
 
         try:
             if scope != "all":
-                tables = self.db.rand_get_owned(ctx.message.author.id, ctx.message.guild.id)
+                tables = self.db.rand_get_owned(
+                    ctx.message.author.id, ctx.message.guild.id
+                )
                 title = f"Random Tables owned by {ctx.message.author.display_name}"
             else:
                 tables = self.db.rand_get_all(ctx.message.guild.id)
@@ -84,16 +84,16 @@ class rand(commands.Cog):
             message = str(traceback.format_exc())
             await self.logger.error(
                 self, message, self.__class__.__name__, "random", self.ctx.author
-                )
+            )
 
-        outString = ''
+        outString = ""
         for table in tables:
             outString += f"{table['table'].title()}\n"
-        
+
         embed = discord.Embed(
             title=title,
             description=outString,
-            color=0x00ff00,
+            color=0x00FF00,
         )
         await ctx.send(embed=embed)
 
@@ -110,15 +110,15 @@ class rand(commands.Cog):
             await self.logger.error(
                 self, message, self.__class__.__name__, "random", self.ctx.author
             )
-        outString = '```'
-        for value in table['pairs']:
+        outString = "```"
+        for value in table["pairs"]:
             outString += f"{value[1]} - {value[0]}\n"
-        outString +='```'
+        outString += "```"
 
         embed = discord.Embed(
             title=f"Random Table: {table['table']}",
             description=outString,
-            color=0x00ff00,
+            color=0x00FF00,
         )
         await ctx.send(embed=embed)
 
@@ -206,7 +206,7 @@ class rand(commands.Cog):
     @random.command()
     async def toggle(self, ctx, Table, Setting):
         """Toggles a designated mode for the provided random table.
-        
+
         Currently settings are Public and DeckMode"""
         Guild, ID = self.ctx_info(ctx)
         try:

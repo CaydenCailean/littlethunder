@@ -22,8 +22,8 @@ class main(commands.Cog):
                 self, f"{self.bot.user.name} is now online", "Main", "Startup"
             )
             items = os.listdir(os.getcwd())
-            if 'temp' not in items:
-                os.mkdir('temp')
+            if "temp" not in items:
+                os.mkdir("temp")
         except:
             await self.logger.error(
                 self,

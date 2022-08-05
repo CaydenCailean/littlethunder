@@ -23,7 +23,7 @@ if "DBNAME" in os.environ:
         "dbname": os.environ["DBNAME"],
         "discordtoken": os.environ["DISCTOKEN"],
         "log_channel": os.environ["LOG_CHANNEL"],
-        "db_uri": os.environ["DB_URI"]
+        "db_uri": os.environ["DB_URI"],
     }
 else:
     cfg = configparser.ConfigParser()
@@ -84,7 +84,9 @@ async def pat(ctx):
         (50, "_pants softly, thoroughly enjoying the attention._"),
         (10, "_uwu_"),
         (10, "_owo_"),
-        (1, """```
+        (
+            1,
+            """```
         ██████████████        
     ████▒▒▒▒    ░░  ▒▒████    
   ██▒▒▒▒██        ░░░░▒▒▒▒▓▓  
@@ -96,7 +98,8 @@ async def pat(ctx):
     ░░  ██    ██    ██        
         ░░██      ██▓▓        
           ▒▒██████░░          
-          ```""")
+          ```""",
+        ),
     ]
     await ctx.send(weighted(responses))
 
@@ -115,9 +118,10 @@ while check == False:
                 check2 = True
             except:
                 print("DB init failed, retrying in 30 seconds...")
-                lt_logger.error(bot, str(traceback.format_exc()), "Main", "DB init failed")
+                lt_logger.error(
+                    bot, str(traceback.format_exc()), "Main", "DB init failed"
+                )
                 time.sleep(30)
-
 
     except:
         print("DB connection failed, retrying in 30 seconds")
@@ -125,7 +129,6 @@ while check == False:
         time.sleep(30)
 
 # add cogs before startup
-
 
 
 bot.add_cog(main(bot, config["log_channel"]))

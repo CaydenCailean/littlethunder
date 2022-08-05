@@ -12,12 +12,12 @@ class lt_db(object):
     def __init__(self, config):
         self.logger = lt_logger
         # connection information for DB
-        
+
         self.URI = config["db_uri"]
         self.dbname = config["dbname"]
-            
+
     def connect(self):
-        
+
         try:
             self.client = MongoClient(self.URI)
             print("Connected to db!")
@@ -53,7 +53,7 @@ class lt_db(object):
 
     def dice_add(self, User, Guild, Alias, updoot):
         query = {"user": User, "Alias": Alias.lower()}
-        #updoot = {"$set": {"user": User, "Alias": Alias.lower(), "Value": [Value]}}
+        # updoot = {"$set": {"user": User, "Alias": Alias.lower(), "Value": [Value]}}
         self.db.dice[str(Guild)].update_one(query, updoot, upsert=True)
         return f"Your {Alias} variable has been updated."
 
@@ -79,13 +79,11 @@ class lt_db(object):
         outDict = {}
         for d in dice:
             outDict.update({d["Alias"]: d["Value"]})
-        
-        
+
         return outDict
-    
+
     # endregion
 
-    
     # region Initiative
 
     def init_add(self, Guild, Category, Name, ID, Init):
@@ -269,15 +267,12 @@ class lt_db(object):
             )
 
     def set_proxy(self, Guild, Category, ID, Character):
-        
 
-        
         proxy = self.get_one_char(Guild, Character, ID)["_id"]
-       
+
         output = self.db[str(Guild)].find_one_and_update(
             {"Category": Category}, {"$set": {f"{ID}": proxy}}
         )
-       
 
         return output
 
@@ -419,7 +414,12 @@ class lt_db(object):
             return output
         except:
             try:
-                entry = {"table": Table.lower(), "user": ID, "pairs": [], "deckMode": "off"}
+                entry = {
+                    "table": Table.lower(),
+                    "user": ID,
+                    "pairs": [],
+                    "deckMode": "off",
+                }
                 self.db.rand[str(Guild)].insert_one(entry).inserted_id
                 output = f"{Table.title()} was added to the database. You can edit this table using commands via Discord, or in the future, using the Web Editor, found at https://webthunder.herokuapp.com/"
                 return output
@@ -433,8 +433,8 @@ class lt_db(object):
         try:
             pubCheck = table["public"]
         except:
-            pubCheck = "off"        
-        
+            pubCheck = "off"
+
         if ID == table["user"] or pubCheck == "on":
             pairs = table["pairs"]
             pairs.append([Value, Weight])
@@ -477,7 +477,7 @@ class lt_db(object):
         return output
 
     def rand_get_owned(self, User, Guild):
-        query = {'user':User}
+        query = {"user": User}
         output = self.db.rand[str(Guild)].find(query)
         return output
 
@@ -488,7 +488,7 @@ class lt_db(object):
     def toggle(self, Guild, ID, Table, Setting):
         query = {"table": Table.lower()}
         table = self.db.rand[str(Guild)].find_one(query)
-        
+
         if ID == table["user"]:
             if Setting == "deck":
                 if table["deckMode"] == "off":
@@ -498,7 +498,7 @@ class lt_db(object):
                     updoot = {"$set": {"deckMode": "off"}}
                     output = f"Deckmode has been disabled for {Table.title()}."
             elif Setting == "public":
-                try:   
+                try:
                     if table["public"] == "off":
                         updoot = {"$set": {"public": "on"}}
                         output = f"{Table.title()} is now public."
@@ -510,7 +510,7 @@ class lt_db(object):
                     output = f"{Table.title()} is now public."
             else:
                 output = f"{Setting} is not a valid setting to toggle."
-            
+
         self.db.rand[str(Guild)].update_one(query, updoot)
         return output
 
