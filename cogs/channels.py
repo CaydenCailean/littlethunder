@@ -216,11 +216,6 @@ class channels(commands.Cog):
         user = payload.user_id
 
         try:
-            payload.channel_id
-        except:
-            return
-
-        try:
             Guild = payload.guild_id
         except:
             Guild = self.db.get_server_proxy(user)
