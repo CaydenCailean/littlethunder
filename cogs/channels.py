@@ -278,11 +278,13 @@ class channels(commands.Cog):
 
     @commands.Cog.listener("on_message")
     async def in_character(self, message):
+        try:
+            message.guild.id
+        except:
+            return
+            
         if message.author.id != self.bot.user.id and not message.webhook_id:
-            try:
-                message.guild.id
-            except:
-                pass
+            
 
             Guild, Category, Channel, ID = (
                 message.guild.id,
