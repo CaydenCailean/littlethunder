@@ -215,6 +215,9 @@ class channels(commands.Cog):
         """
         user = payload.user_id
 
+        if user != self.bot.user.id:
+            return
+
         try:
             Guild = payload.guild_id
         except:
@@ -281,8 +284,9 @@ class channels(commands.Cog):
         try:
             message.guild.id
         except:
+            print('nope')
             return
-            
+
         if message.author.id != self.bot.user.id and not message.webhook_id:
             
 
