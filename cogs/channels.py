@@ -215,7 +215,9 @@ class channels(commands.Cog):
         """
         user = payload.user_id
 
-        if user != self.bot.user.id:
+        try:
+            payload.channel_id
+        except:
             return
 
         try:
