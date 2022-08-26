@@ -284,7 +284,6 @@ class channels(commands.Cog):
         try:
             message.guild.id
         except:
-            print('nope')
             return
 
         if message.author.id != self.bot.user.id and not message.webhook_id:
