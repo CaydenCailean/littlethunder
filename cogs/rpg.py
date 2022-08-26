@@ -45,7 +45,7 @@ class rpg(commands.Cog):
             )
             await ctx.send("Didn't work!")
 
-    def diceroll(self, ctx, input):
+    def diceroll(self, ctx, input, in_string):
         try:
 
             try:
@@ -68,7 +68,7 @@ class rpg(commands.Cog):
 
             embed = discord.Embed(
                 title=f"Results for {ctx.message.author.display_name}",
-                description=f"Rolling {input}",
+                description=f"Rolling {in_string}",
                 color=ctx.message.author.color,
             )
             try:
@@ -169,6 +169,7 @@ class rpg(commands.Cog):
 
             regex = re.compile(r"\!\w+")
             macros = regex.findall(input)
+            in_string = input
             if macros:
                 # regex to isolate macros
 
@@ -181,14 +182,14 @@ class rpg(commands.Cog):
 
                         if len(val) > 1:
                             return [await self.d(ctx, input=input) for input in val]
-
+                        in_string = in_string.replace(macro, f"{label}:**{val[0]}**", 1)
                         eval_str = eval_str.replace(macro, f"({val[0]})", 1)
 
                     if regex.findall(eval_str):
                         # if there are still macros in the string, recurse
                         return await self.d(ctx, input=eval_str)
 
-                    Total, embed = self.diceroll(ctx, eval_str)
+                    Total, embed = self.diceroll(ctx, eval_str, in_string)
                     await ctx.send(embed=embed)
                     return Total
                 except:
@@ -204,7 +205,7 @@ class rpg(commands.Cog):
 
             else:
                 try:
-                    Total, embed = self.diceroll(ctx, input)
+                    Total, embed = self.diceroll(ctx, input, in_string)
                     await ctx.send(embed=embed)
                     return Total
                 except:
