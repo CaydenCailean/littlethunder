@@ -108,8 +108,10 @@ class lt_db(object):
 
     def init_remove(self, Guild, Category, Name):
         query = {"Name": Name}
-
-        self.db[str(Guild)][str(Category)].delete_one(query)
+        
+        deleted = self.db[str(Guild)][str(Category)].delete_one(query)
+        
+        return deleted.deleted_count
 
     def init_get(self, Guild, Category):
         initList = self.db[str(Guild)][str(Category)]
@@ -129,6 +131,7 @@ class lt_db(object):
             self.db[str(Guild)].find_one_and_update(
                 {"Category": Category}, {"$inc": {"turn": -entries}}
             )
+        return current["owner"]
 
     def turn_get(self, Guild, Category):
 
@@ -151,29 +154,33 @@ class lt_db(object):
         )
 
     def init_delay(self, Guild, Category, Name, newInit):
+        try:
+            turn = self.db[str(Guild)].find_one({"Category": Category})["turn"]
+            oldInit = self.db[str(Guild)][str(Category)].find_one({"Name": Name})["Init"]
+            currentInit = self.db[str(Guild)][str(Category)].find_one_and_update(
+                {"Name": Name},
+                {"$set": {"Init": float(newInit)}},
+                return_document=ReturnDocument.AFTER,
+            )["Init"]
+            initraw = self.db[str(Guild)][str(Category)].find({})
+            nextInit = initraw.sort("Init", -1)[turn - 1]["Init"]
 
-        turn = self.db[str(Guild)].find_one({"Category": Category})["turn"]
-        oldInit = self.db[str(Guild)][str(Category)].find_one({"Name": Name})["Init"]
-        currentInit = self.db[str(Guild)][str(Category)].find_one_and_update(
-            {"Name": Name},
-            {"$set": {"Init": float(newInit)}},
-            return_document=ReturnDocument.AFTER,
-        )["Init"]
-        initraw = self.db[str(Guild)][str(Category)].find({})
-        nextInit = initraw.sort("Init", -1)[turn - 1]["Init"]
 
-        entries = self.db[str(Guild)][str(Category)].count_documents({})
+            entries = self.db[str(Guild)][str(Category)].count_documents({})
 
-        if turn >= entries:
-            self.db[str(Guild)].find_one_and_update(
-                {"Category": Category}, {"$inc": {"turn": -entries}}
-            )
+            if turn >= entries:
+                self.db[str(Guild)].find_one_and_update(
+                    {"Category": Category}, {"$inc": {"turn": -entries}}
+                )
 
-        if currentInit > nextInit or oldInit < currentInit:
-            self.db[str(Guild)].update_one(
-                {"Category": Category}, {"$inc": {"turn": 1}}
-            )
-
+            if currentInit > nextInit or oldInit < currentInit:
+                self.db[str(Guild)].update_one(
+                    {"Category": Category}, {"$inc": {"turn": 1}}
+                )
+        except Exception as e:
+            print(e)
+            
+        
     # endregion
 
     # region Category Ownership
@@ -212,7 +219,7 @@ class lt_db(object):
                 {"Category": Category}, {"$unset": {"owner": 1}}
             )
             owner = current["owner"]
-            output = f"<@{owner}> has been removed as this channel's owner."
+            output = f"<@{owner}> has been removed as this category's owner."
             return output
         else:
             current = self.db[str(Guild)].find_one({"Category": Category})
@@ -222,7 +229,7 @@ class lt_db(object):
                 self.db[str(Guild)].find_one_and_update(
                     {"Category": Category}, {"$unset": {"owner": 1}}
                 )
-                output = f"<@{owner}> has been removed as this channel's owner."
+                output = f"<@{owner}> has been removed as this category's owner."
                 return output
             else:
                 output = f"<@{owner}> is the current owner for this category. Please see an administrator or speak with the current owner to take control."
@@ -574,3 +581,5 @@ class lt_db(object):
         query = {"user": ID}
         guild = self.db.proxies.find_one(query)["guild"]
         return int(guild)
+
+    # endregion

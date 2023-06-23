@@ -23,12 +23,29 @@ class lt_logger(commands.Cog):
         )
         await self.bot.get_channel(int(self.channel)).send(embed=embed)
 
-    async def error(self, message, cog, command, author):
-        embed = discord.Embed(
-            title=f"ERROR: {cog} | [{command}]", description=message, color=0xFF0000
-        )
-        embed.set_footer(text=f"Run by {author} ")
-        await self.bot.get_channel(int(self.channel)).send(embed=embed)
+#    async def error(self, message, cog, command, author):
+#        try:
+#            embed = discord.Embed(
+#                title=f"ERROR: {cog} | [{command}]", description=message, color=0xFF0000
+#            )
+#            embed.set_footer(text=f"Run by {author} ")
+#            await self.bot.get_channel(self.channel).send(embed=embed)
+#        except:
+#            print("Error logging error")
+#            print(traceback.format_exc())
+
+    async def error(self, message, cog, command, user):
+        try:
+            embed = discord.Embed(
+                title=f"ERROR: {cog} | [{command}]", description=message, color=0xFF0000
+            )
+            embed.set_footer(text=f"Run by {user} ")
+            channel = self.bot.get_channel(int(self.channel))
+            await channel.send(embed=embed)
+        except:
+            print("Error logging error")
+            print(traceback.format_exc())
+
 
     async def warning(self, message, cog, command):
         embed = discord.Embed(
@@ -66,7 +83,10 @@ class lt_logger(commands.Cog):
             raise Exception("This is a test")
         except:
             message = str(traceback.format_exc())
-            await lt_logger.error(self, message, self.__class__.__name__, "error_test")
+            try:
+                await lt_logger.error(self, message, self.__class__.__name__, "error_test", ctx.author)
+            except:
+                print(traceback.format_exc())
 
 
 def setup(bot):

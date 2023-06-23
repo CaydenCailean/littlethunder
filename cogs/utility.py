@@ -88,11 +88,11 @@ class utility(commands.Cog):
     @commands.command()
     async def add_proxy_guild(self, ctx, guild: int):
         try:
-            
+
             Guild = self.bot.get_guild(guild)
-            
+
             if Guild in self.bot.guilds:
-                
+
                 if Guild.get_member(ctx.author.id) is not None:
                     print("You're in the guild")
                     self.db.add_server_proxy(guild, ctx.author.id)

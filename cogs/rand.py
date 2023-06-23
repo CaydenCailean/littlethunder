@@ -10,9 +10,9 @@ class rand(commands.Cog):
     def __init__(self, bot, lt_db, channel):
         self.bot = bot
         self.db = lt_db
-        self.channel = channel
         self.logger = lt_logger
         self.settings = ["deck", "public"]
+        self.channel = channel
 
     # region Utility
 
